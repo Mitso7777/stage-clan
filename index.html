@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STAGE! | Официальный сайт клана</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            background-color: #02050a;
+            color: #ffffff;
+            font-family: 'Oswald', sans-serif;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        /* Кнопка навигации */
+        .nav-bar {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            display: flex;
+            gap: 20px;
+            background: rgba(5, 10, 20, 0.7);
+            padding: 10px 20px;
+            border-radius: 30px;
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            backdrop-filter: blur(5px);
+        }
+
+        .nav-bar a {
+            color: #ffffff;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 14px;
+            letter-spacing: 2px;
+            transition: color 0.3s;
+        }
+
+        .nav-bar a:hover {
+            color: #00f2fe;
+        }
+
+        /* 1 СТРАНИЦА: ПРИВЕТСТВИЕ */
+        .welcome-screen {
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            background-image: linear-gradient(rgba(2, 5, 10, 0.4), rgba(2, 5, 10, 0.8)), url('bg.png');
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        .welcome-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 24px;
+            color: #00f2fe;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            animation: fadeInDown 1.2s ease-out forwards;
+        }
+
+        /* АНИМАЦИЯ МЕРЦАНИЯ */
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(50px, 8vw, 110px);
+            font-weight: 900;
+            letter-spacing: 18px;
+            text-transform: uppercase;
+            color: #ffffff;
+            animation: bulbFlicker 2.5s ease-in-out forwards;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes bulbFlicker {
+            0% { opacity: 0; text-shadow: none; color: #223344; }
+            2% { opacity: 1; color: #fff; text-shadow: 0 0 30px rgba(0, 242, 254, 0.8); }
+            4% { opacity: 0; text-shadow: none; }
+            8% { opacity: 1; color: #fff; text-shadow: 0 0 20px rgba(0, 242, 254, 0.6); }
+            9% { opacity: 0.2; text-shadow: none; }
+            11% { opacity: 1; color: #fff; text-shadow: 0 0 40px rgba(0, 242, 254, 0.9); }
+            13% { opacity: 0; text-shadow: none; }
+            20% { opacity: 0.1; color: #223344; text-shadow: none; }
+            22% { opacity: 1; color: #fff; text-shadow: 0 0 30px rgba(0, 242, 254, 0.7); }
+            24% { opacity: 0.3; text-shadow: none; }
+            28% { opacity: 1; color: #ffffff; text-shadow: 0 0 35px rgba(0, 242, 254, 0.8), 0 0 15px rgba(0, 242, 254, 0.4); }
+            100% { opacity: 1; color: #ffffff; text-shadow: 0 0 38px rgba(0, 242, 254, 0.85), 0 0 18px rgba(0, 242, 254, 0.45); }
+        }
+
+        /* НАСТРОЙКИ СЕКЦИЙ */
+        .roster-screen, .chat-screen, .founders-screen {
+            min-height: 100vh;
+            width: 100vw;
+            padding: 100px 20px 60px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .roster-screen { background: linear-gradient(180deg, #050a14 0%, #02050a 100%); }
+        .chat-screen { background: linear-gradient(180deg, #02050a 0%, #030812 100%); }
+        .founders-screen { background: linear-gradient(180deg, #030812 0%, #050a14 100%); }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 36px;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 40px;
+            color: #fff;
+            border-bottom: 2px solid #00f2fe;
+            padding-bottom: 10px;
+            text-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
+        }
+
+        /* 2 СТРАНИЦА: СОСТАВ */
+        .roster-container {
+            max-width: 1200px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+        }
+
+        .rank-section {
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid rgba(0, 242, 254, 0.1);
+            padding: 25px;
+            border-radius: 6px;
+        }
+
+        .rank-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            color: #00f2fe;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .players-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .player-link { text-decoration: none; color: inherit; display: block; }
+        .player-card {
+            background: #0f172a;
+            border-left: 4px solid #00f2fe;
+            padding: 15px;
+            border-radius: 4px;
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .player-link:hover .player-card {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0, 242, 254, 0.3);
+            background: #1e293b;
+            border-left-color: #ffffff;
+        }
+
+        .player-card.leader { border-left-color: #ff0055; background: linear-gradient(90deg, #1e1b4b 0%, #0f172a 100%); }
+        .player-card.founder { border-left-color: #a855f7; }
+        .tg-icon { font-size: 14px; color: rgba(255, 255, 255, 0.3); }
+        .player-link:hover .tg-icon { color: #00f2fe; }
+
+        .recruit-box { text-align: center; margin-top: 50px; width: 100%; max-width: 500px; }
+        .btn-join {
+            background: #00f2fe; color: #02050a; border: none; font-family: 'Orbitron', sans-serif; font-size: 22px; font-weight: 900;
+            padding: 15px 40px; text-transform: uppercase; cursor: pointer; letter-spacing: 2px; box-shadow: 0 0 25px rgba(0, 242, 254, 0.4);
+            transition: all 0.3s ease; width: 100%;
+        }
+        .btn-join:hover { background: #ffffff; box-shadow: 0 0 35px rgba(255, 255, 255, 0.6); }
+
+        /* 3 СТРАНИЦА: ТАКТИЧЕСКИЙ ЧАТ */
+        .chat-container {
+            max-width: 850px; width: 100%; background: #090e1a; border: 2px solid #1e293b; border-radius: 8px;
+            display: flex; flex-direction: column; height: 500px; box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+        .chat-messages { flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+        
+        .msg-line { display: flex; flex-direction: column; max-width: 80%; padding: 12px 16px; border-radius: 4px; background: #131a2e; border-left: 4px solid #00f2fe; animation: msgIn 0.3s ease-out forwards; }
+        .msg-line.leader-msg { border-left-color: #ff0055; background: #22162b; }
+        .msg-line.founder-msg { border-left-color: #a855f7; background: #19142b; }
+        
+        .msg-author { font-family: 'Orbitron', sans-serif; font-size: 13px; font-weight: bold; letter-spacing: 1px; margin-bottom: 4px; text-transform: uppercase; }
+        .msg-line.leader-msg .msg-author { color: #ff0055; }
+        .msg-line.founder-msg .msg-author { color: #a855f7; }
+        .msg-line.member-msg .msg-author { color: #00f2fe; }
+        .msg-text { font-size: 16px; line-height: 1.4; color: #e2e8f0; }
+
+        .chat-input-panel { display: flex; gap: 10px; padding: 15px; background: #050811; border-top: 1px solid #1e293b; }
+        .chat-input-panel input { background: #0c101f; border: 1px solid rgba(0, 242, 254, 0.2); color: #fff; padding: 12px; font-size: 15px; border-radius: 4px; font-family: 'Oswald', sans-serif; }
+        .chat-input-panel input:focus { outline: none; border-color: #00f2fe; }
+        #chatNick { width: 150px; }
+        #chatText { flex-grow: 1; }
+        .btn-send { background: #00f2fe; color: #02050a; border: none; padding: 0 25px; font-family: 'Orbitron', sans-serif; font-weight: 900; text-transform: uppercase; cursor: pointer; border-radius: 4px; transition: 0.2s; }
+        .btn-send:hover { background: #fff; }
+
+        @keyframes msgIn { from { opacity: 0; transform: translateX(-15px); } to { opacity: 1; transform: translateX(0); } }
+
+        /* 4 СТРАНИЦА: ОСНОВАТЕЛИ КЛАНА */
+        .founders-grid {
+            display: flex; justify-content: center; flex-wrap: wrap; gap: 25px; max-width: 1200px; width: 100%; margin-top: 20px;
+        }
+        .founder-tile {
+            background: linear-gradient(145deg, #0c1220 0%, #060a12 100%); border: 1px solid rgba(0, 242, 254, 0.15);
+            border-bottom: 4px solid #a855f7; border-radius: 6px; padding: 40px 30px; text-align: center; min-width: 210px;
+            flex: 1; max-width: 260px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: all 0.3s ease-in-out;
+        }
+        .founder-tile.leader-tile { border-bottom-color: #ff0055; background: linear-gradient(145deg, #1b1329 0%, #080b14 100%); box-shadow: 0 10px 35px rgba(255, 0, 85, 0.1); }
+        .founder-tile i { font-size: 44px; color: #00f2fe; margin-bottom: 20px; text-shadow: 0 0 15px rgba(0, 242, 254, 0.4); }
+        .founder-tile.leader-tile i { color: #ff0055; text-shadow: 0 0 15px rgba(255, 0, 85, 0.4); }
+        .founder-tile h3 { font-family: 'Orbitron', sans-serif; font-size: 24px; color: #ffffff; margin-bottom: 8px; letter-spacing: 1px; }
+        .founder-tile p { color: #94a3b8; font-size: 14px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; }
+        .founder-tile:hover { transform: translateY(-10px); border-color: #00f2fe; box-shadow: 0 15px 40px rgba(0, 242, 254, 0.2); }
+
+        /* ТАКТИЧЕСКОЕ ОКНО АНКЕТЫ */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(1, 4, 10, 0.85); z-index: 100; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; backdrop-filter: blur(8px); }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-window { background: #0b121f; border: 2px solid #00f2fe; box-shadow: 0 0 40px rgba(0, 242, 254, 0.3); width: 90%; max-width: 450px; padding: 35px; border-radius: 8px; position: relative; transform: translateY(-30px); transition: transform 0.4s ease; }
+        .modal-overlay.active .modal-window { transform: translateY(0); }
+        .modal-title { font-family: 'Orbitron', sans-serif; font-size: 22px; color: #00f2fe; letter-spacing: 2px; margin-bottom: 25px; text-transform: uppercase; text-align: center; border-bottom: 1px solid rgba(0, 242, 254, 0.2); padding-bottom: 10px; }
+        .close-btn { position: absolute; top: 15px; right: 20px; color: rgba(255,255,255,0.4); font-size: 24px; cursor: pointer; transition: color 0.2s; }
+        .close-btn:hover { color: #ff0055; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; margin-bottom: 8px; }
+        .form-group input { width: 100%; background: #02050a; border: 1px solid rgba(0, 242, 254, 0.3); padding: 12px; color: #fff; font-size: 16px; border-radius: 4px; font-family: 'Oswald', sans-serif; }
+        .form-group input:focus { outline: none; border-color: #00f2fe; }
+        .btn-submit { background: #00f2fe; color: #02050a; width: 100%; border: none; padding: 14px; font-family: 'Orbitron', sans-serif; font-size: 18px; font-weight: 900; text-transform: uppercase; cursor: pointer; letter-spacing: 1px; margin-top: 10px; }
+        .btn-submit:hover { background: #fff; }
+        .success-result { display: none; text-align: center; }
+        .success-result p { color: #94a3b8; font-size: 16px; text-transform: uppercase; margin-bottom: 15px; }
+        .clan-id { font-family: 'Orbitron', sans-serif; font-size: 38px; color: #ffffff; letter-spacing: 8px; background: rgba(0, 242, 254, 0.1); padding: 15px; border: 2px dashed #00f2fe; display: inline-block; text-shadow: 0 0 15px rgba(0, 242, 254, 0.5); width: 100%; }
+    </style>
+</head>
+<body>
+
+    <nav class="nav-bar">
+        <a href="#welcome">Главная</a>
+        <a href="#roster">Состав Флота</a>
+        <a href="#chat">Тактический Чат</a>
+        <a href="#founders">Основатели</a>
+    </nav>
+
+    <section id="welcome" class="welcome-screen">
+        <div class="welcome-text">Welcome to</div>
+        <h1>Stage</h1>
+    </section>
+
+    <section id="roster" class="roster-screen">
+        <h2 class="section-title">Состав Клана</h2>
+        <div class="roster-container">
+            <div class="rank-section">
+                <div class="rank-title">Командующий Флотом</div>
+                <div class="players-grid">
+                    <a href="https://t.me/mitso_stage" target="_blank" class="player-link">
+                        <div class="player-card leader"><span>Mitso</span><span>👑 Flagship</span></div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="rank-section">
+                <div class="rank-title">Адмиралтейство (Сооснователи)</div>
+                <div class="players-grid">
+                    <a href="https://t.me/joker_stage" target="_blank" class="player-link"><div class="player-card founder"><span>Mr. JOKER</span><span class="tg-icon">tg</span></div></a>
+                    <a href="https://t.me/dark_control_stage" target="_blank" class="player-link"><div class="player-card founder"><span>Dark Control</span><span class="tg-icon">tg</span></div></a>
+                    <a href="https://t.me/proper_stage" target="_blank" class="player-link"><div class="player-card founder"><span>Mr. PROper Twelve</span><span class="tg-icon">tg</span></div></a>
+                    <a href="https://t.me/banan4uks" target="_blank" class="player-link"><div class="player-card founder"><span>banan</span><span class="tg-icon">tg</span></div></a>
+                </div>
+            </div>
+
+            <div class="rank-section">
+                <div class="rank-title">Офицерский состав (Игроки)</div>
+                <div class="players-grid">
+                    <a href="https://t.me/sotedious_stage" target="_blank" class="player-link"><div class="player-card"><span>so tedious</span><span class="tg-icon">tg</span></div></a>
+                    <a href="https://t.me/zandetetor_stage" target="_blank" class="player-link"><div class="player-card"><span>Zandetetor</span><span class="tg-icon">tg</span></div></a>
+                    <a href="https://t.me/neptyn_stage" target="_blank" class="player-link"><div class="player-card"><span>NEPTYN B MORE</span><span class="tg-icon">tg</span></div></a>
+                    <a href="https://t.me/anubis_stage" target="_blank" class="player-link"><div class="player-card"><span>anubis_desert</span><span class="tg-icon">tg</span></div></a>
+                    <a href="https://t.me/aera_stage" target="_blank" class="player-link"><div class="player-card"><span>AERA</span><span class="tg-icon">tg</span></div></a>
+                    <a href="https://t.me/shamsudin_stage" target="_blank" class="player-link"><div class="player-card"><span>S.H.A.M.S.U.D.I.N</span><span class="tg-icon">tg</span></div></a>
+                    <a href="https://t.me/imran_stage" target="_blank" class="player-link"><div class="player-card"><span>Imran</span><span class="tg-icon">tg</span></div></a>
+                    <a href="https://t.me/stalin_stage" target="_blank" class="player-link"><div class="player-card"><span>Stalin</span><span class="tg-icon">tg</span></div></a>
+                    <a href="https://t.me/pacific_stage" target="_blank" class="player-link"><div class="player-card"><span>Pacific</span><span class="tg-icon">tg</span></div></a>
+                    <a href="https://t.me/maevrikk_stage" target="_blank" class="player-link"><div class="player-card"><span>Maevrikk</span><span class="tg-icon">tg</span></div></a>
+                </div>
+            </div>
+        </div>
+        <div class="recruit-box"><button class="btn-join" id="openModalBtn">Вступить в клан</button></div>
+    </section>
+
+    <section id="chat" class="chat-screen">
+        <h2 class="section-title">Тактический канал связи</h2>
+        <div class="chat-container">
+            <div class="chat-messages" id="chatMessages">
+                <div class="msg-line leader-msg"><div class="msg-author">Mitso [Flagship] 👑</div><div class="msg-text">Приветствую всех на командном мостике STAGE. Новобранцы — заполняйте анкеты через рапорт флота!</div></div>
+                <div class="msg-line founder-msg"><div class="msg-author">Mr. JOKER</div><div class="msg-text">Главный калибр заряжен, орудия готовы к КВ. Ждем новых бойцов в команду.</div></div>
+                <div class="msg-line founder-msg"><div class="msg-author">banan</div><div class="msg-text">Воздушная разведка секторов запущена. Радары работают стабильно.</div></div>
+            </div>
+            <div class="chat-input-panel">
+                <input type="text" id="chatNick" placeholder="Твой Ник" maxlength="15">
+                <input type="text" id="chatText" placeholder="Введите тактическое сообщение..." maxlength="100">
+                <button class="btn-send" id="chatSendBtn">Отправить</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="founders" class="founders-screen">
+        <h2 class="section-title">Штаб Основателей</h2>
+        <div class="founders-grid">
+            <div class="founder-tile leader-tile"><i class="fa-solid fa-anchor"></i><h3>Mitso</h3><p>Глава Клана / Капитан</p></div>
+            <div class="founder-tile"><i class="fa-solid fa-crosshairs"></i><h3>Mr. JOKER</h3><p>Сооснователь</p></div>
+            <div class="founder-tile"><i class="fa-solid fa-shield-halved"></i><h3>Dark Control</h3><p>Сооснователь</p></div>
+            <div class="founder-tile"><i class="fa-solid fa-bolt"></i><h3>Mr. PROper</h3><p>Сооснователь</p></div>
+            <div class="founder-tile"><i class="fa-solid fa-satellite-dish"></i><h3>banan</h3><p>Сооснователь</p></div>
+        </div>
+    </section>
+
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-window">
+            <span class="close-btn" id="closeModalBtn">&times;</span>
+            <form id="recruitForm">
+                <div class="modal-title">Регистрация Новобранца</div>
+                <div class="form-group"><label>Игровой ID корабля</label><input type="text" id="gameId" placeholder="Например: 49284729" required></div>
+                <div class="form-group"><label>Никнейм в игре</label><input type="text" id="gameNick" placeholder="Твой ник" required></div>
+                <div class="form-group"><label>Ссылка на Telegram</label><input type="text" id="tgLink" placeholder="@username" required></div>
+                <button type="submit" class="btn-submit" id="submitBtn">Отправить рапорт</button>
+            </form>
+            <div class="success-result" id="successResult">
+                <div class="modal-title" style="color: #00f2fe;">Доступ разрешен</div>
+                <p>Рапорт принят. Добро пожаловать на борт! Твой штабной ID клана:</p>
+                <div class="clan-id">YRD9HT</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- ⚙️ НАСТРОЙКА ТЕЛЕГРАМ-БОТА ДЛЯ ТВОЕЙ ГРУППЫ ---
+        const TG_TOKEN = "8640087886:AAGj3tevg54WEW0Qyo-rrtBlT8fRE9RuCDM";
+        const TG_CHAT_ID = "-445804450"; // Твой подтвержденный ID группы MW
+        // ----------------------------------------------------
+
+        // ЛОГИКА АНКЕТЫ
+        const openModalBtn = document.getElementById('openModalBtn');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const modalOverlay = document.getElementById('modalOverlay');
+        const recruitForm = document.getElementById('recruitForm');
+        const successResult = document.getElementById('successResult');
+        const submitBtn = document.getElementById('submitBtn');
+
+        openModalBtn.addEventListener('click', () => {
+            modalOverlay.classList.add('active'); recruitForm.style.display = 'block'; successResult.style.display = 'none';
+            submitBtn.textContent = "Отправить рапорт"; submitBtn.disabled = false;
+        });
+        closeModalBtn.addEventListener('click', () => { modalOverlay.classList.remove('active'); });
+        modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) modalOverlay.classList.remove('active'); });
+
+        recruitForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            submitBtn.textContent = "Передача данных...";
+            submitBtn.disabled = true;
+
+            const idValue = document.getElementById('gameId').value;
+            const nickValue = document.getElementById('gameNick').value;
+            const tgValue = document.getElementById('tgLink').value;
+
+            const textMessage = `⚓️ <b>Новая заявка в клан STAGE!</b>\n\n` +
+                                `👤 <b>Ник в игре:</b> ${nickValue}\n` +
+                                `🆔 <b>ID игрока:</b> ${idValue}\n` +
+                                `✈️ <b>Telegram:</b> ${tgValue}`;
+
+            const url = `https://api.telegram.org/bot${TG_TOKEN}/sendMessage`;
+
+            fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: TG_CHAT_ID, text: textMessage, parse_mode: 'html' })
+            })
+            .then(response => {
+                if (response.ok) {
+                    recruitForm.style.display = 'none'; successResult.style.display = 'block';
+                } else {
+                    alert("Ошибка связи с Telegram. Убедитесь, что бот добавлен в администраторы группы!");
+                    submitBtn.textContent = "Отправить рапорт"; submitBtn.disabled = false;
+                }
+            })
+            .catch(error => { alert("Ошибка сети."); submitBtn.textContent = "Отправить рапорт"; submitBtn.disabled = false; });
+        });
+
+        // ЛОГИКА ЧАТА
+        const chatMessages = document.getElementById('chatMessages');
+        const chatNick = document.getElementById('chatNick');
+        const chatText = document.getElementById('chatText');
+        const chatSendBtn = document.getElementById('chatSendBtn');
+
+        chatSendBtn.addEventListener('click', () => {
+            const nick = chatNick.value.trim(); const text = chatText.value.trim();
+            if (nick === "" || text === "") { alert("Заполните оба поля!"); return; }
+
+            const newMsg = document.createElement('div');
+            newMsg.classList.add('msg-line', 'member-msg');
+
+            if (nick.toLowerCase() === 'mitso') { newMsg.classList.add('leader-msg'); } 
+            else if (['joker', 'mr. joker', 'dark control', 'banan', 'mr. proper twelve'].includes(nick.toLowerCase())) { newMsg.classList.add('founder-msg'); }
+
+            newMsg.innerHTML = `<div class="msg-author">${nick}</div><div class="msg-text">${text}</div>`;
+            chatMessages.appendChild(newMsg); chatMessages.scrollTop = chatMessages.scrollHeight;
+            chatText.value = "";
+        });
+        chatText.addEventListener('keypress', (e) => { if (e.key === 'Enter') chatSendBtn.click(); });
+    </script>
+</body>
+</html>
