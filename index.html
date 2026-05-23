@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STAGE! | Официальный site клана</title>
+    <title>STAGE! | Официальный сайт клана</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
@@ -166,6 +166,7 @@
         .btn-reset-auth { display: block; background: none; border: none; color: rgba(255, 255, 255, 0.3); font-size: 11px; text-decoration: underline; cursor: pointer; margin-top: 15px; font-family: inherit; width: 100%; text-align: center; transition: color 0.2s; }
         .btn-reset-auth:hover { color: #ff0055; }
 
+        /* КНОПКА В TELEGRAM СТИЛЕ (СИНЯЯ С ПОДСВЕТКОЙ) */
         .btn-join-neon {
             background: rgba(0, 136, 204, 0.1); 
             border: 2px solid #0088cc; 
@@ -204,13 +205,11 @@
         .btn-map-download:hover { background: #00f2fe; color: #02050a; box-shadow: 0 0 15px rgba(0, 242, 254, 0.3); }
 
         .board-screen { background-image: linear-gradient(rgba(2, 5, 10, 0.75), rgba(2, 5, 10, 0.9)), url('board_bg.png'); }
-        .btn-fullscreen-toggle { background: rgba(168, 85, 247, 0.1); border: 2px solid #a855f7; color: #a855f7; padding: 10px 24px; border-radius: 4px; font-family: 'Orbitron', sans-serif; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; margin-bottom: 20px; box-shadow: 0 0 15px rgba(168, 85, 247, 0.2); transition: all 0.3s ease; display: flex; align-items: center; gap: 10px; outline: none; z-index: 10001; position: relative; }
+        .btn-fullscreen-toggle { background: rgba(168, 85, 247, 0.1); border: 2px solid #a855f7; color: #a855f7; padding: 10px 24px; border-radius: 4px; font-family: 'Orbitron', sans-serif; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; margin-bottom: 20px; box-shadow: 0 0 15px rgba(168, 85, 247, 0.2); transition: all 0.3s ease; display: flex; align-items: center; gap: 10px; outline: none; }
         .btn-fullscreen-toggle:hover { background: #a855f7; color: #ffffff; box-shadow: 0 0 25px rgba(168, 85, 247, 0.6); transform: translateY(-2px); }
-        .board-container { max-width: 1200px; width: 100%; height: 65vh; border: 2px solid #a855f7; border-radius: 8px; box-shadow: 0 0 30px rgba(168, 85, 247, 0.2); overflow: hidden; background: #121212; position: relative; transition: all 0.3s ease; }
+        .board-container { max-width: 1200px; width: 100%; height: 65vh; border: 2px solid #a855f7; border-radius: 8px; box-shadow: 0 0 30px rgba(168, 85, 247, 0.2); overflow: hidden; background: #121212; position: relative; transition: all 0.4s ease; }
         .board-container.drag-over { border-color: #00f2fe; box-shadow: 0 0 40px rgba(0, 242, 254, 0.4); }
-        
-        /* ИСПРАВЛЕН ПОЛНОЭКРАННЫЙ СТИЛЬ КОНТЕЙНЕРА */
-        .board-container.fullscreen-active { position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important; max-width: 100vw !important; z-index: 9999 !important; border-radius: 0 !important; border: none !important; }
+        .board-container.fullscreen-active { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; max-width: 100vw; z-index: 9999; border-radius: 0; border: none; }
         .board-frame { width: 100%; height: 100%; border: none; }
 
         .lock-overlay-box { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px; background: rgba(11, 18, 31, 0.85); border: 2px dashed #a855f7; border-radius: 8px; max-width: 500px; width: 100%; margin: 40px auto; box-shadow: 0 0 30px rgba(168, 85, 247, 0.15); backdrop-filter: blur(10px); }
@@ -280,7 +279,7 @@
         .btn-terminal-reject { flex: 1; padding: 8px; background: #ef4444; border: none; font-family: 'Orbitron', sans-serif; font-weight: 900; color: #fff; border-radius: 4px; cursor: pointer; text-transform: uppercase; font-size: 12px; text-align: center; }
 
         @media (max-width: 768px) {
-            .nav-bar { top: auto; bottom: 15px; padding: 8px 15px; gap: 4px; width: 98%; left: 50%; transform: translateX(-50%); z-index: 10002; }
+            .nav-bar { top: auto; bottom: 15px; padding: 8px 15px; gap: 4px; width: 98%; left: 50%; transform: translateX(-50%); }
             .nav-links-left { gap: 6px; }
             .nav-links-right { gap: 6px; padding-left: 6px; }
             .nav-bar a, .nav-bar span.nav-link-btn { font-size: 8px; letter-spacing: 0.3px; }
@@ -291,7 +290,7 @@
             .toggle-roster-btn { display: block; }
             .maps-grid { grid-template-columns: 1fr; gap: 15px; }
             .board-container { height: 50vh; }
-            .board-container.fullscreen-active { height: 100vh !important; }
+            .board-container.fullscreen-active { height: 100vh; }
             .stats-grid { grid-template-columns: 1fr; }
             .founders-grid { grid-template-columns: 1fr; }
         }
@@ -370,7 +369,7 @@
     </section>
 
     <section id="maps" class="maps-screen">
-        <h2 class="section-title">Tactical карты</h2>
+        <h2 class="section-title">Тактические Карты</h2>
         <div class="lock-overlay-box" id="mapsLockBox">
             <i class="fa-solid fa-building-shield"></i>
             <h3>Доступ Ограничен</h3>
@@ -432,21 +431,34 @@
             
             <form id="recruitForm">
                 <div class="modal-title">Подать заявку</div>
-                <div class="form-group"><label>Логин (Твой ТГ-Тег)</label><input type="text" id="gameId" placeholder="Например: @Maevrikk" required></div>
-                <div class="form-group"><label>Придумайте пароль</label><input type="password" id="gameNick" placeholder="Твой секретный пароль" required></div>
-                <div class="form-group"><label>Никнейм в игре</label><input type="text" id="tgLink" placeholder="Например: Maevrikk" required></div>
+                <div class="form-group"><label>Игровой ID</label><input type="text" id="gameId" placeholder="Например: 49284729" required></div>
+                <div class="form-group"><label>Никнейм в игре</label><input type="text" id="gameNick" placeholder="Твой ник" required></div>
+                <div class="form-group"><label>Твой Telegram-Ник</label><input type="text" id="tgLink" placeholder="Например: @vova" required></div>
                 <div class="law-box">
                     <input type="checkbox" id="lawAgree">
                     <div class="law-text">Я принимаю условия <button type="button" class="btn-law-link" id="openLawBtn">развлекательного сообщества</button> и даю согласие на обработку данных.</div>
                 </div>
                 <button type="submit" class="btn-submit" id="submitBtn" disabled>Отправить заявку</button>
+                <div style="text-align: center; margin-top: 15px;">
+                    <span id="switchToVerify" style="color: #00f2fe; cursor: pointer; text-decoration: underline; font-size: 14px;">Уже одобрен главой? Проверить допуск</span>
+                </div>
             </form>
 
+            <div id="verifyBlock" style="display: none;">
+                <div class="modal-title" style="color: #00f2fe;">Верификация допуска</div>
+                <p style="font-size: 13px; color: #94a3b8; text-align: center; margin-bottom: 15px;">Введите ваш Telegram-никнейм. Если глава клана перевел вас в статус «Одобрен», шлюз откроется.</p>
+                <div class="form-group"><label>Ваш Telegram-Ник</label><input type="text" id="verifyTgInput" placeholder="Например: @vova" required></div>
+                <button type="button" class="btn-submit" id="checkVerifyBtn">Проверить допуск</button>
+                <div style="text-align: center; margin-top: 15px;">
+                    <span id="switchToForm" style="color: #a855f7; cursor: pointer; text-decoration: underline; font-size: 14px;">Вернуться к подаче заявки</span>
+                </div>
+            </div>
+
             <div class="success-result" id="successResult">
-                <div class="modal-title" style="color: #00f2fe;">Связь с ботом</div>
-                <p style="text-align:center; margin-bottom:12px; color: #94a3b8; font-size: 14px;">Логин и пароль зафиксированы. Теперь необходимо выполнить привязку аккаунта к Telegram.</p>
-                <a href="#" id="dynamicBotLink" target="_blank" class="btn-submit" style="display:inline-block; text-decoration:none; margin-bottom:10px; background:#0088cc; color:#fff; text-align:center; padding:10px 0; width:100%; border-radius: 30px;"><i class="fa-solid fa-link"></i> Подключить Telegram</a>
-                <button type="button" class="btn-submit" onclick="document.getElementById('modalOverlay').classList.remove('active');" style="background:#1e293b; color:#94a3b8;">Закрыть</button>
+                <div class="modal-title" style="color: #00f2fe;">Заявка в штабе</div>
+                <p style="text-align:center; margin-bottom:12px; color: #94a3b8; font-size: 14px;">Данные отправлены. Чтобы бот смог автоматически прислать вам **Логин и Пароль** после одобрения главой, обязательно запустите бота.</p>
+                <a href="https://t.me/StageMv_bot" target="_blank" class="btn-submit" style="display:inline-block; text-decoration:none; margin-bottom:10px; background:#0088cc; color:#fff; text-align:center; padding:10px 0; width:100%; border-radius: 30px;">1. Активировать бота в ТГ</a>
+                <button type="button" class="btn-submit" onclick="document.getElementById('modalOverlay').classList.remove('active');" style="background:#1e293b; color:#94a3b8;">2. Закрыть окно</button>
             </div>
         </div>
     </div>
@@ -454,11 +466,11 @@
     <div class="modal-overlay" id="lawModalOverlay" style="z-index: 110;">
         <div class="modal-window" style="max-width: 500px;">
             <span class="close-btn" id="closeLawModalBtn">&times;</span>
-            <div class="modal-title" style="color: #a855f7; border-bottom-color: rgba(168, 85, 247, 0.3);">Пользовательское Соглашение</div>
+            <div class="modal-title" style="color: #a855f7; border-bottom-color: rgba(168,85,247,0.3);">Пользовательское Соглашение</div>
             <div class="law-window-content">
                 <p>Клан STAGE является некоммерческим добровольным объединением игроков Modern Warships.</p>
                 <h4>1. Принцип добровольности</h4>
-                <p>Пользователь предоставляет свой публичный контакт Telegram добровольно для верификации профиля.</p>
+                <p>Пользователь предоставляет свой публичный Игровой ID и контакт Telegram добровольно для верификации профиля.</p>
             </div>
             <button type="button" class="btn-submit" id="acceptLawBtn" style="background: #a855f7; color: #fff; margin-top: 15px;">Ясно, вернуться</button>
         </div>
@@ -509,8 +521,9 @@
         const TG_TOKEN = "8640087886:AAGj3tevg54WEW0Qyo-rrtBlT8fRE9RuCDM";
         const TG_CHAT_ID = "-1002619697984"; 
         const TG_THREAD_ID = 5264;          
-        const CLAN_ID = "YRD9HT";
+        const CLAN_ID = "250489";
 
+        // ☁️ ПРИВЯЗКА К ТВОЕЙ СЕКРЕТНОЙ ОБЛАЧНОЙ БАЗЕ ДАННЫХ JSONBIN.IO
         const BIN_ID = "6a12294c6877513b27c06650"; 
         const MASTER_KEY = "$2a$10$v7z4/8N8GC8M8hitL86knebm9goe4YeILXuk0ApLLcpdRNJIWqjzu"; 
 
@@ -575,12 +588,11 @@
         const terminalStatusBox = document.getElementById('terminalStatusBox');
         const parsedNickText = document.getElementById('parsedNickText');
         const parsedTgText = document.getElementById('parsedTgText');
-        const dynamicBotLink = document.getElementById('dynamicBotLink');
 
         let isRosterExpanded = false;
         let isLeaderMode = false;
         let currentParsedData = null;
-        let cloudDatabase = { recruits: {}, pairs: {}, banned: [], kickedNicks: [], chatIds: {} };
+        let cloudDatabase = { recruits: {}, pairs: {}, banned: [], kickedNicks: [] };
 
         window.addEventListener('DOMContentLoaded', async () => {
             if (window.location.hash && window.location.hash !== "#welcome") {
@@ -589,25 +601,19 @@
 
             await syncWithCloud();
 
-            // 🔥 ЖЕСТКИЙ АВТО-РАЗЛОГИН ЕСЛИ ПОЛЬЗОВАТЕЛЬ БЫЛ УДАЛЕН ИЗ ОБЛАКА
+            applyGlobalKickedFilters();
+            renderLocalRecruits();
+            generateTacticalMapsGrid();
+            
             const userTg = localStorage.getItem('stage_user_registered_tg');
-            if (userTg && cloudDatabase.banned && cloudDatabase.banned.includes(userTg.trim().toLowerCase())) {
+            if (userTg && cloudDatabase.banned.includes(userTg.trim().toLowerCase())) {
                 forceAbsoluteLogout();
                 return;
             }
 
-            applyGlobalKickedFilters();
-            renderLocalRecruits();
-            generateTacticalMapsGrid();
-
-            if (localStorage.getItem('stage_leader_session_persisted') === 'true') {
-                activateLeaderMode();
-                unlockTeamFeatures();
-            } else if (localStorage.getItem('stage_team_logged') === 'true') { 
-                unlockTeamFeatures(); 
-            }
-
+            if (localStorage.getItem('stage_team_logged') === 'true') { unlockTeamFeatures(); }
             if (localStorage.getItem('stage_authorized') === 'true') { secretTgBox.style.display = 'block'; recruitBoxBtn.style.display = 'none'; }
+            if (sessionStorage.getItem('stage_leader_session') === 'true') { activateLeaderMode(); }
             
             setupDragAndDrop();
 
@@ -631,7 +637,6 @@
                         cloudDatabase.pairs = data.record.pairs || {};
                         cloudDatabase.banned = data.record.banned || [];
                         cloudDatabase.kickedNicks = data.record.kickedNicks || [];
-                        cloudDatabase.chatIds = data.record.chatIds || {};
                     }
                 }
             } catch (err) { console.error("Ошибка облачной синхронизации:", err); }
@@ -677,12 +682,12 @@
             acceptBtn.textContent = "Запись...";
             acceptBtn.disabled = true;
 
-            const userTgKey = currentParsedData.tg.trim();
-            const targetChatId = cloudDatabase.chatIds[userTgKey.toLowerCase()];
-
-            cloudDatabase.recruits[currentParsedData.nick] = Date.now();
+            const generatedPassword = "ST-" + Math.floor(1000 + Math.random() * 9000);
             
-            cloudDatabase.banned = cloudDatabase.banned.filter(tg => tg !== userTgKey.toLowerCase());
+            cloudDatabase.recruits[currentParsedData.nick] = Date.now();
+            cloudDatabase.pairs[currentParsedData.tg.trim()] = generatedPassword.trim();
+            
+            cloudDatabase.banned = cloudDatabase.banned.filter(tg => tg !== currentParsedData.tg.trim().toLowerCase());
             cloudDatabase.kickedNicks = cloudDatabase.kickedNicks.filter(n => n.toLowerCase() !== currentParsedData.nick.toLowerCase());
 
             await saveToCloud();
@@ -693,22 +698,11 @@
                 body: JSON.stringify({ 
                     chat_id: TG_CHAT_ID, 
                     message_thread_id: TG_THREAD_ID, 
-                    text: `🟢 <b>Игрок ${currentParsedData.nick} одобрен в клан STAGE!</b>\n\nЛогин ТГ: <code>${userTgKey}</code>\nID Клана: <code>${CLAN_ID}</code>`
+                    text: `🟢 <b>Игрок ${currentParsedData.nick} ПРИНЯТ в клан STAGE!</b>\n\n👤 Логин: <code>${currentParsedData.tg}</code>\n🔑 Пароль: <code>${generatedPassword}</code>\n🆔 ID Клана: <code>${CLAN_ID}</code>\n\nРапорт отправлен в личные сообщения.`
                 })
             });
 
-            if (targetChatId) {
-                fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        chat_id: targetChatId, 
-                        text: `✅ <b>Ваш аккаунт был одобрен Руководством.</b>\n\nТеперь вы можете войти на сайт.\n🆔 <b>ID Клана:</b> <code>${CLAN_ID}</code>\n\nДобро пожаловать на борт!`
-                    })
-                });
-            }
-
-            alert(`Игрок ${currentParsedData.nick} зачислен! База обновлена.`);
+            alert(`Игрок ${currentParsedData.nick} зачислен! Облачная база обновлена.`);
             
             rawTelegramInput.value = "";
             terminalStatusBox.style.display = 'none';
@@ -730,7 +724,6 @@
             localStorage.removeItem('stage_approved_list');
             localStorage.removeItem('stage_user_registered_tg');
             localStorage.removeItem('stage_team_logged');
-            localStorage.removeItem('stage_leader_session_persisted');
             location.reload();
         }
 
@@ -740,17 +733,31 @@
             }
         }
 
+        navLoginBtn.addEventListener('click', () => {
+            if(isLeaderMode || localStorage.getItem('stage_team_logged') === 'true') {
+                if(confirm("Выйти из текущей учетной записи?")) {
+                    sessionStorage.removeItem('stage_leader_session');
+                    localStorage.removeItem('stage_team_logged');
+                    location.reload();
+                }
+            } else {
+                adminEmailInput.value = ""; adminPasswordInput.value = "";
+                loginModalOverlay.classList.add('active');
+            }
+        });
+        closeLoginModalBtn.addEventListener('click', () => loginModalOverlay.classList.remove('active'));
+
         submitAdminLoginBtn.addEventListener('click', () => {
             const inputLogin = adminEmailInput.value.trim();
             const inputPassword = adminPasswordInput.value.trim();
 
-            if (cloudDatabase.banned && cloudDatabase.banned.includes(inputLogin.toLowerCase())) {
+            if (cloudDatabase.banned.includes(inputLogin.toLowerCase())) {
                 alert("Данный аккаунт заблокирован решением штаба STAGE.");
                 return;
             }
 
             if (inputLogin === SUPER_ADMIN.email && inputPassword === SUPER_ADMIN.password) {
-                localStorage.setItem('stage_leader_session_persisted', 'true');
+                sessionStorage.setItem('stage_leader_session', 'true');
                 localStorage.setItem('stage_team_logged', 'true');
                 activateLeaderMode(); unlockTeamFeatures(); loginModalOverlay.classList.remove('active');
                 alert("Доступ подтвержден. Приветствую, Глава флота STAGE!");
@@ -763,7 +770,7 @@
                 return;
             }
 
-            if (cloudDatabase.pairs && cloudDatabase.pairs[inputLogin] && cloudDatabase.pairs[inputLogin] === inputPassword) {
+            if (cloudDatabase.pairs[inputLogin] && cloudDatabase.pairs[inputLogin] === inputPassword) {
                 localStorage.setItem('stage_team_logged', 'true');
                 localStorage.setItem('stage_user_registered_tg', inputLogin);
                 unlockTeamFeatures(); loginModalOverlay.classList.remove('active');
@@ -775,7 +782,6 @@
         });
 
         function applyGlobalKickedFilters() {
-            if(!cloudDatabase.kickedNicks) return;
             cloudDatabase.kickedNicks.forEach(kickedNick => {
                 const cardToRemove = document.querySelector(`.player-card[data-nick="${kickedNick}"]`);
                 if (cardToRemove) cardToRemove.remove();
@@ -787,13 +793,13 @@
             document.getElementById('boardLockBox').style.display = 'none';
             document.getElementById('mapsActualGrid').style.display = 'grid';
             document.getElementById('boardActualContainer').style.display = 'flex';
-            navLoginBtn.innerHTML = `<i class="fa-solid fa-user-check" style="color:#00f2fe;"></i> Выйти`;
+            navLoginBtn.innerHTML = `<i class="fa-solid fa-user-check" style="color:#00f2fe;"></i> В команде`;
             navLoginBtn.style.background = "rgba(0, 242, 254, 0.15)"; navLoginBtn.style.borderColor = "#00f2fe";
         }
 
         function activateLeaderMode() {
             isLeaderMode = true; adminBadge.style.display = 'block'; navStatsBtn.style.display = 'block'; 
-            navLoginBtn.innerHTML = `<i class="fa-solid fa-user-gear" style="color:#ff0055;"></i> Выйти`;
+            navLoginBtn.innerHTML = `<i class="fa-solid fa-user-gear" style="color:#ff0055;"></i> Админ`;
             navLoginBtn.style.background = "rgba(255, 0, 85, 0.15)"; navLoginBtn.style.borderColor = "#ff0055";
             document.querySelectorAll('.kick-btn').forEach(btn => btn.style.display = 'inline-block');
         }
@@ -838,39 +844,37 @@
                 if (mapFileName && mapFileName.includes('.png')) {
                     const fullMapUrl = window.location.origin + '/' + mapFileName;
                     excalidrawFrame.contentWindow.postMessage({ type: "excalidraw-load-image", url: fullMapUrl }, "*");
-                    alert("Тактическая Карта развернута на холсте!");
+                    alert(`Тактическая Карта №${mapFileName.replace(/\D/g, '')} развернута на холсте!`);
                 }
             });
         }
-
-        openModalBtn.addEventListener('click', () => { 
-            document.getElementById('modalOverlay').classList.add('active'); 
-            recruitForm.style.display = 'block'; verifyBlock.style.display = 'none';
-            document.getElementById('successResult').style.display = 'none';
-            lawAgree.checked = false; submitBtn.disabled = true; 
-        });
 
         checkVerifyBtn.addEventListener('click', () => {
             let inputNick = verifyTgInput.value.trim().toLowerCase();
             if(!inputNick.startsWith('@')) { inputNick = '@' + inputNick; }
             
-            if(cloudDatabase.banned && cloudDatabase.banned.includes(inputNick)) { alert("Доступ заблокирован."); return; }
+            if(cloudDatabase.banned.includes(inputNick)) { alert("Доступ заблокирован штабом клана."); return; }
 
-            if (APPROVED_TELEGRAMS.map(v => v.toLowerCase()).includes(inputNick) || cloudDatabase.pairs[verifyTgInput.value.trim()]) {
+            const localApproved = JSON.parse(localStorage.getItem('stage_approved_list')) || [];
+            if (APPROVED_TELEGRAMS.map(v => v.toLowerCase()).includes(inputNick) || localApproved.includes(inputNick) || cloudDatabase.pairs[verifyTgInput.value.trim()]) {
                 localStorage.setItem('stage_authorized', 'true');
                 localStorage.setItem('stage_user_registered_tg', verifyTgInput.value.trim()); 
                 secretTgBox.style.display = 'block'; recruitBoxBtn.style.display = 'none';
                 document.getElementById('modalOverlay').classList.remove('active');
-                alert("Верификация пройдена!");
-            } else { alert("Ошибка! Допуск не найден."); }
+                alert("Верификация пройдена успешно! Доступ к ссылке чата открыт.");
+            } else { alert("Ошибка! Ваш Telegram-никнейм не найден в списке одобренных. Пройдите авторизацию через 'Вход' вверху."); }
         });
+
+        function removePlayerCardsByNick(nick) {
+            const cards = document.querySelectorAll(`.player-card[data-nick="${nick}"]`);
+            cards.forEach(c => c.remove());
+        }
 
         function renderLocalRecruits() {
             document.querySelectorAll('.player-card.new-recruit-dynamic').forEach(c => c.remove());
             const oneDayInMs = 24 * 60 * 60 * 1000;
             const now = Date.now();
 
-            if(!cloudDatabase.recruits) return;
             for (let nick in cloudDatabase.recruits) {
                 const approveTime = cloudDatabase.recruits[nick];
                 const card = document.createElement('div');
@@ -892,24 +896,28 @@
 
         window.kickPlayer = async function(element, nick, isStatic = true) {
             if (!isLeaderMode) return;
-            if (confirm(`Исключить игрока ${nick}?`)) {
+            if (confirm(`Исключить игрока ${nick} из состава? Логин и пароль будут аннулированы везде.`)) {
+                
                 const cleanNick = nick.replace(/\s+/g, '').toLowerCase();
                 const possibleTgs = [`@${cleanNick}`, `@${cleanNick}_mw`, `@${cleanNick}_stage`, `@${cleanNick}mw`, `@${cleanNick}stage`];
                 
                 delete cloudDatabase.recruits[nick];
                 possibleTgs.forEach(tg => {
                     delete cloudDatabase.pairs[tg];
-                    delete cloudDatabase.chatIds[tg];
+                    for(let key in cloudDatabase.pairs) {
+                        if(key.toLowerCase() === tg) delete cloudDatabase.pairs[key];
+                    }
                     if(!cloudDatabase.banned.includes(tg)) cloudDatabase.banned.push(tg);
                 });
 
-                if (isStatic && !cloudDatabase.kickedNicks.includes(nick)) { 
-                    cloudDatabase.kickedNicks.push(nick);
+                if (isStatic) { 
+                    if(!cloudDatabase.kickedNicks.includes(nick)) cloudDatabase.kickedNicks.push(nick);
                 }
 
                 await saveToCloud();
+                
                 element.parentElement.remove(); 
-                alert("Игрок удален.");
+                alert(`Игрок ${nick} успешно вырезан из глобальной базы данных сайта на всех устройствах.`);
             }
         }
 
@@ -924,60 +932,53 @@
         });
 
         lawAgree.addEventListener('change', function() { submitBtn.disabled = !this.checked; });
+        openModalBtn.addEventListener('click', () => { 
+            document.getElementById('modalOverlay').classList.add('active'); 
+            recruitForm.style.display = 'block'; verifyBlock.style.display = 'none';
+            document.getElementById('successResult').style.display = 'none';
+            lawAgree.checked = false; submitBtn.disabled = true; 
+        });
 
         const openLawModal = () => lawModalOverlay.classList.add('active');
         const closeLawModal = () => lawModalOverlay.classList.remove('active');
-        navLawBtn.addEventListener('click', openLawModal);
+        openLawBtn.addEventListener('click', openLawModal); navLawBtn.addEventListener('click', openLawModal);
         closeLawModalBtn.addEventListener('click', closeLawModal); acceptLawBtn.addEventListener('click', closeLawModal);
 
-        // 🔥 ИСПРАВЛЕНА ЛОГИКА ОТПРАВКИ ФОРМЫ (ИСПРАВЛЕНЫ ID ПЕРЕМЕННЫХ СИТУАЦИИ СДВИГА)
-        recruitForm.addEventListener('submit', async function(e) {
-            e.preventDefault(); submitBtn.textContent = "Передача...";
-            
-            const userLoginTg = document.getElementById('gameId').value.trim();
-            const userPassword = document.getElementById('gameNick').value.trim();
-            const gameNickname = document.getElementById('tgLink').value.trim();
-
-            let cleanLogin = userLoginTg;
-            if(!cleanLogin.startsWith('@')) cleanLogin = '@' + cleanLogin;
-
-            if(!cloudDatabase.pairs) cloudDatabase.pairs = {};
-            cloudDatabase.pairs[cleanLogin] = userPassword;
-            await saveToCloud();
-
-            const textMessage = `⚓️ <b>Новая регистрация STAGE!</b>\n\n👤 <b>Ник:</b> ${gameNickname}\n✈️ <b>TG (Логин):</b> ${cleanLogin}`;
-            
-            fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
-                method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: TG_CHAT_ID, message_thread_id: TG_THREAD_ID, text: textMessage, parse_mode: 'html' })
-            });
-
-            const encodedParam = btoa(`${cleanLogin}:${gameNickname}`);
-            dynamicBotLink.href = `https://t.me/StageClanRecruit_bot?start=${encodedParam}`;
-
-            recruitForm.style.display = 'none'; 
-            document.getElementById('successResult').style.display = 'block'; 
-            totalRequests++; localStorage.setItem('stage_requests_count', totalRequests.toString());
-            submitBtn.textContent = "Отправить заявку";
-        });
-
-        // 🔥 ЛОГИКА КНОПКИ РАЗВЕРТЫВАНИЯ ДОСКИ ВО ВЕСЬ ЭКРАН С УЧЕТОМ КОРРЕКТНЫХ СТИЛЕЙ
         toggleFullscreenBtn.addEventListener('click', () => {
             const isCurrentlyFullscreen = boardContainer.classList.contains('fullscreen-active');
             if (!isCurrentlyFullscreen) {
                 boardContainer.classList.add('fullscreen-active');
-                toggleFullscreenBtn.innerHTML = `<i class="fa-solid fa-compress"></i> Свернуть доску`;
-                // Перемещаем кнопку наверх для удобства
                 toggleFullscreenBtn.style.position = "fixed";
-                toggleFullscreenBtn.style.top = "20px";
-                toggleFullscreenBtn.style.right = "20px";
+                toggleFullscreenBtn.style.top = "15px";
+                toggleFullscreenBtn.style.right = "15px";
+                toggleFullscreenBtn.style.zIndex = "10000";
+                toggleFullscreenBtn.innerHTML = `<i class="fa-solid fa-compress"></i> Свернуть доску`;
             } else {
                 boardContainer.classList.remove('fullscreen-active');
+                toggleFullscreenBtn.style.position = "static";
                 toggleFullscreenBtn.innerHTML = `<i class="fa-solid fa-expand"></i> Развернуть во весь экран`;
-                toggleFullscreenBtn.style.position = "relative";
-                toggleFullscreenBtn.style.top = "0";
-                toggleFullscreenBtn.style.right = "0";
             }
+        });
+
+        recruitForm.addEventListener('submit', function(e) {
+            e.preventDefault(); submitBtn.textContent = "Передача...";
+            const gameNick = document.getElementById('gameNick').value.trim();
+            const gameId = document.getElementById('gameId').value.trim();
+            let tgLink = document.getElementById('tgLink').value.trim();
+            if(!tgLink.startsWith('@')) tgLink = '@' + tgLink;
+
+            const textMessage = `⚓️ <b>Новая заявка STAGE!</b>\n\n👤 <b>Ник:</b> ${gameNick}\n🆔 <b>ID:</b> ${gameId}\n✈️ <b>TG:</b> ${tgLink}`;
+            
+            fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: TG_CHAT_ID, message_thread_id: TG_THREAD_ID, text: textMessage, parse_mode: 'html' })
+            }).then(response => {
+                if (response.ok) { 
+                    recruitForm.style.display = 'none'; document.getElementById('successResult').style.display = 'block'; 
+                    totalRequests++; localStorage.setItem('stage_requests_count', totalRequests.toString());
+                } else { alert("Ошибка отправки заявки!"); }
+                submitBtn.textContent = "Отправить заявку";
+            });
         });
     </script>
 </body>
