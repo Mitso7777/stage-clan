@@ -166,6 +166,7 @@
         .btn-reset-auth { display: block; background: none; border: none; color: rgba(255, 255, 255, 0.3); font-size: 11px; text-decoration: underline; cursor: pointer; margin-top: 15px; font-family: inherit; width: 100%; text-align: center; transition: color 0.2s; }
         .btn-reset-auth:hover { color: #ff0055; }
 
+        /* КНОПКА В TELEGRAM СТИЛЕ (СИНЯЯ С ПОДСВЕТКОЙ) */
         .btn-join-neon {
             background: rgba(0, 136, 204, 0.1); 
             border: 2px solid #0088cc; 
@@ -455,7 +456,7 @@
 
             <div class="success-result" id="successResult">
                 <div class="modal-title" style="color: #00f2fe;">Заявка в штабе</div>
-                <p style="text-align:center; margin-bottom:12px; color: #94a3b8; font-size: 14px;">Данные отправлены. Чтобы бот смог прислать вам **Логин и Пароль** после одобрения главой, обязательно запустите бота.</p>
+                <p style="text-align:center; margin-bottom:12px; color: #94a3b8; font-size: 14px;">Данные отправлены. Чтобы бот смог автоматически прислать вам **Логин и Пароль** после одобрения главой, обязательно запустите бота.</p>
                 <a href="https://t.me/StageMv_bot" target="_blank" class="btn-submit" style="display:inline-block; text-decoration:none; margin-bottom:10px; background:#0088cc; color:#fff; text-align:center; padding:10px 0; width:100%; border-radius: 30px;">1. Активировать бота в ТГ</a>
                 <button type="button" class="btn-submit" onclick="document.getElementById('modalOverlay').classList.remove('active');" style="background:#1e293b; color:#94a3b8;">2. Закрыть окно</button>
             </div>
@@ -523,7 +524,7 @@
         const CLAN_ID = "250489";
 
         // ☁️ ПРИВЯЗКА К ТВОЕЙ СЕКРЕТНОЙ ОБЛАЧНОЙ БАЗЕ ДАННЫХ JSONBIN.IO
-        const BIN_ID = "6a02b1f0e42910e117caa003"; 
+        const BIN_ID = "6a12294c6877513b27c06650"; 
         const MASTER_KEY = "$2a$10$v7z4/8N8GC8M8hitL86knebm9goe4YeILXuk0ApLLcpdRNJIWqjzu"; 
 
         const SUPER_ADMIN = { email: "admin@stage.ru", password: "stage2026" };
@@ -863,6 +864,11 @@
                 alert("Верификация пройдена успешно! Доступ к ссылке чата открыт.");
             } else { alert("Ошибка! Ваш Telegram-никнейм не найден в списке одобренных. Пройдите авторизацию через 'Вход' вверху."); }
         });
+
+        function removePlayerCardsByNick(nick) {
+            const cards = document.querySelectorAll(`.player-card[data-nick="${nick}"]`);
+            cards.forEach(c => c.remove());
+        }
 
         function renderLocalRecruits() {
             document.querySelectorAll('.player-card.new-recruit-dynamic').forEach(c => c.remove());
