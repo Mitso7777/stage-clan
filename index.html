@@ -106,7 +106,8 @@
             background-attachment: fixed;
         }
 
-        /* АНИМАЦИЯ ПОЯВЛЕНИЯ КОНТЕНТА */
+        .maps-screen, .board-screen { display: none; }
+
         .welcome-screen > *, .roster-container, .social-container, .founders-grid, .section-title, .recruit-box, .secret-tg-box, .sub-section-title, .maps-grid, .board-container, .btn-fullscreen-toggle, .lock-overlay-box {
             opacity: 0;
             transform: translateY(30px);
@@ -203,11 +204,13 @@
         .btn-map-download:hover { background: #00f2fe; color: #02050a; box-shadow: 0 0 15px rgba(0, 242, 254, 0.3); }
 
         .board-screen { background-image: linear-gradient(rgba(2, 5, 10, 0.75), rgba(2, 5, 10, 0.9)), url('board_bg.png'); }
-        .btn-fullscreen-toggle { background: rgba(168, 85, 247, 0.1); border: 2px solid #a855f7; color: #a855f7; padding: 10px 24px; border-radius: 4px; font-family: 'Orbitron', sans-serif; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; margin-bottom: 20px; box-shadow: 0 0 15px rgba(168, 85, 247, 0.2); transition: all 0.3s ease; display: flex; align-items: center; gap: 10px; outline: none; }
+        .btn-fullscreen-toggle { background: rgba(168, 85, 247, 0.1); border: 2px solid #a855f7; color: #a855f7; padding: 10px 24px; border-radius: 4px; font-family: 'Orbitron', sans-serif; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; margin-bottom: 20px; box-shadow: 0 0 15px rgba(168, 85, 247, 0.2); transition: all 0.3s ease; display: flex; align-items: center; gap: 10px; outline: none; z-index: 10001; position: relative; }
         .btn-fullscreen-toggle:hover { background: #a855f7; color: #ffffff; box-shadow: 0 0 25px rgba(168, 85, 247, 0.6); transform: translateY(-2px); }
-        .board-container { max-width: 1200px; width: 100%; height: 65vh; border: 2px solid #a855f7; border-radius: 8px; box-shadow: 0 0 30px rgba(168, 85, 247, 0.2); overflow: hidden; background: #121212; position: relative; transition: all 0.4s ease; }
+        .board-container { max-width: 1200px; width: 100%; height: 65vh; border: 2px solid #a855f7; border-radius: 8px; box-shadow: 0 0 30px rgba(168, 85, 247, 0.2); overflow: hidden; background: #121212; position: relative; transition: all 0.3s ease; }
         .board-container.drag-over { border-color: #00f2fe; box-shadow: 0 0 40px rgba(0, 242, 254, 0.4); }
-        .board-container.fullscreen-active { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; max-width: 100vw; z-index: 9999; border-radius: 0; border: none; }
+        
+        /* ИСПРАВЛЕН ПОЛНОЭКРАННЫЙ СТИЛЬ КОНТЕЙНЕРА */
+        .board-container.fullscreen-active { position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important; max-width: 100vw !important; z-index: 9999 !important; border-radius: 0 !important; border: none !important; }
         .board-frame { width: 100%; height: 100%; border: none; }
 
         .lock-overlay-box { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px; background: rgba(11, 18, 31, 0.85); border: 2px dashed #a855f7; border-radius: 8px; max-width: 500px; width: 100%; margin: 40px auto; box-shadow: 0 0 30px rgba(168, 85, 247, 0.15); backdrop-filter: blur(10px); }
@@ -277,7 +280,7 @@
         .btn-terminal-reject { flex: 1; padding: 8px; background: #ef4444; border: none; font-family: 'Orbitron', sans-serif; font-weight: 900; color: #fff; border-radius: 4px; cursor: pointer; text-transform: uppercase; font-size: 12px; text-align: center; }
 
         @media (max-width: 768px) {
-            .nav-bar { top: auto; bottom: 15px; padding: 8px 15px; gap: 4px; width: 98%; left: 50%; transform: translateX(-50%); }
+            .nav-bar { top: auto; bottom: 15px; padding: 8px 15px; gap: 4px; width: 98%; left: 50%; transform: translateX(-50%); z-index: 10002; }
             .nav-links-left { gap: 6px; }
             .nav-links-right { gap: 6px; padding-left: 6px; }
             .nav-bar a, .nav-bar span.nav-link-btn { font-size: 8px; letter-spacing: 0.3px; }
@@ -288,6 +291,7 @@
             .toggle-roster-btn { display: block; }
             .maps-grid { grid-template-columns: 1fr; gap: 15px; }
             .board-container { height: 50vh; }
+            .board-container.fullscreen-active { height: 100vh !important; }
             .stats-grid { grid-template-columns: 1fr; }
             .founders-grid { grid-template-columns: 1fr; }
         }
@@ -585,15 +589,16 @@
 
             await syncWithCloud();
 
-            applyGlobalKickedFilters();
-            renderLocalRecruits();
-            generateTacticalMapsGrid();
-            
+            // 🔥 ЖЕСТКИЙ АВТО-РАЗЛОГИН ЕСЛИ ПОЛЬЗОВАТЕЛЬ БЫЛ УДАЛЕН ИЗ ОБЛАКА
             const userTg = localStorage.getItem('stage_user_registered_tg');
-            if (userTg && cloudDatabase.banned.includes(userTg.trim().toLowerCase())) {
+            if (userTg && cloudDatabase.banned && cloudDatabase.banned.includes(userTg.trim().toLowerCase())) {
                 forceAbsoluteLogout();
                 return;
             }
+
+            applyGlobalKickedFilters();
+            renderLocalRecruits();
+            generateTacticalMapsGrid();
 
             if (localStorage.getItem('stage_leader_session_persisted') === 'true') {
                 activateLeaderMode();
@@ -613,7 +618,6 @@
             sections.forEach(s => observer.observe(s));
         });
 
-        // 🔥 ИСПРАВЛЕННАЯ СИНХРОНИЗАЦИЯ С АВТОЗАПОЛНЕНИЕМ ДЛЯ ПУСТОЙ БАЗЫ ДАННЫХ
         async function syncWithCloud() {
             if(BIN_ID.includes("ВСТАВЬ_СЮДА")) return; 
             try {
@@ -623,7 +627,6 @@
                 if (response.ok) {
                     const data = await response.json();
                     if(data.record) {
-                        // Если в базе пусто, подставляем пустые структуры, чтобы не ломался код
                         cloudDatabase.recruits = data.record.recruits || {};
                         cloudDatabase.pairs = data.record.pairs || {};
                         cloudDatabase.banned = data.record.banned || [];
@@ -722,7 +725,6 @@
             currentParsedData = null;
         }
 
-        // 🔥 ИСПРАВЛЕННАЯ ФУНКЦИЯ ВЫХОДА ДЛЯ ВСЕХ ТИПОВ СЕССИЙ (И АДМИНА, И ЮЗЕРОВ)
         function forceAbsoluteLogout() {
             localStorage.removeItem('stage_authorized');
             localStorage.removeItem('stage_approved_list');
@@ -737,18 +739,6 @@
                 forceAbsoluteLogout();
             }
         }
-
-        navLoginBtn.addEventListener('click', () => {
-            if(isLeaderMode || localStorage.getItem('stage_team_logged') === 'true') {
-                if(confirm("Выйти из текущей учетной записи?")) {
-                    forceAbsoluteLogout();
-                }
-            } else {
-                adminEmailInput.value = ""; adminPasswordInput.value = "";
-                loginModalOverlay.classList.add('active');
-            }
-        });
-        closeLoginModalBtn.addEventListener('click', () => loginModalOverlay.classList.remove('active'));
 
         submitAdminLoginBtn.addEventListener('click', () => {
             const inputLogin = adminEmailInput.value.trim();
@@ -853,7 +843,6 @@
             });
         }
 
-        // 🔥 ИСПРАВЛЕННАЯ КНОПКА ОТКРЫТИЯ МОДАЛКИ (ТЕПЕРЬ СЛУШАТЕЛЬ НЕ ПАДАЕТ)
         openModalBtn.addEventListener('click', () => { 
             document.getElementById('modalOverlay').classList.add('active'); 
             recruitForm.style.display = 'block'; verifyBlock.style.display = 'none';
@@ -941,22 +930,7 @@
         navLawBtn.addEventListener('click', openLawModal);
         closeLawModalBtn.addEventListener('click', closeLawModal); acceptLawBtn.addEventListener('click', closeLawModal);
 
-        toggleFullscreenBtn.addEventListener('click', () => {
-            const isCurrentlyFullscreen = boardContainer.classList.contains('fullscreen-active');
-            if (!isCurrentlyFullscreen) {
-                boardContainer.classList.add('fullscreen-active');
-                toggleFullscreenBtn.style.position = "fixed";
-                toggleFullscreenBtn.style.top = "15px";
-                toggleFullscreenBtn.style.right = "15px";
-                toggleFullscreenBtn.style.zIndex = "10000";
-                toggleFullscreenBtn.innerHTML = `<i class="fa-solid fa-compress"></i> Свернуть доску`;
-            } else {
-                boardContainer.classList.remove('fullscreen-active');
-                toggleFullscreenBtn.style.position = "static";
-                toggleFullscreenBtn.innerHTML = `<i class="fa-solid fa-expand"></i> Развернуть во весь экран`;
-            }
-        });
-
+        // 🔥 ИСПРАВЛЕНА ЛОГИКА ОТПРАВКИ ФОРМЫ (ИСПРАВЛЕНЫ ID ПЕРЕМЕННЫХ СИТУАЦИИ СДВИГА)
         recruitForm.addEventListener('submit', async function(e) {
             e.preventDefault(); submitBtn.textContent = "Передача...";
             
@@ -985,6 +959,25 @@
             document.getElementById('successResult').style.display = 'block'; 
             totalRequests++; localStorage.setItem('stage_requests_count', totalRequests.toString());
             submitBtn.textContent = "Отправить заявку";
+        });
+
+        // 🔥 ЛОГИКА КНОПКИ РАЗВЕРТЫВАНИЯ ДОСКИ ВО ВЕСЬ ЭКРАН С УЧЕТОМ КОРРЕКТНЫХ СТИЛЕЙ
+        toggleFullscreenBtn.addEventListener('click', () => {
+            const isCurrentlyFullscreen = boardContainer.classList.contains('fullscreen-active');
+            if (!isCurrentlyFullscreen) {
+                boardContainer.classList.add('fullscreen-active');
+                toggleFullscreenBtn.innerHTML = `<i class="fa-solid fa-compress"></i> Свернуть доску`;
+                // Перемещаем кнопку наверх для удобства
+                toggleFullscreenBtn.style.position = "fixed";
+                toggleFullscreenBtn.style.top = "20px";
+                toggleFullscreenBtn.style.right = "20px";
+            } else {
+                boardContainer.classList.remove('fullscreen-active');
+                toggleFullscreenBtn.innerHTML = `<i class="fa-solid fa-expand"></i> Развернуть во весь экран`;
+                toggleFullscreenBtn.style.position = "relative";
+                toggleFullscreenBtn.style.top = "0";
+                toggleFullscreenBtn.style.right = "0";
+            }
         });
     </script>
 </body>
