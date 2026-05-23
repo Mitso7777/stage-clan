@@ -106,8 +106,7 @@
             background-attachment: fixed;
         }
 
-        .maps-screen, .board-screen { display: none; }
-
+        /* АНИМАЦИЯ ПОЯВЛЕНИЯ КОНТЕНТА */
         .welcome-screen > *, .roster-container, .social-container, .founders-grid, .section-title, .recruit-box, .secret-tg-box, .sub-section-title, .maps-grid, .board-container, .btn-fullscreen-toggle, .lock-overlay-box {
             opacity: 0;
             transform: translateY(30px);
@@ -508,7 +507,6 @@
         const TG_THREAD_ID = 5264;          
         const CLAN_ID = "YRD9HT";
 
-        // ☁️ ПРИВЯЗКА К ТВОЕЙ СЕКРЕТНОЙ ОБЛАЧНОЙ БАЗЕ ДАННЫХ JSONBIN.IO
         const BIN_ID = "6a12294c6877513b27c06650"; 
         const MASTER_KEY = "$2a$10$v7z4/8N8GC8M8hitL86knebm9goe4YeILXuk0ApLLcpdRNJIWqjzu"; 
 
@@ -615,6 +613,7 @@
             sections.forEach(s => observer.observe(s));
         });
 
+        // 🔥 ИСПРАВЛЕННАЯ СИНХРОНИЗАЦИЯ С АВТОЗАПОЛНЕНИЕМ ДЛЯ ПУСТОЙ БАЗЫ ДАННЫХ
         async function syncWithCloud() {
             if(BIN_ID.includes("ВСТАВЬ_СЮДА")) return; 
             try {
@@ -624,6 +623,7 @@
                 if (response.ok) {
                     const data = await response.json();
                     if(data.record) {
+                        // Если в базе пусто, подставляем пустые структуры, чтобы не ломался код
                         cloudDatabase.recruits = data.record.recruits || {};
                         cloudDatabase.pairs = data.record.pairs || {};
                         cloudDatabase.banned = data.record.banned || [];
@@ -722,6 +722,7 @@
             currentParsedData = null;
         }
 
+        // 🔥 ИСПРАВЛЕННАЯ ФУНКЦИЯ ВЫХОДА ДЛЯ ВСЕХ ТИПОВ СЕССИЙ (И АДМИНА, И ЮЗЕРОВ)
         function forceAbsoluteLogout() {
             localStorage.removeItem('stage_authorized');
             localStorage.removeItem('stage_approved_list');
@@ -737,11 +738,23 @@
             }
         }
 
+        navLoginBtn.addEventListener('click', () => {
+            if(isLeaderMode || localStorage.getItem('stage_team_logged') === 'true') {
+                if(confirm("Выйти из текущей учетной записи?")) {
+                    forceAbsoluteLogout();
+                }
+            } else {
+                adminEmailInput.value = ""; adminPasswordInput.value = "";
+                loginModalOverlay.classList.add('active');
+            }
+        });
+        closeLoginModalBtn.addEventListener('click', () => loginModalOverlay.classList.remove('active'));
+
         submitAdminLoginBtn.addEventListener('click', () => {
             const inputLogin = adminEmailInput.value.trim();
             const inputPassword = adminPasswordInput.value.trim();
 
-            if (cloudDatabase.banned.includes(inputLogin.toLowerCase())) {
+            if (cloudDatabase.banned && cloudDatabase.banned.includes(inputLogin.toLowerCase())) {
                 alert("Данный аккаунт заблокирован решением штаба STAGE.");
                 return;
             }
@@ -760,7 +773,7 @@
                 return;
             }
 
-            if (cloudDatabase.pairs[inputLogin] && cloudDatabase.pairs[inputLogin] === inputPassword) {
+            if (cloudDatabase.pairs && cloudDatabase.pairs[inputLogin] && cloudDatabase.pairs[inputLogin] === inputPassword) {
                 localStorage.setItem('stage_team_logged', 'true');
                 localStorage.setItem('stage_user_registered_tg', inputLogin);
                 unlockTeamFeatures(); loginModalOverlay.classList.remove('active');
@@ -772,6 +785,7 @@
         });
 
         function applyGlobalKickedFilters() {
+            if(!cloudDatabase.kickedNicks) return;
             cloudDatabase.kickedNicks.forEach(kickedNick => {
                 const cardToRemove = document.querySelector(`.player-card[data-nick="${kickedNick}"]`);
                 if (cardToRemove) cardToRemove.remove();
@@ -783,13 +797,13 @@
             document.getElementById('boardLockBox').style.display = 'none';
             document.getElementById('mapsActualGrid').style.display = 'grid';
             document.getElementById('boardActualContainer').style.display = 'flex';
-            navLoginBtn.innerHTML = `<i class="fa-solid fa-user-check" style="color:#00f2fe;"></i> В команде`;
+            navLoginBtn.innerHTML = `<i class="fa-solid fa-user-check" style="color:#00f2fe;"></i> Выйти`;
             navLoginBtn.style.background = "rgba(0, 242, 254, 0.15)"; navLoginBtn.style.borderColor = "#00f2fe";
         }
 
         function activateLeaderMode() {
             isLeaderMode = true; adminBadge.style.display = 'block'; navStatsBtn.style.display = 'block'; 
-            navLoginBtn.innerHTML = `<i class="fa-solid fa-user-gear" style="color:#ff0055;"></i> Админ`;
+            navLoginBtn.innerHTML = `<i class="fa-solid fa-user-gear" style="color:#ff0055;"></i> Выйти`;
             navLoginBtn.style.background = "rgba(255, 0, 85, 0.15)"; navLoginBtn.style.borderColor = "#ff0055";
             document.querySelectorAll('.kick-btn').forEach(btn => btn.style.display = 'inline-block');
         }
@@ -834,25 +848,32 @@
                 if (mapFileName && mapFileName.includes('.png')) {
                     const fullMapUrl = window.location.origin + '/' + mapFileName;
                     excalidrawFrame.contentWindow.postMessage({ type: "excalidraw-load-image", url: fullMapUrl }, "*");
-                    alert(`Тактическая Карта №${mapFileName.replace(/\D/g, '')} развернута на холсте!`);
+                    alert("Тактическая Карта развернута на холсте!");
                 }
             });
         }
+
+        // 🔥 ИСПРАВЛЕННАЯ КНОПКА ОТКРЫТИЯ МОДАЛКИ (ТЕПЕРЬ СЛУШАТЕЛЬ НЕ ПАДАЕТ)
+        openModalBtn.addEventListener('click', () => { 
+            document.getElementById('modalOverlay').classList.add('active'); 
+            recruitForm.style.display = 'block'; verifyBlock.style.display = 'none';
+            document.getElementById('successResult').style.display = 'none';
+            lawAgree.checked = false; submitBtn.disabled = true; 
+        });
 
         checkVerifyBtn.addEventListener('click', () => {
             let inputNick = verifyTgInput.value.trim().toLowerCase();
             if(!inputNick.startsWith('@')) { inputNick = '@' + inputNick; }
             
-            if(cloudDatabase.banned.includes(inputNick)) { alert("Доступ заблокирован штабом клана."); return; }
+            if(cloudDatabase.banned && cloudDatabase.banned.includes(inputNick)) { alert("Доступ заблокирован."); return; }
 
-            const localApproved = JSON.parse(localStorage.getItem('stage_approved_list')) || [];
-            if (APPROVED_TELEGRAMS.map(v => v.toLowerCase()).includes(inputNick) || localApproved.includes(inputNick) || cloudDatabase.pairs[verifyTgInput.value.trim()]) {
+            if (APPROVED_TELEGRAMS.map(v => v.toLowerCase()).includes(inputNick) || cloudDatabase.pairs[verifyTgInput.value.trim()]) {
                 localStorage.setItem('stage_authorized', 'true');
                 localStorage.setItem('stage_user_registered_tg', verifyTgInput.value.trim()); 
                 secretTgBox.style.display = 'block'; recruitBoxBtn.style.display = 'none';
                 document.getElementById('modalOverlay').classList.remove('active');
-                alert("Верификация пройдена успешно! Доступ к ссылке чата открыт.");
-            } else { alert("Ошибка! Ваш Telegram-никнейм не найден в списке одобренных. Пройдите авторизацию через 'Вход' вверху."); }
+                alert("Верификация пройдена!");
+            } else { alert("Ошибка! Допуск не найден."); }
         });
 
         function renderLocalRecruits() {
@@ -860,6 +881,7 @@
             const oneDayInMs = 24 * 60 * 60 * 1000;
             const now = Date.now();
 
+            if(!cloudDatabase.recruits) return;
             for (let nick in cloudDatabase.recruits) {
                 const approveTime = cloudDatabase.recruits[nick];
                 const card = document.createElement('div');
@@ -881,8 +903,7 @@
 
         window.kickPlayer = async function(element, nick, isStatic = true) {
             if (!isLeaderMode) return;
-            if (confirm(`Исключить игрока ${nick} из состава? Логин и пароль будут аннулированы везде.`)) {
-                
+            if (confirm(`Исключить игрока ${nick}?`)) {
                 const cleanNick = nick.replace(/\s+/g, '').toLowerCase();
                 const possibleTgs = [`@${cleanNick}`, `@${cleanNick}_mw`, `@${cleanNick}_stage`, `@${cleanNick}mw`, `@${cleanNick}stage`];
                 
@@ -890,20 +911,16 @@
                 possibleTgs.forEach(tg => {
                     delete cloudDatabase.pairs[tg];
                     delete cloudDatabase.chatIds[tg];
-                    for(let key in cloudDatabase.pairs) {
-                        if(key.toLowerCase() === tg) delete cloudDatabase.pairs[key];
-                    }
                     if(!cloudDatabase.banned.includes(tg)) cloudDatabase.banned.push(tg);
                 });
 
-                if (isStatic) { 
-                    if(!cloudDatabase.kickedNicks.includes(nick)) cloudDatabase.kickedNicks.push(nick);
+                if (isStatic && !cloudDatabase.kickedNicks.includes(nick)) { 
+                    cloudDatabase.kickedNicks.push(nick);
                 }
 
                 await saveToCloud();
-                
                 element.parentElement.remove(); 
-                alert(`Игрок ${nick} успешно вырезан из глобальной базы данных сайта на всех устройствах.`);
+                alert("Игрок удален.");
             }
         }
 
@@ -918,16 +935,10 @@
         });
 
         lawAgree.addEventListener('change', function() { submitBtn.disabled = !this.checked; });
-        openModalBtn.addEventListener('click', () => { 
-            document.getElementById('modalOverlay').classList.add('active'); 
-            recruitForm.style.display = 'block'; verifyBlock.style.display = 'none';
-            document.getElementById('successResult').style.display = 'none';
-            lawAgree.checked = false; submitBtn.disabled = true; 
-        });
 
         const openLawModal = () => lawModalOverlay.classList.add('active');
         const closeLawModal = () => lawModalOverlay.classList.remove('active');
-        openLawBtn.addEventListener('click', openLawModal); navLawBtn.addEventListener('click', openLawModal);
+        navLawBtn.addEventListener('click', openLawModal);
         closeLawModalBtn.addEventListener('click', closeLawModal); acceptLawBtn.addEventListener('click', closeLawModal);
 
         toggleFullscreenBtn.addEventListener('click', () => {
@@ -956,6 +967,7 @@
             let cleanLogin = userLoginTg;
             if(!cleanLogin.startsWith('@')) cleanLogin = '@' + cleanLogin;
 
+            if(!cloudDatabase.pairs) cloudDatabase.pairs = {};
             cloudDatabase.pairs[cleanLogin] = userPassword;
             await saveToCloud();
 
@@ -966,7 +978,6 @@
                 body: JSON.stringify({ chat_id: TG_CHAT_ID, message_thread_id: TG_THREAD_ID, text: textMessage, parse_mode: 'html' })
             });
 
-            // 🔥 ЮЗЕРНЕЙМ БОТА ИСПРАВЛЕН НА StageClanRecruit_bot ДЛЯ СТАРТА ПРИВЯЗКИ ЛОГИНА И НИКА В ТГ
             const encodedParam = btoa(`${cleanLogin}:${gameNickname}`);
             dynamicBotLink.href = `https://t.me/StageClanRecruit_bot?start=${encodedParam}`;
 
