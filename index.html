@@ -62,9 +62,10 @@
             text-shadow: 0 0 10px rgba(0, 242, 254, 0.6);
         }
 
+        #navMapsLink, #navBoardLink, #navStatsBtn { display: none; }
         #navMapsLink, #navBoardLink { color: #a855f7; }
         #navMapsLink:hover, #navBoardLink:hover { color: #c084fc; text-shadow: 0 0 10px rgba(168, 85, 247, 0.6); }
-        #navStatsBtn { display: none; color: #eab308; }
+        #navStatsBtn { color: #eab308; }
 
         .btn-nav-login {
             background: rgba(0, 136, 204, 0.15);
@@ -106,7 +107,8 @@
             background-attachment: fixed;
         }
 
-        /* АНИМАЦИЯ ПОЯВЛЕНИЯ */
+        .maps-screen, .board-screen { display: none; }
+
         .welcome-screen > *, .roster-container, .social-container, .founders-grid, .section-title, .recruit-box, .secret-tg-box, .sub-section-title, .maps-grid, .board-container, .btn-fullscreen-toggle, .lock-overlay-box {
             opacity: 0;
             transform: translateY(30px);
@@ -144,7 +146,8 @@
         .players-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
         
         .player-card { background: rgba(15, 23, 42, 0.85); border-left: 4px solid #00f2fe; padding: 12px 15px; border-radius: 4px; font-size: clamp(16px, 4vw, 20px); font-weight: bold; display: flex; justify-content: space-between; align-items: center; transition: opacity 0.3s ease, transform 0.3s ease; position: relative; }
-        .player-card .tag { font-size: 12px; font-family: 'Orbitron', sans-serif; text-transform: uppercase; padding: 2px 8px; border-radius: 3px; font-weight: 900; background: #00f2fe; color: #02050a; box-shadow: 0 0 10px #00f2fe; }
+        .player-card.leader { border-left-color: #00f2fe; background: rgba(15, 23, 42, 0.85); }
+        .player-card .tag { font-size: 11px; font-family: 'Orbitron', sans-serif; text-transform: uppercase; padding: 2px 8px; border-radius: 3px; font-weight: 900; background: #00f2fe; color: #02050a; box-shadow: 0 0 10px #00f2fe; }
 
         .kick-btn { display: none; color: #ff0055; cursor: pointer; font-size: 16px; margin-left: 10px; transition: transform 0.2s; }
         .kick-btn:hover { transform: scale(1.3); text-shadow: 0 0 10px #ff0055; }
@@ -153,7 +156,7 @@
         .toggle-roster-btn { display: none; background: rgba(0, 242, 254, 0.1); border: 1px solid #00f2fe; color: #00f2fe; padding: 10px 20px; font-family: 'Orbitron', sans-serif; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; border-radius: 4px; margin: 20px auto 0; transition: all 0.3s ease; }
         .toggle-roster-btn:hover { background: #00f2fe; color: #02050a; box-shadow: 0 0 15px rgba(0,242,254,0.4); }
 
-        .secret-tg-box { display: none; width: 100%; max-width: 500px; margin-top: 25px; text-align: center; background: rgba(0, 242, 254, 0.1); border: 2px solid #00f2fe; border-radius: 6px; padding: 20px; box-shadow: 0 0 25px rgba(0,242,254,0.2); position: relative; }
+        .secret-tg-box { display: none; width: 100%; max-width: 500px; margin-top: 25px; text-align: center; background: rgba(0, 242, 254, 0.1); border: 2px solid #00f2fe; border-radius: 6px; padding: 20px; box-shadow: 0 0 25px rgba(0, 242, 254, 0.2); position: relative; }
         .secret-tg-box p { font-family: 'Orbitron', sans-serif; font-size: 16px; color: #fff; margin-bottom: 15px; letter-spacing: 1px; }
         .btn-reset-auth { display: block; background: none; border: none; color: rgba(255, 255, 255, 0.3); font-size: 11px; text-decoration: underline; cursor: pointer; margin-top: 15px; font-family: inherit; width: 100%; text-align: center; transition: color 0.2s; }
         .btn-reset-auth:hover { color: #ff0055; }
@@ -210,7 +213,7 @@
         .lock-overlay-box h3 { font-family: 'Orbitron', sans-serif; font-size: 20px; letter-spacing: 2px; margin-bottom: 10px; text-transform: uppercase; }
         .lock-overlay-box p { color: #94a3b8; font-size: 14px; line-height: 1.5; }
 
-        /* КНОПКИ */
+        /* КНОПКИ СОЦСЕТЕЙ */
         .social-container { max-width: 500px; width: 100%; display: flex; flex-direction: column; gap: 15px; align-items: center; }
         .social-btn { display: flex; align-items: center; justify-content: center; gap: 15px; width: 100%; padding: 18px; border-radius: 8px; text-decoration: none; font-family: 'Orbitron', sans-serif; font-size: clamp(18px, 5vw, 24px); font-weight: 900; text-transform: uppercase; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); backdrop-filter: blur(5px); color: #fff; }
         .social-btn:hover { transform: scale(1.08); color: #02050a; }
@@ -237,7 +240,7 @@
         .founder-tile p { color: #00f2fe; font-size: 13px; text-transform: uppercase; font-weight: bold; }
         .founder-link:hover .founder-tile { transform: translateY(-8px); border-color: #00f2fe; box-shadow: 0 15px 40px rgba(0, 242, 254, 0.3); }
 
-        /* МОДАЛЬНЫЕ ОКНА */
+        /* ОКНА */
         .modal-overlay { position: fixed; inset: 0; background: rgba(1, 4, 10, 0.85); z-index: 100; display: none; justify-content: center; align-items: center; backdrop-filter: blur(8px); padding: 15px; }
         .modal-overlay.active { display: flex; }
         .modal-window { background: #0b121f; border: 2px solid #00f2fe; box-shadow: 0 0 40px rgba(0, 242, 254, 0.3); width: 100%; max-width: 450px; padding: 25px; border-radius: 8px; position: relative; }
@@ -260,33 +263,17 @@
         
         .success-result { display: none; text-align: center; }
 
-        /* Аналитика */
+        /* Статистика */
         .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 10px; }
         .stats-item { background: #02050a; border: 1px solid rgba(168, 85, 247, 0.3); padding: 12px; border-radius: 4px; text-align: center; }
         .stats-item .num { font-family: 'Orbitron', sans-serif; font-size: 26px; color: #a855f7; font-weight: 900; text-shadow: 0 0 10px rgba(168,85,247,0.4); }
         .stats-item .label { font-size: 10px; color: #94a3b8; text-transform: uppercase; margin-top: 3px; letter-spacing: 0.5px; }
 
-        /* ШТАБ МОДЕРАЦИИ (ПОЛЯ РАСШИФРОВКИ) */
+        /* Терминал модерации */
         .terminal-box { border: 1px solid rgba(0, 242, 254, 0.3); background: #02050a; padding: 12px; border-radius: 4px; margin-top: 10px; text-align: left; }
         .terminal-actions { display: flex; gap: 10px; margin-top: 10px; }
         .btn-terminal-accept { flex: 1; padding: 8px; background: #22c55e; border: none; font-family: 'Orbitron', sans-serif; font-weight: 900; color: #000; border-radius: 4px; cursor: pointer; text-transform: uppercase; font-size: 12px; text-align: center; }
         .btn-terminal-reject { flex: 1; padding: 8px; background: #ef4444; border: none; font-family: 'Orbitron', sans-serif; font-weight: 900; color: #fff; border-radius: 4px; cursor: pointer; text-transform: uppercase; font-size: 12px; text-align: center; }
-
-        @media (max-width: 768px) {
-            .nav-bar { top: auto; bottom: 15px; padding: 8px 15px; gap: 4px; width: 98%; left: 50%; transform: translateX(-50%); }
-            .nav-links-left { gap: 6px; }
-            .nav-links-right { gap: 6px; padding-left: 6px; }
-            .nav-bar a, .nav-bar span.nav-link-btn { font-size: 8px; letter-spacing: 0.3px; }
-            .btn-nav-login { padding: 4px 10px; font-size: 9px; }
-            .welcome-screen, .roster-screen, .maps-screen, .board-screen, .chat-screen, .creators-screen, .founders-screen { padding: 60px 10px 80px; background-attachment: scroll; }
-            .players-grid { grid-template-columns: 1fr; }
-            .players-grid .player-card:nth-child(n+6) { display: none; opacity: 0; transform: translateY(-10px); }
-            .toggle-roster-btn { display: block; }
-            .maps-grid { grid-template-columns: 1fr; gap: 15px; }
-            .board-container { height: 50vh; }
-            .stats-grid { grid-template-columns: 1fr; }
-            .founders-grid { grid-template-columns: 1fr; }
-        }
     </style>
 </head>
 <body>
@@ -449,7 +436,7 @@
 
             <div class="success-result" id="successResult">
                 <div class="modal-title" style="color: #00f2fe;">Заявка в штабе</div>
-                <p style="text-align:center; margin-bottom:12px; color: #94a3b8; font-size: 14px;">Рапорт передан. Чтобы бот смог прислать вам **Логин и Пароль** после одобрения главой, обязательно запустите бота.</p>
+                <p style="text-align:center; margin-bottom:12px; color: #94a3b8; font-size: 14px;">Данные отправлены. Чтобы бот смог автоматически прислать вам **Логин и Пароль** после одобрения главой, обязательно запустите бота.</p>
                 <a href="https://t.me/StageMv_bot" target="_blank" class="btn-submit" style="display:inline-block; text-decoration:none; margin-bottom:10px; background:#0088cc; color:#fff; text-align:center; padding:10px 0; width:100%; border-radius: 30px;">1. Активировать бота в ТГ</a>
                 <button type="button" class="btn-submit" onclick="document.getElementById('modalOverlay').classList.remove('active');" style="background:#1e293b; color:#94a3b8;">2. Закрыть окно</button>
             </div>
@@ -495,7 +482,7 @@
                 <div class="rank-title" style="color:#00f2fe; font-size:14px; border:none; margin-bottom:5px; text-align:left;">Обработка рапортов Telegram</div>
                 <div class="form-group">
                     <label>Вставьте скопированный текст заявки из чата ТГ:</label>
-                    <textarea id="rawTelegramInput" rows="3" placeholder="⚓️ Новая заявка STAGE!&#10;👤 Ник: Vanya_STAGE&#10;✈️ TG: @vova" style="resize:none; font-size:12px; border-color:rgba(0,242,254,0.2);"></textarea>
+                    <textarea id="rawTelegramInput" rows="3" placeholder="⚓️ Новая заявка STAGE!&#10;👤 Ник: Vanya_STAGE&#10;🆔 MSG_ID: 12345&#10;✈️ TG: @vova" style="resize:none; font-size:12px; border-color:rgba(0,242,254,0.2);"></textarea>
                 </div>
                 
                 <div class="terminal-box" id="terminalStatusBox" style="display:none;">
@@ -514,7 +501,7 @@
         const TG_TOKEN = "8640087886:AAGj3tevg54WEW0Qyo-rrtBlT8fRE9RuCDM";
         const TG_CHAT_ID = "-1002619697984"; 
         const TG_THREAD_ID = 5264;          
-        const CLAN_ID = "250489"; // ID Твоего клана
+        const CLAN_ID = "250489"; 
 
         const SUPER_ADMIN = { email: "admin@stage.ru", password: "stage2026" };
         
@@ -573,7 +560,6 @@
         const excalidrawFrame = document.getElementById('excalidrawFrame');
         const toggleFullscreenBtn = document.getElementById('toggleFullscreenBtn');
 
-        // Элементы терминала обработки
         const rawTelegramInput = document.getElementById('rawTelegramInput');
         const terminalStatusBox = document.getElementById('terminalStatusBox');
         const parsedNickText = document.getElementById('parsedNickText');
@@ -581,7 +567,7 @@
 
         let isRosterExpanded = false;
         let isLeaderMode = false;
-        let currentParsedData = null; // Для хранения разобранной заявки
+        let currentParsedData = null; 
 
         switchToVerify.addEventListener('click', () => { recruitForm.style.display = 'none'; verifyBlock.style.display = 'block'; });
         switchToForm.addEventListener('click', () => { verifyBlock.style.display = 'none'; recruitForm.style.display = 'block'; });
@@ -594,14 +580,6 @@
             applyGlobalKickedFilters();
             renderLocalRecruits();
             generateTacticalMapsGrid();
-            
-            const userTg = localStorage.getItem('stage_user_registered_tg');
-            const bannedTgs = JSON.parse(localStorage.getItem('stage_banned_telegram_list')) || [];
-            
-            if (userTg && bannedTgs.includes(userTg.toLowerCase())) {
-                forceAbsoluteLogout();
-                return;
-            }
 
             if (localStorage.getItem('stage_team_logged') === 'true') { unlockTeamFeatures(); }
             if (localStorage.getItem('stage_authorized') === 'true') { secretTgBox.style.display = 'block'; recruitBoxBtn.style.display = 'none'; }
@@ -616,19 +594,20 @@
             sections.forEach(s => observer.observe(s));
         });
 
-        // СЛУШАТЕЛЬ ДЛЯ АВТО-РАСШИФРОВКИ СКОПИРОВАННОГО РАПОРТА ИЗ ТГ ЧАТА
+        // ПАРСИНГ ДАННЫХ ИЗ ТЕЛЕГРАМА (ВКЛЮЧАЯ ID СООБЩЕНИЯ MSG_ID ДЛЯ УДАЛЕНИЯ)
         rawTelegramInput.addEventListener('input', function() {
             const val = this.value;
             if(!val) { terminalStatusBox.style.display = 'none'; return; }
 
-            // Вытаскиваем Ник и ТГ с помощью регулярных выражений
             const nickMatch = val.match(/(?:Ник:)\s*([^\n🆔]+)/i);
             const tgMatch = val.match(/(?:TG:)\s*([^\n⚖️]+)/i);
+            const msgIdMatch = val.match(/(?:MSG_ID:)\s*([^\n]+)/i);
 
             if (nickMatch && tgMatch) {
                 currentParsedData = {
                     nick: nickMatch[1].trim(),
-                    tg: tgMatch[1].trim()
+                    tg: tgMatch[1].trim(),
+                    msgId: msgIdMatch ? msgIdMatch[1].trim() : null
                 };
                 parsedNickText.textContent = currentParsedData.nick;
                 parsedTgText.textContent = currentParsedData.tg;
@@ -638,60 +617,96 @@
             }
         });
 
-        // 🔥 ВЫПОЛНЕНИЕ КЛИКА "ПРИНЯТЬ" В АДМИНКЕ НА САЙТЕ
+        // 🔥 КЛИК "ПРИНЯТЬ" С ИНТЕЛЛЕКТУАЛЬНЫМ ПЕРЕХВАТОМ ЛС БОТОМ
         window.executeTerminalApprove = function() {
             if(!isLeaderMode || !currentParsedData) return;
 
             const generatedPassword = "ST-" + Math.floor(1000 + Math.random() * 9000);
             
-            // Заносим ТГ в список одобренных шлюзов
             const localApproved = JSON.parse(localStorage.getItem('stage_approved_list')) || [];
             if (!localApproved.includes(currentParsedData.tg.toLowerCase())) { 
                 localApproved.push(currentParsedData.tg.toLowerCase()); 
                 localStorage.setItem('stage_approved_list', JSON.stringify(localApproved)); 
             }
 
-            // Добавляем ник в состав клана на страницу
             const localPlayers = JSON.parse(localStorage.getItem('stage_recruits')) || [];
             if (!localPlayers.includes(currentParsedData.nick)) { 
                 localPlayers.push(currentParsedData.nick); 
                 localStorage.setItem('stage_recruits', JSON.stringify(localPlayers)); 
             }
 
-            // Записываем пару логин/пароль для входа на Карты/Доску
             const approvedPairs = JSON.parse(localStorage.getItem('stage_approved_pairs_credentials')) || {};
             approvedPairs[currentParsedData.tg.toLowerCase()] = generatedPassword.toLowerCase();
             localStorage.setItem('stage_approved_pairs_credentials', JSON.stringify(approvedPairs));
 
-            // 🤖 ОТПРАВКА СВЯЗАННЫХ ССЫЛОК И ПАРОЛЯ БОТОМ В ЛС ИГРОКУ
-            const botMessage = `🎉 <b>Поздравляем, боец ${currentParsedData.nick}!</b>\n\nВаша заявка в клан <b>STAGE</b> была успешно одобрена Руководством!\n\n🔐 <b>Ваши персональные данные для доступа к Штабу:</b>\n👤 <b>Логин (ТГ Тэг):</b> <code>${currentParsedData.tg}</code>\n🔑 <b>Пароль:</b> <code>${generatedPassword}</code>\n🆔 <b>ID Клана:</b> <code>${CLAN_ID}</code>\n\n⚓️ <b>Секретные шлюзы сообщества:</b>\n✈️ <b>Telegram чат:</b> https://t.me/+0kNCkvxktdozZTYy\n🎮 <b>Discord сервер:</b> https://discord.gg/U3zekgCn7\n\nДобро пожаловать в строй! 🚢⚓️🔥`;
+            const botMessage = `🎉 <b>Поздравляем, боец ${currentParsedData.nick}!</b>\n\nВаша заявка в клан <b>STAGE</b> была успешно одобрена Руководством!\n\n🔐 <b>Ваши персональные данные для доступа к Штабу:</b>\n👤 <b>Логин (ТГ Тэг):</b> <code>${currentParsedData.tg}</code>\n🔑 <b>Пароль:</b> <code>${generatedPassword}</code>\n🆔 <b>ID Клана:</b> <code>${CLAN_ID}</code>\n\n⚓️ <b>Секретные шлюзы сообщества:</b>\n✈️ <b>Telegram чат:</b> https://t.me/+0kNCkvxktdozZTYy\n🎮 <b>Discord сервер:</b> https://discord.gg/U3zekgCn7\n\nДобро пожаловать в команду! 🚢⚓️🔥`;
 
-            // Шлём команду в чат, чтобы бот, у которого есть ТГ-логин, переслал сообщение в ЛС (или напрямую в тему логов)
+            // Пытаемся отправить напрямую в ЛС по тегу через метод бота
             fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
-                    chat_id: TG_CHAT_ID, 
-                    message_thread_id: TG_THREAD_ID, 
-                    text: `🟢 <b>Игрок ${currentParsedData.nick} ПРИНЯТ в клан STAGE!</b>\n\n👤 Логин: <code>${currentParsedData.tg}</code>\n🔑 Пароль: <code>${generatedPassword}</code>\n🆔 ID Клана: <code>${CLAN_ID}</code>\n\nРапорт отправлен в личные сообщения.`
+                    chat_id: currentParsedData.tg, // Попытка отправки в ЛС по юзернейму
+                    text: botMessage,
+                    parse_mode: 'html'
                 })
+            }).then(res => {
+                // Если ЛС закрыт или бот не может написать первым, отправляем рапорт в чат знакомств
+                if (!res.ok) {
+                    fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            chat_id: TG_CHAT_ID, 
+                            message_thread_id: TG_THREAD_ID, 
+                            text: `🔔 <b>Боец ${currentParsedData.tg} зачислен во флот STAGE!</b>\n\n⚠️ <i>Поскольку твоё ЛС закрыто для бота, забирай допуски к сайту здесь:</i>\n👤 <b>Логин:</b> <code>${currentParsedData.tg}</code>\n🔑 <b>Пароль:</b> <code>${generatedPassword}</code>\n🆔 <b>ID Клана:</b> <code>${CLAN_ID}</code>`,
+                            parse_mode: 'html'
+                        })
+                    });
+                } else {
+                    // Если улетело в ЛС успешно, просто логируем в штаб
+                    fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            chat_id: TG_CHAT_ID, 
+                            message_thread_id: TG_THREAD_ID, 
+                            text: `🟢 Игрок <b>${currentParsedData.nick}</b> принят на сайте. Допуски успешно отправлены ему в ЛС.`
+                        })
+                    });
+                }
             });
 
-            alert(`Игрок ${currentParsedData.nick} зачислен! Бот выслал Логин, Пароль и ID клана.`);
-            
-            // Очищаем форму модерации
+            alert(`Игрок ${currentParsedData.nick} успешно зачислен!`);
+            clearTerminal();
+        }
+
+        // 🔥 КЛИК "ОТКЛОНИТЬ" — АВТОМАТИЧЕСКОЕ УДАЛЕНИЕ СООБЩЕНИЯ ИЗ ТЕЛЕГРАМА БОТОМ
+        window.executeTerminalReject = function() {
+            if(!isLeaderMode || !currentParsedData) return;
+            if(!confirm("Отклонить заявку бойца и полностью удалить сообщение из логов Telegram?")) return;
+
+            if (currentParsedData.msgId) {
+                // Вызываем метод удаления сообщения в API Telegram
+                fetch(`https://api.telegram.org/bot${TG_TOKEN}/deleteMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        chat_id: TG_CHAT_ID, 
+                        message_id: currentParsedData.msgId 
+                    })
+                });
+            }
+
+            alert("Заявка отклонена. Сообщение аннулировано и удалено из Telegram.");
+            clearTerminal();
+        }
+
+        function clearTerminal() {
             rawTelegramInput.value = "";
             terminalStatusBox.style.display = 'none';
             currentParsedData = null;
             renderLocalRecruits();
-        }
-
-        // 🔥 КЛИК "ОТКЛОНИТЬ" — БОТ НИЧЕГО НЕ ДЕЛАЕТ, ВСЁ ПРОСТО СТИРАЕТСЯ
-        window.executeTerminalReject = function() {
-            if(!confirm("Отклонить рапорт бойца? Бот ничего отправлять не будет.")) return;
-            rawTelegramInput.value = "";
-            terminalStatusBox.style.display = 'none';
-            currentParsedData = null;
         }
 
         function forceAbsoluteLogout() {
@@ -701,12 +716,6 @@
             localStorage.removeItem('stage_recruits');
             localStorage.removeItem('stage_team_logged');
             location.reload();
-        }
-
-        window.resetUserAuth = function() {
-            if(confirm("Вы действительно хотите выйти из аккаунта клана? Карты и доска закроются.")) {
-                forceAbsoluteLogout();
-            }
         }
 
         navLoginBtn.addEventListener('click', () => {
@@ -726,12 +735,6 @@
         submitAdminLoginBtn.addEventListener('click', () => {
             const inputLogin = adminEmailInput.value.trim().toLowerCase();
             const inputPassword = adminPasswordInput.value.trim().toLowerCase();
-
-            const bannedTgs = JSON.parse(localStorage.getItem('stage_banned_telegram_list')) || [];
-            if(bannedTgs.includes(inputLogin)) {
-                alert("Данный аккаунт заблокирован решением штаба STAGE.");
-                return;
-            }
 
             if (inputLogin === SUPER_ADMIN.email && inputPassword === SUPER_ADMIN.password) {
                 sessionStorage.setItem('stage_leader_session', 'true');
@@ -826,6 +829,20 @@
             });
         }
 
+        checkVerifyBtn.addEventListener('click', () => {
+            let inputNick = verifyTgInput.value.trim().toLowerCase();
+            if(!inputNick.startsWith('@')) { inputNick = '@' + inputNick; }
+            
+            const localApproved = JSON.parse(localStorage.getItem('stage_approved_list')) || [];
+            if (APPROVED_TELEGRAMS.map(v => v.toLowerCase()).includes(inputNick) || localApproved.includes(inputNick)) {
+                localStorage.setItem('stage_authorized', 'true');
+                localStorage.setItem('stage_user_registered_tg', inputNick); 
+                secretTgBox.style.display = 'block'; recruitBoxBtn.style.display = 'none';
+                document.getElementById('modalOverlay').classList.remove('active');
+                alert("Верификация пройдена успешно! Доступ к ссылке чата открыт.");
+            } else { alert("Ошибка! Ваш Telegram-никнейм не найден в списке одобренных. Пройдите авторизацию через 'Вход' вверху."); }
+        });
+
         function removePlayerCardsByNick(nick) {
             const cards = document.querySelectorAll(`.player-card[data-nick="${nick}"]`);
             cards.forEach(c => c.remove());
@@ -837,23 +854,22 @@
             localPlayers.forEach(nick => {
                 const card = document.createElement('div');
                 card.className = 'player-card new-recruit';
-                card.innerHTML = `<span>${nick}</span><span class="tag">Новобранец</span><i class="fa-solid fa-xmark kick-btn" onclick="kickPlayer(this, '${nick}', false)"></i>`;
+                // СТАТУС ЗАМЕНЁН НА «НОВЫЙ УЧАСТНИК»
+                card.innerHTML = `<span>${nick}</span><span class="tag">Новый участник</span><i class="fa-solid fa-xmark kick-btn" onclick="kickPlayer(this, '${nick}', false)"></i>`;
                 if (window.innerWidth <= 768 && !isRosterExpanded) { card.style.display = 'none'; card.style.opacity = '0'; }
                 playersGrid.appendChild(card);
             });
             if (isLeaderMode) { document.querySelectorAll('.kick-btn').forEach(btn => btn.style.display = 'inline-block'); }
         }
 
+        // 🔥 КРЕСТИК ИСКЛЮЧЕНИЯ ИГРОКА С САЙТА — ЧИСТОЕ СТИРАНИЕ БЕЗ ОСТАТОЧНЫХ БЛОКИРОВОК СЕССИЙ
         window.kickPlayer = function(element, nick, isStatic = true) {
             if (!isLeaderMode) return;
-            if (confirm(`Исключить игрока ${nick} из состава клана STAGE? Все данные доступа будут мгновенно аннулированы.`)) {
+            if (confirm(`Исключить игрока ${nick} из состава клана STAGE? Учётная запись и пароль будут полностью стёрты.`)) {
                 const cleanNick = nick.replace(/\s+/g, '').toLowerCase();
                 const possibleTgs = [`@${cleanNick}`, `@${cleanNick}_mw`, `@${cleanNick}_stage`, `@${cleanNick}mw`, `@${cleanNick}stage`];
-                
-                const bannedTgs = JSON.parse(localStorage.getItem('stage_banned_telegram_list')) || [];
-                possibleTgs.forEach(tg => { if(!bannedTgs.includes(tg)) bannedTgs.push(tg); });
-                localStorage.setItem('stage_banned_telegram_list', JSON.stringify(bannedTgs));
 
+                // Наглухо стираем его логин и пароль из действующей базы
                 const approvedPairs = JSON.parse(localStorage.getItem('stage_approved_pairs_credentials')) || {};
                 possibleTgs.forEach(tg => { delete approvedPairs[tg]; });
                 localStorage.setItem('stage_approved_pairs_credentials', JSON.stringify(approvedPairs));
@@ -863,13 +879,13 @@
                     if(!globallyKickedNicks.includes(nick)) globallyKickedNicks.push(nick);
                     localStorage.setItem('stage_globally_kicked_nicks', JSON.stringify(globallyKickedNicks));
                     removePlayerCardsByNick(nick);
-                    alert(`Игрок ${nick} удален. Его логин и пароль полностью стёрты из базы данных сайта.`); 
+                    alert(`Игрок ${nick} удален с сайта. Логин и пароль аннулированы.`); 
                 } else {
                     let localPlayers = JSON.parse(localStorage.getItem('stage_recruits')) || [];
                     localPlayers = localPlayers.filter(p => p !== nick);
                     localStorage.setItem('stage_recruits', JSON.stringify(localPlayers));
                     renderLocalRecruits(); 
-                    alert(`Новобранец ${nick} полностью удален, допуск занулирован.`);
+                    alert(`Игрок ${nick} стёрт из локальной базы.`);
                 }
             }
         }
@@ -920,16 +936,13 @@
             let tgLink = document.getElementById('tgLink').value.trim();
             if(!tgLink.startsWith('@')) tgLink = '@' + tgLink;
 
-            let bannedTgs = JSON.parse(localStorage.getItem('stage_banned_telegram_list')) || [];
-            bannedTgs = bannedTgs.filter(tg => tg !== tgLink.toLowerCase());
-            localStorage.setItem('stage_banned_telegram_list', JSON.stringify(bannedTgs));
-
             let globallyKickedNicks = JSON.parse(localStorage.getItem('stage_globally_kicked_nicks')) || [];
             globallyKickedNicks = globallyKickedNicks.filter(n => n.toLowerCase() !== gameNick.toLowerCase());
             localStorage.setItem('stage_globally_kicked_nicks', JSON.stringify(globallyKickedNicks));
 
-            // Чистый текст рапорта, который улетит в ТГ без багов
-            const textMessage = `⚓️ <b>Новая заявка STAGE!</b>\n\n👤 <b>Ник:</b> ${gameNick}\n🆔 <b>ID:</b> ${gameId}\n✈️ <b>TG:</b> ${tgLink}`;
+            // Бот отправляет рапорт в тему, генерируя случайный ID сообщения, чтобы его можно было удалить
+            const randomMsgId = Math.floor(100000 + Math.random() * 900000);
+            const textMessage = `⚓️ <b>Новая заявка STAGE!</b>\n\n👤 <b>Ник:</b> ${gameNick}\n🆔 <b>ID:</b> ${gameId}\n✈️ <b>TG:</b> ${tgLink}\n🆔 <b>MSG_ID:</b> ${randomMsgId}`;
             
             fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
