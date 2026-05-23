@@ -508,6 +508,7 @@
         const TG_THREAD_ID = 5264;          
         const CLAN_ID = "YRD9HT";
 
+        // ☁️ ПРИВЯЗКА К ТВОЕЙ СЕКРЕТНОЙ ОБЛАЧНОЙ БАЗЕ ДАННЫХ JSONBIN.IO
         const BIN_ID = "6a12294c6877513b27c06650"; 
         const MASTER_KEY = "$2a$10$v7z4/8N8GC8M8hitL86knebm9goe4YeILXuk0ApLLcpdRNJIWqjzu"; 
 
@@ -596,7 +597,6 @@
                 return;
             }
 
-            // 🔥 ЗАПОМИНАНИЕ СЕССИИ АДМИНИСТРАТОРА ИЛИ БОЙЦА
             if (localStorage.getItem('stage_leader_session_persisted') === 'true') {
                 activateLeaderMode();
                 unlockTeamFeatures();
@@ -684,7 +684,6 @@
 
             await saveToCloud();
 
-            // Посылаем лог в общую тему
             fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -695,7 +694,6 @@
                 })
             });
 
-            // 🔥 БОТ НАПРЯМУЮ ОТПРАВЛЯЕТ В ЛС ПОЛЬЗОВАТЕЛЮ ПО ЕГО CHAT_ID РАПОРТ ОБ ОДОБРЕНИИ
             if (targetChatId) {
                 fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
                     method: 'POST',
@@ -749,7 +747,6 @@
             }
 
             if (inputLogin === SUPER_ADMIN.email && inputPassword === SUPER_ADMIN.password) {
-                // 🔥 СОХРАНЯЕМ ФЛАГ АДМИНА В LOCALSTORAGE ДЛЯ ЗАПОМИНАНИЯ ВХОДА
                 localStorage.setItem('stage_leader_session_persisted', 'true');
                 localStorage.setItem('stage_team_logged', 'true');
                 activateLeaderMode(); unlockTeamFeatures(); loginModalOverlay.classList.remove('active');
@@ -842,6 +839,22 @@
             });
         }
 
+        checkVerifyBtn.addEventListener('click', () => {
+            let inputNick = verifyTgInput.value.trim().toLowerCase();
+            if(!inputNick.startsWith('@')) { inputNick = '@' + inputNick; }
+            
+            if(cloudDatabase.banned.includes(inputNick)) { alert("Доступ заблокирован штабом клана."); return; }
+
+            const localApproved = JSON.parse(localStorage.getItem('stage_approved_list')) || [];
+            if (APPROVED_TELEGRAMS.map(v => v.toLowerCase()).includes(inputNick) || localApproved.includes(inputNick) || cloudDatabase.pairs[verifyTgInput.value.trim()]) {
+                localStorage.setItem('stage_authorized', 'true');
+                localStorage.setItem('stage_user_registered_tg', verifyTgInput.value.trim()); 
+                secretTgBox.style.display = 'block'; recruitBoxBtn.style.display = 'none';
+                document.getElementById('modalOverlay').classList.remove('active');
+                alert("Верификация пройдена успешно! Доступ к ссылке чата открыт.");
+            } else { alert("Ошибка! Ваш Telegram-никнейм не найден в списке одобренных. Пройдите авторизацию через 'Вход' вверху."); }
+        });
+
         function renderLocalRecruits() {
             document.querySelectorAll('.player-card.new-recruit-dynamic').forEach(c => c.remove());
             const oneDayInMs = 24 * 60 * 60 * 1000;
@@ -869,6 +882,7 @@
         window.kickPlayer = async function(element, nick, isStatic = true) {
             if (!isLeaderMode) return;
             if (confirm(`Исключить игрока ${nick} из состава? Логин и пароль будут аннулированы везде.`)) {
+                
                 const cleanNick = nick.replace(/\s+/g, '').toLowerCase();
                 const possibleTgs = [`@${cleanNick}`, `@${cleanNick}_mw`, `@${cleanNick}_stage`, `@${cleanNick}mw`, `@${cleanNick}stage`];
                 
@@ -887,8 +901,9 @@
                 }
 
                 await saveToCloud();
+                
                 element.parentElement.remove(); 
-                alert(`Игрок ${nick} удален из глобальной базы.`);
+                alert(`Игрок ${nick} успешно вырезан из глобальной базы данных сайта на всех устройствах.`);
             }
         }
 
@@ -931,7 +946,6 @@
             }
         });
 
-        // 🔥 ОТПРАВКА ДАННЫХ И СТАРТ АВТОМАТИЧЕСКОЙ СВЯЗКИ ЧЕРЕЗ ССЫЛКУ ТГ БОТА
         recruitForm.addEventListener('submit', async function(e) {
             e.preventDefault(); submitBtn.textContent = "Передача...";
             
@@ -942,11 +956,9 @@
             let cleanLogin = userLoginTg;
             if(!cleanLogin.startsWith('@')) cleanLogin = '@' + cleanLogin;
 
-            // Записываем пару логин/пароль в локальный объект перед пушем в облако
             cloudDatabase.pairs[cleanLogin] = userPassword;
             await saveToCloud();
 
-            // Формируем безопасный рапорт для отправки лога бота в общую закрытую тему
             const textMessage = `⚓️ <b>Новая регистрация STAGE!</b>\n\n👤 <b>Ник:</b> ${gameNickname}\n✈️ <b>TG (Логин):</b> ${cleanLogin}`;
             
             fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
@@ -954,10 +966,9 @@
                 body: JSON.stringify({ chat_id: TG_CHAT_ID, message_thread_id: TG_THREAD_ID, text: textMessage, parse_mode: 'html' })
             });
 
-            // 🔥 ГЕНЕРИРУЕМ ССЫЛКУ ДЛЯ СВЯЗКИ С БОТОМ (ПЕРЕДАЕМ ЛОГИН И НИК В ДЕПЛИНКЕ БОТА)
-            // Игрок перейдет по ссылке, нажмет Start, и бот поймет, кто это, прислав подтверждение.
+            // 🔥 ЮЗЕРНЕЙМ БОТА ИСПРАВЛЕН НА StageClanRecruit_bot ДЛЯ СТАРТА ПРИВЯЗКИ ЛОГИНА И НИКА В ТГ
             const encodedParam = btoa(`${cleanLogin}:${gameNickname}`);
-            dynamicBotLink.href = `https://t.me/StageMv_bot?start=${encodedParam}`;
+            dynamicBotLink.href = `https://t.me/StageClanRecruit_bot?start=${encodedParam}`;
 
             recruitForm.style.display = 'none'; 
             document.getElementById('successResult').style.display = 'block'; 
