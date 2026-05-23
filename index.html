@@ -106,6 +106,7 @@
             background-attachment: fixed;
         }
 
+        /* АНИМАЦИЯ ПОЯВЛЕНИЯ */
         .welcome-screen > *, .roster-container, .social-container, .founders-grid, .section-title, .recruit-box, .secret-tg-box, .sub-section-title, .maps-grid, .board-container, .btn-fullscreen-toggle, .lock-overlay-box {
             opacity: 0;
             transform: translateY(30px);
@@ -143,10 +144,7 @@
         .players-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
         
         .player-card { background: rgba(15, 23, 42, 0.85); border-left: 4px solid #00f2fe; padding: 12px 15px; border-radius: 4px; font-size: clamp(16px, 4vw, 20px); font-weight: bold; display: flex; justify-content: space-between; align-items: center; transition: opacity 0.3s ease, transform 0.3s ease; position: relative; }
-        .player-card.leader { border-left-color: #00f2fe; background: rgba(15, 23, 42, 0.85); }
-        .player-card .tag { font-size: 12px; font-family: 'Orbitron', sans-serif; text-transform: uppercase; padding: 2px 8px; border-radius: 3px; font-weight: 900; }
-        .player-card.leader .tag { background: #00f2fe; color: #02050a; box-shadow: 0 0 10px #00f2fe; }
-        .player-card.new-recruit .tag { background: #00f2fe; color: #02050a; box-shadow: 0 0 10px #00f2fe; }
+        .player-card .tag { font-size: 12px; font-family: 'Orbitron', sans-serif; text-transform: uppercase; padding: 2px 8px; border-radius: 3px; font-weight: 900; background: #00f2fe; color: #02050a; box-shadow: 0 0 10px #00f2fe; }
 
         .kick-btn { display: none; color: #ff0055; cursor: pointer; font-size: 16px; margin-left: 10px; transition: transform 0.2s; }
         .kick-btn:hover { transform: scale(1.3); text-shadow: 0 0 10px #ff0055; }
@@ -160,7 +158,7 @@
         .btn-reset-auth { display: block; background: none; border: none; color: rgba(255, 255, 255, 0.3); font-size: 11px; text-decoration: underline; cursor: pointer; margin-top: 15px; font-family: inherit; width: 100%; text-align: center; transition: color 0.2s; }
         .btn-reset-auth:hover { color: #ff0055; }
 
-        /* ИСПРАВЛЕННАЯ СТИЛЬНАЯ КНОПКА ПОДАЧИ ЗАЯВКИ ПОД СТИЛЬ TELEGRAM (СИНЯЯ НЕОНОВАЯ КНОПКА С СИНИМ СВЕЧЕНИЕМ) */
+        /* КНОПКА ПОДАЧИ ЗАЯВКИ В СТИЛЕ TELEGRAM */
         .btn-join-neon {
             background: rgba(0, 136, 204, 0.1); 
             border: 2px solid #0088cc; 
@@ -184,14 +182,9 @@
             gap: 12px;
             outline: none;
         }
-        .btn-join-neon:hover {
-            background: #0088cc;
-            color: #02050a;
-            box-shadow: 0 0 35px rgba(0, 136, 204, 0.8);
-            transform: scale(1.03);
-        }
+        .btn-join-neon:hover { background: #0088cc; color: #02050a; box-shadow: 0 0 35px rgba(0, 136, 204, 0.8); transform: scale(1.03); }
 
-        /* ТАКТИЧЕСКИЕ КАРТЫ */
+        /* КАРТЫ И ДОСКА */
         .maps-screen { background-image: linear-gradient(rgba(2, 5, 10, 0.75), rgba(2, 5, 10, 0.9)), url('maps_bg.png'); }
         .maps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; max-width: 1200px; width: 100%; }
         .map-card { background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(0, 242, 254, 0.2); border-radius: 6px; padding: 15px; display: flex; flex-direction: column; gap: 12px; backdrop-filter: blur(5px); transition: border 0.3s, box-shadow 0.3s, transform 0.2s; cursor: grab; user-select: none; }
@@ -203,53 +196,16 @@
         .btn-map-download { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 10px; background: rgba(0, 242, 254, 0.1); border: 1px solid #00f2fe; color: #00f2fe; font-family: 'Orbitron', sans-serif; font-size: 12px; font-weight: bold; text-transform: uppercase; text-decoration: none; border-radius: 4px; transition: all 0.3s; }
         .btn-map-download:hover { background: #00f2fe; color: #02050a; box-shadow: 0 0 15px rgba(0, 242, 254, 0.3); }
 
-        /* ТАКТИЧЕСКАЯ ДОСКА */
         .board-screen { background-image: linear-gradient(rgba(2, 5, 10, 0.75), rgba(2, 5, 10, 0.9)), url('board_bg.png'); }
-        
-        .btn-fullscreen-toggle {
-            background: rgba(168, 85, 247, 0.1);
-            border: 2px solid #a855f7;
-            color: #a855f7;
-            padding: 10px 24px;
-            border-radius: 4px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 13px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-            margin-bottom: 20px;
-            box-shadow: 0 0 15px rgba(168, 85, 247, 0.2);
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            outline: none;
-        }
+        .btn-fullscreen-toggle { background: rgba(168, 85, 247, 0.1); border: 2px solid #a855f7; color: #a855f7; padding: 10px 24px; border-radius: 4px; font-family: 'Orbitron', sans-serif; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; margin-bottom: 20px; box-shadow: 0 0 15px rgba(168, 85, 247, 0.2); transition: all 0.3s ease; display: flex; align-items: center; gap: 10px; outline: none; }
         .btn-fullscreen-toggle:hover { background: #a855f7; color: #ffffff; box-shadow: 0 0 25px rgba(168, 85, 247, 0.6); transform: translateY(-2px); }
-
         .board-container { max-width: 1200px; width: 100%; height: 65vh; border: 2px solid #a855f7; border-radius: 8px; box-shadow: 0 0 30px rgba(168, 85, 247, 0.2); overflow: hidden; background: #121212; position: relative; transition: all 0.4s ease; }
         .board-container.drag-over { border-color: #00f2fe; box-shadow: 0 0 40px rgba(0, 242, 254, 0.4); }
         .board-container.fullscreen-active { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; max-width: 100vw; z-index: 9999; border-radius: 0; border: none; }
         .board-frame { width: 100%; height: 100%; border: none; }
 
-        /* ЗАГЛУШКА ДЛЯ ЗАКРЫТЫХ СТРАНИЦ */
-        .lock-overlay-box {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 40px;
-            background: rgba(11, 18, 31, 0.85);
-            border: 2px dashed #a855f7;
-            border-radius: 8px;
-            max-width: 500px;
-            width: 100%;
-            margin: 40px auto;
-            box-shadow: 0 0 30px rgba(168, 85, 247, 0.15);
-            backdrop-filter: blur(10px);
-        }
+        /* ЗАГЛУШКА ДЛЯ СТРАНИЦ */
+        .lock-overlay-box { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px; background: rgba(11, 18, 31, 0.85); border: 2px dashed #a855f7; border-radius: 8px; max-width: 500px; width: 100%; margin: 40px auto; box-shadow: 0 0 30px rgba(168, 85, 247, 0.15); backdrop-filter: blur(10px); }
         .lock-overlay-box i { font-size: 50px; color: #a855f7; margin-bottom: 20px; text-shadow: 0 0 15px rgba(168, 85, 247, 0.5); }
         .lock-overlay-box h3 { font-family: 'Orbitron', sans-serif; font-size: 20px; letter-spacing: 2px; margin-bottom: 10px; text-transform: uppercase; }
         .lock-overlay-box p { color: #94a3b8; font-size: 14px; line-height: 1.5; }
@@ -271,7 +227,6 @@
         .creators-screen { background-image: linear-gradient(rgba(2, 5, 10, 0.75), rgba(2, 5, 10, 0.95)), url('creators_bg.png'); }
         .founders-screen { background-image: linear-gradient(rgba(2, 5, 10, 0.75), rgba(2, 5, 10, 0.95)), url('founders_bg.png'); }
 
-        /* ОСНОВАТЕЛИ */
         .founders-grid { display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; max-width: 1200px; width: 100%; }
         .founder-link { text-decoration: none; color: inherit; display: block; flex: 1; max-width: 240px; min-width: 180px; }
         .founder-tile { background: rgba(12, 18, 32, 0.8); border: 1px solid rgba(0, 242, 254, 0.15); border-bottom: 4px solid #a855f7; border-radius: 6px; padding: 30px 20px; text-align: center; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); height: 100%; backdrop-filter: blur(8px); }
@@ -292,7 +247,7 @@
         
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; font-size: 13px; text-transform: uppercase; color: #94a3b8; margin-bottom: 6px; }
-        .form-group input { width: 100%; background: #02050a; border: 1px solid rgba(0, 242, 254, 0.3); padding: 10px; color: #fff; border-radius: 4px; font-family: 'Oswald', sans-serif; }
+        .form-group input, .form-group textarea { width: 100%; background: #02050a; border: 1px solid rgba(0, 242, 254, 0.3); padding: 10px; color: #fff; border-radius: 4px; font-family: 'Oswald', sans-serif; }
         
         .law-box { background: rgba(2, 5, 10, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); padding: 10px; border-radius: 4px; margin-bottom: 15px; display: flex; gap: 10px; align-items: flex-start; }
         .law-box input { width: 18px; height: 18px; accent-color: #00f2fe; flex-shrink: 0; cursor: pointer; }
@@ -311,6 +266,12 @@
         .stats-item .num { font-family: 'Orbitron', sans-serif; font-size: 26px; color: #a855f7; font-weight: 900; text-shadow: 0 0 10px rgba(168,85,247,0.4); }
         .stats-item .label { font-size: 10px; color: #94a3b8; text-transform: uppercase; margin-top: 3px; letter-spacing: 0.5px; }
 
+        /* ШТАБ МОДЕРАЦИИ (ПОЛЯ РАСШИФРОВКИ) */
+        .terminal-box { border: 1px solid rgba(0, 242, 254, 0.3); background: #02050a; padding: 12px; border-radius: 4px; margin-top: 10px; text-align: left; }
+        .terminal-actions { display: flex; gap: 10px; margin-top: 10px; }
+        .btn-terminal-accept { flex: 1; padding: 8px; background: #22c55e; border: none; font-family: 'Orbitron', sans-serif; font-weight: 900; color: #000; border-radius: 4px; cursor: pointer; text-transform: uppercase; font-size: 12px; text-align: center; }
+        .btn-terminal-reject { flex: 1; padding: 8px; background: #ef4444; border: none; font-family: 'Orbitron', sans-serif; font-weight: 900; color: #fff; border-radius: 4px; cursor: pointer; text-transform: uppercase; font-size: 12px; text-align: center; }
+
         @media (max-width: 768px) {
             .nav-bar { top: auto; bottom: 15px; padding: 8px 15px; gap: 4px; width: 98%; left: 50%; transform: translateX(-50%); }
             .nav-links-left { gap: 6px; }
@@ -323,10 +284,8 @@
             .toggle-roster-btn { display: block; }
             .maps-grid { grid-template-columns: 1fr; gap: 15px; }
             .board-container { height: 50vh; }
-            .board-container.fullscreen-active { height: 100vh; }
             .stats-grid { grid-template-columns: 1fr; }
             .founders-grid { grid-template-columns: 1fr; }
-            .founder-link { max-width: 100%; width: 100%; }
         }
     </style>
 </head>
@@ -398,9 +357,7 @@
         </div>
 
         <div class="recruit-box" id="recruitBoxBtn">
-            <button class="btn-join-neon" id="openModalBtn">
-                <i class="fa-solid fa-paper-plane"></i> Подать заявку / Верификация
-            </button>
+            <button class="btn-join-neon" id="openModalBtn"><i class="fa-solid fa-paper-plane"></i> Подать заявку / Верификация</button>
         </div>
     </section>
 
@@ -481,7 +438,7 @@
             </form>
 
             <div id="verifyBlock" style="display: none;">
-                <div class="modal-title" style="color: #00f2fe;">Верификация бойца</div>
+                <div class="modal-title" style="color: #00f2fe;">Верификация допуска</div>
                 <p style="font-size: 13px; color: #94a3b8; text-align: center; margin-bottom: 15px;">Введите ваш Telegram-никнейм. Если глава клана перевел вас в статус «Одобрен», шлюз откроется.</p>
                 <div class="form-group"><label>Ваш Telegram-Ник</label><input type="text" id="verifyTgInput" placeholder="Например: @vova" required></div>
                 <button type="button" class="btn-submit" id="checkVerifyBtn">Проверить допуск</button>
@@ -492,7 +449,7 @@
 
             <div class="success-result" id="successResult">
                 <div class="modal-title" style="color: #00f2fe;">Заявка в штабе</div>
-                <p style="text-align:center; margin-bottom:12px; color: #94a3b8; font-size: 14px;">Данные отправлены. Чтобы бот смог автоматически прислать вам **Логин и Пароль** после одобрения, обязательно перейдите в него и запустите.</p>
+                <p style="text-align:center; margin-bottom:12px; color: #94a3b8; font-size: 14px;">Рапорт передан. Чтобы бот смог прислать вам **Логин и Пароль** после одобрения главой, обязательно запустите бота.</p>
                 <a href="https://t.me/StageMv_bot" target="_blank" class="btn-submit" style="display:inline-block; text-decoration:none; margin-bottom:10px; background:#0088cc; color:#fff; text-align:center; padding:10px 0; width:100%; border-radius: 30px;">1. Активировать бота в ТГ</a>
                 <button type="button" class="btn-submit" onclick="document.getElementById('modalOverlay').classList.remove('active');" style="background:#1e293b; color:#94a3b8;">2. Закрыть окно</button>
             </div>
@@ -504,11 +461,9 @@
             <span class="close-btn" id="closeLawModalBtn">&times;</span>
             <div class="modal-title" style="color: #a855f7; border-bottom-color: rgba(168,85,247,0.3);">Пользовательское Соглашение</div>
             <div class="law-window-content">
-                <p><b>Клан STAGE является некоммерческим добровольным объединением игроков Modern Warships, созданным исключительно в развлекательных целях.</b></p>
+                <p>Клан STAGE является некоммерческим добровольным объединением игроков Modern Warships.</p>
                 <h4>1. Принцип добровольности</h4>
-                <p>Пользователь предоставляет свой публичный Игровой ID и контакт Telegram добровольно для верификации профиля.</p>
-                <h4>2. Отсутствие претензий</h4>
-                <p>Каждый участник подтверждает, что <b>не имеет никаких юридических претензий</b> к Администрации STAGE.</p>
+                <p>Пользователь предоставляет свой публичный Игровой ID и контакт Telegram добровольно.</p>
             </div>
             <button type="button" class="btn-submit" id="acceptLawBtn" style="background: #a855f7; color: #fff; margin-top: 15px;">Ясно, вернуться</button>
         </div>
@@ -519,7 +474,7 @@
             <span class="close-btn" id="closeLoginModalBtn">&times;</span>
             <div class="modal-title" style="color: #00f2fe;">Вход для Членов Клана</div>
             <div class="form-group"><label>Ваш Telegram Тэг (Логин)</label><input type="text" id="adminEmailInput" placeholder="Например: @vova" required></div>
-            <div class="form-group"><label>Пароль / Игровой ник</label><input type="password" id="adminPasswordInput" placeholder="Введи выданный пароль" required></div>
+            <div class="form-group"><label>Пароль</label><input type="password" id="adminPasswordInput" placeholder="Введи выданный пароль" required></div>
             <button type="button" class="btn-submit" id="submitAdminLoginBtn">Авторизоваться</button>
         </div>
     </div>
@@ -535,7 +490,23 @@
                 <div class="stats-item"><div class="num" id="statTotalRequests">0</div><div class="label">Поданные заявки</div></div>
                 <div class="stats-item"><div class="num" id="statConversionRate">0%</div><div class="label">Конверсия штаба</div></div>
             </div>
-            <button type="button" class="btn-submit" onclick="document.getElementById('statsModalOverlay').classList.remove('active');" style="background:#a855f7; color:#fff; margin-top:15px;">Закрыть</button>
+
+            <div style="border-top: 1px solid rgba(168, 85, 247, 0.2); margin-top: 15px; padding-top: 15px;">
+                <div class="rank-title" style="color:#00f2fe; font-size:14px; border:none; margin-bottom:5px; text-align:left;">Обработка рапортов Telegram</div>
+                <div class="form-group">
+                    <label>Вставьте скопированный текст заявки из чата ТГ:</label>
+                    <textarea id="rawTelegramInput" rows="3" placeholder="⚓️ Новая заявка STAGE!&#10;👤 Ник: Vanya_STAGE&#10;✈️ TG: @vova" style="resize:none; font-size:12px; border-color:rgba(0,242,254,0.2);"></textarea>
+                </div>
+                
+                <div class="terminal-box" id="terminalStatusBox" style="display:none;">
+                    <div>📝 <b>Боец:</b> <span id="parsedNickText" style="color:#00f2fe; font-weight:bold;">-</span></div>
+                    <div>✈️ <b>Логин ТГ:</b> <span id="parsedTgText" style="color:#a855f7;">-</span></div>
+                    <div class="terminal-actions">
+                        <button type="button" class="btn-terminal-accept" onclick="executeTerminalApprove()">Принять</button>
+                        <button type="button" class="btn-terminal-reject" onclick="executeTerminalReject()">Отклонить</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -543,6 +514,7 @@
         const TG_TOKEN = "8640087886:AAGj3tevg54WEW0Qyo-rrtBlT8fRE9RuCDM";
         const TG_CHAT_ID = "-1002619697984"; 
         const TG_THREAD_ID = 5264;          
+        const CLAN_ID = "250489"; // ID Твоего клана
 
         const SUPER_ADMIN = { email: "admin@stage.ru", password: "stage2026" };
         
@@ -601,8 +573,15 @@
         const excalidrawFrame = document.getElementById('excalidrawFrame');
         const toggleFullscreenBtn = document.getElementById('toggleFullscreenBtn');
 
+        // Элементы терминала обработки
+        const rawTelegramInput = document.getElementById('rawTelegramInput');
+        const terminalStatusBox = document.getElementById('terminalStatusBox');
+        const parsedNickText = document.getElementById('parsedNickText');
+        const parsedTgText = document.getElementById('parsedTgText');
+
         let isRosterExpanded = false;
         let isLeaderMode = false;
+        let currentParsedData = null; // Для хранения разобранной заявки
 
         switchToVerify.addEventListener('click', () => { recruitForm.style.display = 'none'; verifyBlock.style.display = 'block'; });
         switchToForm.addEventListener('click', () => { verifyBlock.style.display = 'none'; recruitForm.style.display = 'block'; });
@@ -636,6 +615,84 @@
             }, { threshold: 0.1 });
             sections.forEach(s => observer.observe(s));
         });
+
+        // СЛУШАТЕЛЬ ДЛЯ АВТО-РАСШИФРОВКИ СКОПИРОВАННОГО РАПОРТА ИЗ ТГ ЧАТА
+        rawTelegramInput.addEventListener('input', function() {
+            const val = this.value;
+            if(!val) { terminalStatusBox.style.display = 'none'; return; }
+
+            // Вытаскиваем Ник и ТГ с помощью регулярных выражений
+            const nickMatch = val.match(/(?:Ник:)\s*([^\n🆔]+)/i);
+            const tgMatch = val.match(/(?:TG:)\s*([^\n⚖️]+)/i);
+
+            if (nickMatch && tgMatch) {
+                currentParsedData = {
+                    nick: nickMatch[1].trim(),
+                    tg: tgMatch[1].trim()
+                };
+                parsedNickText.textContent = currentParsedData.nick;
+                parsedTgText.textContent = currentParsedData.tg;
+                terminalStatusBox.style.display = 'block';
+            } else {
+                terminalStatusBox.style.display = 'none';
+            }
+        });
+
+        // 🔥 ВЫПОЛНЕНИЕ КЛИКА "ПРИНЯТЬ" В АДМИНКЕ НА САЙТЕ
+        window.executeTerminalApprove = function() {
+            if(!isLeaderMode || !currentParsedData) return;
+
+            const generatedPassword = "ST-" + Math.floor(1000 + Math.random() * 9000);
+            
+            // Заносим ТГ в список одобренных шлюзов
+            const localApproved = JSON.parse(localStorage.getItem('stage_approved_list')) || [];
+            if (!localApproved.includes(currentParsedData.tg.toLowerCase())) { 
+                localApproved.push(currentParsedData.tg.toLowerCase()); 
+                localStorage.setItem('stage_approved_list', JSON.stringify(localApproved)); 
+            }
+
+            // Добавляем ник в состав клана на страницу
+            const localPlayers = JSON.parse(localStorage.getItem('stage_recruits')) || [];
+            if (!localPlayers.includes(currentParsedData.nick)) { 
+                localPlayers.push(currentParsedData.nick); 
+                localStorage.setItem('stage_recruits', JSON.stringify(localPlayers)); 
+            }
+
+            // Записываем пару логин/пароль для входа на Карты/Доску
+            const approvedPairs = JSON.parse(localStorage.getItem('stage_approved_pairs_credentials')) || {};
+            approvedPairs[currentParsedData.tg.toLowerCase()] = generatedPassword.toLowerCase();
+            localStorage.setItem('stage_approved_pairs_credentials', JSON.stringify(approvedPairs));
+
+            // 🤖 ОТПРАВКА СВЯЗАННЫХ ССЫЛОК И ПАРОЛЯ БОТОМ В ЛС ИГРОКУ
+            const botMessage = `🎉 <b>Поздравляем, боец ${currentParsedData.nick}!</b>\n\nВаша заявка в клан <b>STAGE</b> была успешно одобрена Руководством!\n\n🔐 <b>Ваши персональные данные для доступа к Штабу:</b>\n👤 <b>Логин (ТГ Тэг):</b> <code>${currentParsedData.tg}</code>\n🔑 <b>Пароль:</b> <code>${generatedPassword}</code>\n🆔 <b>ID Клана:</b> <code>${CLAN_ID}</code>\n\n⚓️ <b>Секретные шлюзы сообщества:</b>\n✈️ <b>Telegram чат:</b> https://t.me/+0kNCkvxktdozZTYy\n🎮 <b>Discord сервер:</b> https://discord.gg/U3zekgCn7\n\nДобро пожаловать в строй! 🚢⚓️🔥`;
+
+            // Шлём команду в чат, чтобы бот, у которого есть ТГ-логин, переслал сообщение в ЛС (или напрямую в тему логов)
+            fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    chat_id: TG_CHAT_ID, 
+                    message_thread_id: TG_THREAD_ID, 
+                    text: `🟢 <b>Игрок ${currentParsedData.nick} ПРИНЯТ в клан STAGE!</b>\n\n👤 Логин: <code>${currentParsedData.tg}</code>\n🔑 Пароль: <code>${generatedPassword}</code>\n🆔 ID Клана: <code>${CLAN_ID}</code>\n\nРапорт отправлен в личные сообщения.`
+                })
+            });
+
+            alert(`Игрок ${currentParsedData.nick} зачислен! Бот выслал Логин, Пароль и ID клана.`);
+            
+            // Очищаем форму модерации
+            rawTelegramInput.value = "";
+            terminalStatusBox.style.display = 'none';
+            currentParsedData = null;
+            renderLocalRecruits();
+        }
+
+        // 🔥 КЛИК "ОТКЛОНИТЬ" — БОТ НИЧЕГО НЕ ДЕЛАЕТ, ВСЁ ПРОСТО СТИРАЕТСЯ
+        window.executeTerminalReject = function() {
+            if(!confirm("Отклонить рапорт бойца? Бот ничего отправлять не будет.")) return;
+            rawTelegramInput.value = "";
+            terminalStatusBox.style.display = 'none';
+            currentParsedData = null;
+        }
 
         function forceAbsoluteLogout() {
             localStorage.removeItem('stage_authorized');
@@ -769,23 +826,6 @@
             });
         }
 
-        checkVerifyBtn.addEventListener('click', () => {
-            let inputNick = verifyTgInput.value.trim().toLowerCase();
-            if(!inputNick.startsWith('@')) { inputNick = '@' + inputNick; }
-            
-            const bannedTgs = JSON.parse(localStorage.getItem('stage_banned_telegram_list')) || [];
-            if(bannedTgs.includes(inputNick)) { alert("Доступ заблокирован штабом клана."); return; }
-
-            const localApproved = JSON.parse(localStorage.getItem('stage_approved_list')) || [];
-            if (APPROVED_TELEGRAMS.map(v => v.toLowerCase()).includes(inputNick) || localApproved.includes(inputNick)) {
-                localStorage.setItem('stage_authorized', 'true');
-                localStorage.setItem('stage_user_registered_tg', inputNick); 
-                secretTgBox.style.display = 'block'; recruitBoxBtn.style.display = 'none';
-                document.getElementById('modalOverlay').classList.remove('active');
-                alert("Верификация пройдена успешно! Доступ к ссылке чата открыт.");
-            } else { alert("Ошибка! Ваш Telegram-никнейм не найден в списке одобренных. Пройдите авторизацию через 'Вход' вверху."); }
-        });
-
         function removePlayerCardsByNick(nick) {
             const cards = document.querySelectorAll(`.player-card[data-nick="${nick}"]`);
             cards.forEach(c => c.remove());
@@ -888,29 +928,12 @@
             globallyKickedNicks = globallyKickedNicks.filter(n => n.toLowerCase() !== gameNick.toLowerCase());
             localStorage.setItem('stage_globally_kicked_nicks', JSON.stringify(globallyKickedNicks));
 
-            // 🔥 СТРУКТУРИРОВАННЫЙ ТЕКСТ РАПОРТА С КНОПКАМИ ДЛЯ ТЕЛЕГРАМ-БОТА
+            // Чистый текст рапорта, который улетит в ТГ без багов
             const textMessage = `⚓️ <b>Новая заявка STAGE!</b>\n\n👤 <b>Ник:</b> ${gameNick}\n🆔 <b>ID:</b> ${gameId}\n✈️ <b>TG:</b> ${tgLink}`;
             
-            // Чтобы бот мог прикреплять кнопки, мы отправляем специальную разметку клавиатуры (reply_markup) прямо через API Telegram!
-            const keyboardMarkup = {
-                inline_keyboard: [
-                    [
-                        { text: "🟢 Принять", callback_data: `accept:${gameNick}:${tgLink}` },
-                        { text: "🔴 Отклонить", callback_data: `reject:${gameNick}` }
-                    ]
-                ]
-            };
-
             fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
-                method: 'POST', 
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    chat_id: TG_CHAT_ID, 
-                    message_thread_id: TG_THREAD_ID, 
-                    text: textMessage, 
-                    parse_mode: 'html',
-                    reply_markup: keyboardMarkup // Бот прикрепит кнопки прямо в ТГ!
-                })
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: TG_CHAT_ID, message_thread_id: TG_THREAD_ID, text: textMessage, parse_mode: 'html' })
             }).then(response => {
                 if (response.ok) { 
                     recruitForm.style.display = 'none'; document.getElementById('successResult').style.display = 'block'; 
