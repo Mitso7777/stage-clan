@@ -478,7 +478,7 @@
             <div class="law-window-content">
                 <p>Клан STAGE является некоммерческим добровольным объединением игроков Modern Warships.</p>
                 <h4>1. Принцип добровольности</h4>
-                <p>Пользователь предоставляет свой публичный Игровой ID и контакт Telegram добровольно.</p>
+                <p>Пользователь предоставляет свой публичный Игровой ID и контакт Telegram добровольно для верификации профиля.</p>
             </div>
             <button type="button" class="btn-submit" id="acceptLawBtn" style="background: #a855f7; color: #fff; margin-top: 15px;">Ясно, вернуться</button>
         </div>
@@ -597,7 +597,6 @@
         let isLeaderMode = false;
         let currentParsedData = null; 
 
-        // 🔐 СИНХРОННЫЙ АЛГОРИТМ ПАРОЛЕЙ ЧТОБЫ ВСЁ ПОДХОДИЛО НА ЛЮБЫХ ТЕЛЕФОНАХ БЕЗ БЭКЕНДА
         function getDeterministicPassword(tg) {
             let clean = tg.trim().toLowerCase().replace('@', '');
             let hash = 0;
@@ -606,29 +605,6 @@
             }
             return "ST-" + (Math.abs(hash) % 9000 + 1000);
         }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            if (window.location.hash && window.location.hash !== "#welcome") {
-                setTimeout(() => { window.location.hash = "#welcome"; window.scrollTo(0, 0); }, 50);
-            }
-
-            applyGlobalKickedFilters();
-            renderLocalRecruits();
-            generateTacticalMapsGrid();
-            
-            if (localStorage.getItem('stage_team_logged') === 'true') { unlockTeamFeatures(); }
-            if (localStorage.getItem('stage_authorized') === 'true') { secretTgBox.style.display = 'block'; recruitBoxBtn.style.display = 'none'; }
-            if (sessionStorage.getItem('stage_leader_session') === 'true') { activateLeaderMode(); }
-            
-            setupDragAndDrop();
-
-            // 🎯 ДВИЖОК ОПТИЧЕСКОГО СЛЕЖЕНИЯ АНИМАЦИИ (БЫЛ СРЕЗАН РАНЕЕ)
-            const sections = document.querySelectorAll('section');
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('section-active'); });
-            }, { threshold: 0.1 });
-            sections.forEach(s => observer.observe(s));
-        });
 
         navLoginBtn.addEventListener('click', () => {
             if(isLeaderMode || localStorage.getItem('stage_team_logged') === 'true') {
@@ -697,6 +673,7 @@
             }
         });
 
+        // 🔥 КЛИК "ПРИНЯТЬ" С СИНХРОННЫМ ПАРОЛЕМ И СТРОГО ПРЯМОЙ ОТПРАВКОЙ В ГРУППУ В ТГ БЕЗ ЛС
         window.executeTerminalApprove = function() {
             if(!isLeaderMode || !currentParsedData) return;
 
@@ -721,7 +698,8 @@
             approvedPairs[currentParsedData.tg.toLowerCase()] = generatedPassword.toLowerCase();
             localStorage.setItem('stage_approved_pairs_credentials', JSON.stringify(approvedPairs));
 
-            const groupMessage = `🔔 <b>Боец ${currentParsedData.tg} официально зачислен в клан STAGE!</b>\n\n👤 <b>Логин (ТГ):</b> <code>${currentParsedData.tg}</code>\n🔑 <b>Пароль для сайта:</b> <code>${generatedPassword}</code>\n🆔 <b>ID Клана:</b> <code>${CLAN_ID}</code>\n\nДобро пожаловать на борт флота! 🚢⚓️🔥`;
+            // Формируем четкий тактический рапорт сразу для вашей группы
+            const groupMessage = `🎉 <b>Боец ${currentParsedData.nick} (${currentParsedData.tg}) зачислен в клан STAGE!</b>\n\n🔐 <b>Данные тактического доступа к сайту:</b>\n👤 <b>Логин (ТГ):</b> <code>${currentParsedData.tg}</code>\n🔑 <b>Пароль:</b> <code>${generatedPassword}</code>\n🆔 <b>ID Клана:</b> <code>${CLAN_ID}</code>\n\nДобро пожаловать во флот клана! 🚢⚓️🔥`;
 
             fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
                 method: 'POST',
@@ -729,7 +707,7 @@
                 body: JSON.stringify({ chat_id: TG_CHAT_ID, message_thread_id: TG_THREAD_ID, text: groupMessage, parse_mode: 'html' })
             });
 
-            alert(`Игрок ${currentParsedData.nick} зачислен! Ключи отправлены в чат логов.`);
+            alert(`Игрок ${currentParsedData.nick} зачислен! Ссылки и ключи отправлены в общий чат.`);
             clearTerminal();
         }
 
@@ -842,7 +820,6 @@
             cards.forEach(c => c.remove());
         }
 
-        // 🔥 УМНЫЙ ТАЙМЕР НА 24 ЧАСА ДЛЯ МАРКЕРА «НОВЫЙ УЧАСТНИК»
         function renderLocalRecruits() {
             document.querySelectorAll('.player-card.new-recruit').forEach(c => c.remove());
             let localPlayers = [];
@@ -974,6 +951,13 @@
                 submitBtn.textContent = "Отправить заявку";
             });
         });
+
+        // ДВИЖОК ТАКТИЧЕСКИХ АНИМАЦИЙ СТРАНИЦ
+        const sections = document.querySelectorAll('section');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('section-active'); });
+        }, { threshold: 0.1 });
+        sections.forEach(s => observer.observe(s));
     </script>
 </body>
 </html>
