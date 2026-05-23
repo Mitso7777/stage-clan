@@ -719,41 +719,36 @@
         });
         closeLoginModalBtn.addEventListener('click', () => loginModalOverlay.classList.remove('active'));
 
-        submitAdminLoginBtn.addEventListener('click', () => {
-            const inputLogin = adminEmailInput.value.trim();
-            const inputPassword = adminPasswordInput.value.trim();
+     submitAdminLoginBtn.addEventListener('click', async () => {
+    const inputLogin = adminEmailInput.value.trim();
+    const inputPassword = adminPasswordInput.value.trim();
 
-            const bannedTgs = JSON.parse(localStorage.getItem('stage_banned_telegram_list')) || [];
-            if(bannedTgs.includes(inputLogin.toLowerCase())) {
-                alert("Данный аккаунт заблокирован решением штаба STAGE.");
-                return;
-            }
+    // Показываем, что идет проверка
+    submitAdminLoginBtn.textContent = "Проверка доступа...";
+    submitAdminLoginBtn.disabled = true;
 
-            if (inputLogin === SUPER_ADMIN.email && inputPassword === SUPER_ADMIN.password) {
-                sessionStorage.setItem('stage_leader_session', 'true');
-                localStorage.setItem('stage_team_logged', 'true');
-                activateLeaderMode(); unlockTeamFeatures(); loginModalOverlay.classList.remove('active');
-                alert("Доступ подтвержден. Приветствую, Глава флота STAGE!");
-                return;
-            }
+    try {
+        // Твоя ссылка на Google Script
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz-3OGQWNe3i74brY3ahkYTiag3M6NKlI-f0Y6Tl3aXnQ0O1X--_lzueO8GqkzwnLqzTw/exec";
+        
+        const response = await fetch(`${GOOGLE_SCRIPT_URL}?login=${encodeURIComponent(inputLogin)}&pass=${encodeURIComponent(inputPassword)}`);
+        const result = await response.text();
 
-            // Проверка базового состава (сравниваем без обрезания регистра)
-            if (BASE_CLAN_MEMBERS[inputLogin.toLowerCase()] && BASE_CLAN_MEMBERS[inputLogin.toLowerCase()] === inputPassword.toLowerCase()) {
-                localStorage.setItem('stage_team_logged', 'true'); unlockTeamFeatures(); loginModalOverlay.classList.remove('active');
-                alert(`Доступ разрешен. С возвращением в строй, боец!`);
-                return;
-            }
-
-            // Точная проверка динамических паролей (безtoLowerCase для пароля!)
-            const approvedQueueList = JSON.parse(localStorage.getItem('stage_approved_pairs_credentials')) || {};
-            if (approvedQueueList[inputLogin] && approvedQueueList[inputLogin] === inputPassword) {
-                localStorage.setItem('stage_team_logged', 'true'); unlockTeamFeatures(); loginModalOverlay.classList.remove('active');
-                alert(`Верификация пройдена. Добро пожаловать в тактический штаб STAGE!`);
-                return;
-            }
-
-            alert("Ошибка доступа! Неверное сочетание Логина (ТГ) и Пароля.");
-        });
+        if (result.trim() === "SUCCESS") {
+            localStorage.setItem('stage_team_logged', 'true');
+            unlockTeamFeatures();
+            loginModalOverlay.classList.remove('active');
+            alert("✅ Доступ подтвержден через облачную базу STAGE!");
+        } else {
+            alert("❌ Ошибка: Неверный логин или пароль.");
+        }
+    } catch (error) {
+        alert("⚠️ Ошибка связи с сервером. Проверь интернет или настройки скрипта.");
+    } finally {
+        submitAdminLoginBtn.textContent = "Авторизоваться";
+        submitAdminLoginBtn.disabled = false;
+    }
+});
 
         function applyGlobalKickedFilters() {
             const globallyKickedNicks = JSON.parse(localStorage.getItem('stage_globally_kicked_nicks')) || [];
