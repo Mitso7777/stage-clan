@@ -66,24 +66,6 @@
         #navMapsLink:hover, #navBoardLink:hover { color: #c084fc; text-shadow: 0 0 10px rgba(168, 85, 247, 0.6); }
         #navStatsBtn { display: none; color: #eab308; }
 
-        /* КНОПКА ВЫБОРА ЯЗЫКА */
-        .btn-lang-switch {
-            background: rgba(168, 85, 247, 0.1);
-            border: 1px solid rgba(168, 85, 247, 0.4);
-            color: #c084fc;
-            padding: 4px 10px;
-            border-radius: 15px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 11px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .btn-lang-switch:hover {
-            background: rgba(168, 85, 247, 0.3);
-            box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
-        }
-
         .btn-nav-login {
             background: rgba(0, 136, 204, 0.15);
             border: 2px solid #0088cc;
@@ -124,7 +106,6 @@
             background-attachment: fixed;
         }
 
-        /* АНИМАЦИЯ ПОЯВЛЕНИЯ КОНТЕНТА */
         .welcome-screen > *, .roster-container, .social-container, .founders-grid, .section-title, .recruit-box, .secret-tg-box, .sub-section-title, .maps-grid, .board-container, .btn-fullscreen-toggle, .lock-overlay-box {
             opacity: 0;
             transform: translateY(30px);
@@ -208,6 +189,7 @@
         }
         .btn-join-neon:hover { background: #0088cc; color: #02050a; box-shadow: 0 0 35px rgba(0, 136, 204, 0.8); transform: scale(1.03); }
 
+        /* КАРТЫ И ДОСКА */
         .maps-screen { background-image: linear-gradient(rgba(2, 5, 10, 0.75), rgba(2, 5, 10, 0.9)), url('maps_bg.png'); }
         .maps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; max-width: 1200px; width: 100%; }
         .map-card { background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(0, 242, 254, 0.2); border-radius: 6px; padding: 15px; display: flex; flex-direction: column; gap: 12px; backdrop-filter: blur(5px); transition: border 0.3s, box-shadow 0.3s, transform 0.2s; cursor: grab; user-select: none; }
@@ -305,6 +287,7 @@
             .toggle-roster-btn { display: block; }
             .maps-grid { grid-template-columns: 1fr; gap: 15px; }
             .board-container { height: 50vh; }
+            .board-container.fullscreen-active { height: 100vh; }
             .stats-grid { grid-template-columns: 1fr; }
             .founders-grid { grid-template-columns: 1fr; }
         }
@@ -314,17 +297,16 @@
 
     <nav class="nav-bar">
         <div class="nav-links-left">
-            <a href="#welcome" id="lngNavHome">Главная</a>
-            <a href="#roster" id="lngNavRoster">Состав</a>
+            <a href="#welcome">Главная</a>
+            <a href="#roster">Состав</a>
             <a href="#maps" id="navMapsLink">Карты</a>
             <a href="#board" id="navBoardLink">Доска</a>
-            <a href="#chat" id="lngNavChats">Чат</a>
-            <a href="#creators" id="lngNavCreators">Креаторы</a>
+            <a href="#chat">Чат</a>
+            <a href="#creators">Креаторы</a>
         </div>
         <div class="nav-links-right">
             <span class="nav-link-btn" id="navLawBtn">Соглашение</span>
             <span class="nav-link-btn" id="navStatsBtn"><i class="fa-solid fa-chart-simple"></i> Статистика</span>
-            <button class="btn-lang-switch" id="langSwitchBtn">EN</button>
             <button class="btn-nav-login" id="navLoginBtn"><i class="fa-solid fa-lock"></i> Вход</button>
         </div>
     </nav>
@@ -335,15 +317,15 @@
     </section>
 
     <section id="roster" class="roster-screen">
-        <h2 class="section-title" id="lngRosterTitle">Состав клана</h2>
+        <h2 class="section-title">Состав клана</h2>
         
         <div id="adminBadge"><i class="fa-solid fa-shield-halved"></i> Режим Лидера Активирован</div>
 
         <div class="roster-container">
             <div class="rank-section">
-                <div class="rank-title" id="lngRosterSubTitle">Участники клана</div>
+                <div class="rank-title">Участники клана</div>
                 <div class="players-grid" id="playersGrid">
-                    <div class="player-card leader" data-nick="Mitso"><span>Mitso</span><span class="tag" id="lngTagLeader">Глава</span></div>
+                    <div class="player-card leader" data-nick="Mitso"><span>Mitso</span><span class="tag">Глава</span></div>
                     <div class="player-card" data-nick="Mr. JOKER"><span>Mr. JOKER</span><i class="fa-solid fa-xmark kick-btn" onclick="kickPlayer(this, 'Mr. JOKER')"></i></div>
                     <div class="player-card" data-nick="Dark Control"><span>Dark Control</span><i class="fa-solid fa-xmark kick-btn" onclick="kickPlayer(this, 'Dark Control')"></i></div>
                     <div class="player-card" data-nick="Mr. PROper Twelve"><span>Mr. PROper Twelve</span><i class="fa-solid fa-xmark kick-btn" onclick="kickPlayer(this, 'Mr. PROper Twelve')"></i></div>
@@ -371,34 +353,34 @@
         </div>
 
         <div class="secret-tg-box" id="secretTgBox">
-            <p id="lngSecretWelcome">ДОСТУП РАЗРЕШЕН. ДОБРО ПОЖАЛОВАТЬ ВО ФЛОТ</p>
+            <p>ДОСТУП РАЗРЕШЕН. ДОБРО ПОЖАЛОВАТЬ ВО ФЛОТ</p>
             <a href="https://t.me/+0kNCkvxktdozZTYy" target="_blank" class="social-btn btn-telegram" style="margin: 0 auto; max-width: 300px;">
-                <i class="fa-solid fa-paper-plane"></i><span id="lngSecretBtnText">Войти в чат клана</span>
+                <i class="fa-solid fa-paper-plane"></i><span>Войти в чат клана</span>
             </a>
-            <button type="button" class="btn-reset-auth" onclick="resetUserAuth()" id="lngSecretLogout">Выйти из аккаунта (Сбросить допуск)</button>
+            <button type="button" class="btn-reset-auth" onclick="resetUserAuth()">Выйти из аккаунта (Сбросить допуск)</button>
         </div>
 
         <div class="recruit-box" id="recruitBoxBtn">
-            <button class="btn-join-neon" id="openModalBtn"><i class="fa-solid fa-paper-plane"></i> <span id="lngRecruitBtn">Подать заявку / Верификация</span></button>
+            <button class="btn-join-neon" id="openModalBtn"><i class="fa-solid fa-paper-plane"></i> Подать заявку / Верификация</button>
         </div>
     </section>
 
     <section id="maps" class="maps-screen">
-        <h2 class="section-title" id="lngMapsTitle">Тактические Карты</h2>
+        <h2 class="section-title">Тактические Карты</h2>
         <div class="lock-overlay-box" id="mapsLockBox">
             <i class="fa-solid fa-building-shield"></i>
-            <h3 id="lngLockMapsH">Доступ Ограничен</h3>
-            <p id="lngLockMapsP">Тактические карты доступны исключительно действующим членам экипажа STAGE. Пожалуйста, авторизуйтесь через терминал "Вход" в верхнем меню.</p>
+            <h3>Доступ Ограничен</h3>
+            <p>Тактические карты доступны исключительно действующим членам экипажа STAGE. Пожалуйста, авторизуйтесь через терминал "Вход" в верхнем меню.</p>
         </div>
         <div class="maps-grid" id="mapsActualGrid" style="display: none; width: 100%;"></div>
     </section>
 
     <section id="board" class="board-screen">
-        <h2 class="section-title" id="lngBoardTitle">Тактическая доска</h2>
+        <h2 class="section-title">Тактическая доска</h2>
         <div class="lock-overlay-box" id="boardLockBox">
             <i class="fa-solid fa-user-lock"></i>
-            <h3 id="lngLockBoardH">Терминал Заблокирован</h3>
-            <p id="lngLockBoardP">Интерактивный холст координации маневров заблокирован. Требуется подтверждение прав члена команды.</p>
+            <h3>Терминал Заблокирован</h3>
+            <p>Интерактивный холст координации маневров заблокирован. Требуется подтверждение прав члена команды.</p>
         </div>
         <div id="boardActualContainer" style="display: none; width: 100%; flex-direction: column; align-items: center;">
             <button type="button" class="btn-fullscreen-toggle" id="toggleFullscreenBtn">
@@ -411,7 +393,7 @@
     </section>
 
     <section id="chat" class="chat-screen">
-        <h2 class="section-title" id="lngChatsTitle">Наши чаты</h2>
+        <h2 class="section-title">Наши чаты</h2>
         <div class="social-container">
             <a href="https://discord.gg/U3zekgCn7" target="_blank" class="social-btn btn-discord"><i class="fa-brands fa-discord"></i><span>Discord</span></a>
             <a href="https://t.me/+0kNCkvxktdozZTYy" target="_blank" class="social-btn btn-telegram"><i class="fa-solid fa-paper-plane"></i><span>Telegram</span></a>
@@ -419,24 +401,24 @@
     </section>
 
     <section id="creators" class="creators-screen">
-        <h2 class="section-title" id="lngCreatorsTitle">Наши креаторы</h2>
+        <h2 class="section-title">Наши креаторы</h2>
         <div class="social-container">
             <a href="https://t.me/MwAbymitso" target="_blank" class="social-btn btn-creator"><i class="fa-solid fa-play"></i><span>MwAbymitso</span></a>
             <a href="https://t.me/anubis_MW" target="_blank" class="social-btn btn-creator"><i class="fa-solid fa-video"></i><span>Anubis MW</span></a>
             <a href="https://t.me/MWnewsMPT" target="_blank" class="social-btn btn-creator"><i class="fa-solid fa-newspaper"></i><span>MWnewsMPT</span></a>
-            <div class="sub-section-title" id="lngUsefulTitle">Полезно</div>
+            <div class="sub-section-title">Полезно</div>
             <a href="https://wiki.modernwarships.com/ru" target="_blank" class="social-btn btn-wiki"><i class="fa-solid fa-book-open"></i><span>MW WiKi</span></a>
         </div>
     </section>
 
     <section id="founders" class="founders-screen">
-        <h2 class="section-title" id="lngFoundersTitle">Основатели</h2>
+        <h2 class="section-title">Основатели</h2>
         <div class="founders-grid">
-            <a href="https://t.me/bymitso" target="_blank" class="founder-link"><div class="founder-tile leader-tile"><i class="fa-solid fa-anchor"></i><h3>Mitso</h3><p id="lngTileLeader">Основатель</p></div></a>
-            <a href="https://t.me/Mr_JOKER017" target="_blank" class="founder-link"><div class="founder-tile"><i class="fa-solid fa-crosshairs"></i><h3>Mr. JOKER</h3><p class="lngTileFound">Основатель</p></div></a>
-            <a href="https://t.me/Dark_ControI" target="_blank" class="founder-link"><div class="founder-tile"><i class="fa-solid fa-shield-halved"></i><h3>Dark Control</h3><p class="lngTileFound">Основатель</p></div></a>
-            <a href="https://t.me/saveliy_li" target="_blank" class="founder-link"><div class="founder-tile"><i class="fa-solid fa-bolt"></i><h3>Mr. PROper</h3><p class="lngTileFound">Основатель</p></div></a>
-            <a href="https://t.me/banan4uks" target="_blank" class="founder-link"><div class="founder-tile"><i class="fa-solid fa-satellite-dish"></i><h3>Banan</h3><p class="lngTileFound">Основатель</p></div></a>
+            <a href="https://t.me/bymitso" target="_blank" class="founder-link"><div class="founder-tile leader-tile"><i class="fa-solid fa-anchor"></i><h3>Mitso</h3><p>Основатель</p></div></a>
+            <a href="https://t.me/Mr_JOKER017" target="_blank" class="founder-link"><div class="founder-tile"><i class="fa-solid fa-crosshairs"></i><h3>Mr. JOKER</h3><p>Основатель</p></div></a>
+            <a href="https://t.me/Dark_ControI" target="_blank" class="founder-link"><div class="founder-tile"><i class="fa-solid fa-shield-halved"></i><h3>Dark Control</h3><p>Основатель</p></div></a>
+            <a href="https://t.me/saveliy_li" target="_blank" class="founder-link"><div class="founder-tile"><i class="fa-solid fa-bolt"></i><h3>Mr. PROper</h3><p>Основатель</p></div></a>
+            <a href="https://t.me/banan4uks" target="_blank" class="founder-link"><div class="founder-tile"><i class="fa-solid fa-satellite-dish"></i><h3>Banan</h3><p>Основатель</p></div></a>
         </div>
     </section>
 
@@ -445,13 +427,13 @@
             <span class="close-btn" id="closeModalBtn" onclick="document.getElementById('modalOverlay').classList.remove('active');">&times;</span>
             
             <form id="recruitForm">
-                <div class="modal-title" id="lngM1Title">Подать заявку</div>
-                <div class="form-group"><label id="lngM1L1">Игровой ID</label><input type="text" id="gameId" placeholder="49284729" required></div>
-                <div class="form-group"><label id="lngM1L2">Никнейм в игре</label><input type="text" id="gameNick" placeholder="Nick" required></div>
-                <div class="form-group"><label id="lngM1L3">Твой Telegram-Ник</label><input type="text" id="tgLink" placeholder="@name" required></div>
+                <div class="modal-title">Подать заявку</div>
+                <div class="form-group"><label>Игровой ID</label><input type="text" id="gameId" placeholder="Например: 49284729" required></div>
+                <div class="form-group"><label>Никнейм в игре</label><input type="text" id="gameNick" placeholder="Твой ник" required></div>
+                <div class="form-group"><label>Твой Telegram-Ник</label><input type="text" id="tgLink" placeholder="Например: @vova" required></div>
                 <div class="law-box">
                     <input type="checkbox" id="lawAgree">
-                    <div class="law-text" id="lngM1Law">Я принимаю условия <button type="button" class="btn-law-link" id="openLawBtn">развлекательного сообщества</button> и даю согласие на обработку данных.</div>
+                    <div class="law-text">Я принимаю условия <button type="button" class="btn-law-link" id="openLawBtn">развлекательного сообщества</button> и даю согласие на обработку данных.</div>
                 </div>
                 <button type="submit" class="btn-submit" id="submitBtn" disabled>Отправить заявку</button>
                 <div style="text-align: center; margin-top: 15px;">
@@ -460,9 +442,9 @@
             </form>
 
             <div id="verifyBlock" style="display: none;">
-                <div class="modal-title" style="color: #00f2fe;" id="lngM2Title">Верификация допуска</div>
-                <p style="font-size: 13px; color: #94a3b8; text-align: center; margin-bottom: 15px;" id="lngM2P">Введите ваш Telegram-никнейм. Если глава клана перевел вас в статус «Одобрен», шлюз откроется.</p>
-                <div class="form-group"><label id="lngM2L">Ваш Telegram-Ник</label><input type="text" id="verifyTgInput" placeholder="@name" required></div>
+                <div class="modal-title" style="color: #00f2fe;">Верификация допуска</div>
+                <p style="font-size: 13px; color: #94a3b8; text-align: center; margin-bottom: 15px;">Введите ваш Telegram-никнейм. Если глава клана перевел вас в статус «Одобрен», шлюз откроется.</p>
+                <div class="form-group"><label>Ваш Telegram-Ник</label><input type="text" id="verifyTgInput" placeholder="Например: @vova" required></div>
                 <button type="button" class="btn-submit" id="checkVerifyBtn">Проверить допуск</button>
                 <div style="text-align: center; margin-top: 15px;">
                     <span id="switchToForm" style="color: #a855f7; cursor: pointer; text-decoration: underline; font-size: 14px;">Вернуться к подаче заявки</span>
@@ -470,10 +452,10 @@
             </div>
 
             <div class="success-result" id="successResult">
-                <div class="modal-title" style="color: #00f2fe;" id="lngM3Title">Заявка в штабе</div>
-                <p style="text-align:center; margin-bottom:12px; color: #94a3b8; font-size: 14px;" id="lngM3P">Данные отправлены. Чтобы бот смог автоматически прислать вам **Логин и Пароль** после одобрения главой, обязательно запустите бота.</p>
-                <a href="https://t.me/StageClanRecruit_bot" target="_blank" class="btn-submit" style="display:inline-block; text-decoration:none; margin-bottom:10px; background:#0088cc; color:#fff; text-align:center; padding:10px 0; width:100%; border-radius: 30px;" id="lngM3Bot">1. Активировать бота в ТГ</a>
-                <button type="button" class="btn-submit" onclick="document.getElementById('modalOverlay').classList.remove('active');" style="background:#1e293b; color:#94a3b8;" id="lngM3Close">2. Закрыть окно</button>
+                <div class="modal-title" style="color: #00f2fe;">Заявка в штабе</div>
+                <p style="text-align:center; margin-bottom:12px; color: #94a3b8; font-size: 14px;">Данные отправлены. Чтобы бот смог автоматически прислать вам **Логин и Пароль** после одобрения главой, обязательно запустите бота.</p>
+                <a href="https://t.me/StageClanRecruit_bot" target="_blank" class="btn-submit" style="display:inline-block; text-decoration:none; margin-bottom:10px; background:#0088cc; color:#fff; text-align:center; padding:10px 0; width:100%; border-radius: 30px;">1. Активировать бота в ТГ</a>
+                <button type="button" class="btn-submit" onclick="document.getElementById('modalOverlay').classList.remove('active');" style="background:#1e293b; color:#94a3b8;">2. Закрыть окно</button>
             </div>
         </div>
     </div>
@@ -481,8 +463,8 @@
     <div class="modal-overlay" id="lawModalOverlay" style="z-index: 110;">
         <div class="modal-window" style="max-width: 500px;">
             <span class="close-btn" id="closeLawModalBtn">&times;</span>
-            <div class="modal-title" style="color: #a855f7; border-bottom-color: rgba(168,85,247,0.3);" id="lngM4Title">Пользовательское Соглашение</div>
-            <div class="law-window-content" id="lngM4Content">
+            <div class="modal-title" style="color: #a855f7; border-bottom-color: rgba(168, 85, 247, 0.3);">Пользовательское Соглашение</div>
+            <div class="law-window-content">
                 <p>Клан STAGE является некоммерческим добровольным объединением игроков Modern Warships.</p>
                 <h4>1. Принцип добровольности</h4>
                 <p>Пользователь предоставляет свой публичный Игровой ID и контакт Telegram добровольно для верификации профиля.</p>
@@ -494,9 +476,9 @@
     <div class="modal-overlay" id="loginModalOverlay" style="z-index: 120;">
         <div class="modal-window" style="max-width: 400px;">
             <span class="close-btn" id="closeLoginModalBtn">&times;</span>
-            <div class="modal-title" style="color: #00f2fe;" id="lngM5Title">Вход для Членов Клана</div>
-            <div class="form-group"><label id="lngM5L1">Ваш Telegram Тэг (Логин)</label><input type="text" id="adminEmailInput" placeholder="@name" required></div>
-            <div class="form-group"><label id="lngM5L2">Пароль</label><input type="password" id="adminPasswordInput" placeholder="Password" required></div>
+            <div class="modal-title" style="color: #00f2fe;">Вход для Членов Клана</div>
+            <div class="form-group"><label>Ваш Telegram Тэг (Логин)</label><input type="text" id="adminEmailInput" placeholder="Например: @vova" required></div>
+            <div class="form-group"><label>Пароль</label><input type="password" id="adminPasswordInput" placeholder="Введи выданный пароль" required></div>
             <button type="button" class="btn-submit" id="submitAdminLoginBtn">Авторизоваться</button>
         </div>
     </div>
@@ -516,7 +498,7 @@
             <div style="border-top: 1px solid rgba(168, 85, 247, 0.2); margin-top: 15px; padding-top: 15px;">
                 <div class="rank-title" style="color:#00f2fe; font-size:14px; border:none; margin-bottom:5px; text-align:left;">Обработка рапортов Telegram</div>
                 <div class="form-group">
-                    <label>Вставьте скопированный текст заявки из чата ТГ:</label>
+                    <label>Вставьте скопированный text заявки из чата ТГ:</label>
                     <textarea id="rawTelegramInput" rows="3" placeholder="⚓️ Новая заявка STAGE!&#10;👤 Ник: Vanya_STAGE&#10;✈️ TG: @vova" style="resize:none; font-size:12px; border-color:rgba(0,242,254,0.2);"></textarea>
                 </div>
                 
@@ -538,6 +520,7 @@
         const TG_THREAD_ID = 5264;          
         const CLAN_ID = "250489";
 
+        // ☁️ ПРИВЯЗКА К ОБЛАЧНОЙ БАЗЕ ДАННЫХ JSONBIN.IO
         const BIN_ID = "6a12294c6877513b27c06650"; 
         const MASTER_KEY = "$2a$10$v7z4/8N8GC8M8hitL86knebm9goe4YeILXuk0ApLLcpdRNJIWqjzu"; 
 
@@ -553,105 +536,91 @@
 
         const APPROVED_TELEGRAMS = ["@bymitso", "@banan4uks", "@Dark_ControI", "@saveliy_li", "@Mr_JOKER017"];
 
-        let translations = {
-            EN: {
-                home: "Home", roster: "Roster", maps: "Maps", board: "Board", chats: "Chats", creators: "Creators",
-                agreement: "Agreement", stats: "Stats", login: "Login", rosterTitle: "Clan Roster", rosterSubTitle: "Clan Members",
-                leader: "Leader", secWelcome: "ACCESS GRANTED. WELCOME TO THE FLEET", secBtn: "Enter Clan Chat", secLogout: "Logout from Account",
-                recruitBtn: "Apply for Clan / Verification", mapsTitle: "Tactical Maps", boardTitle: "Tactical Board", fullscreenOn: "Fullscreen Mode", fullscreenOff: "Exit Fullscreen",
-                lockMapsH: "Access Restricted", lockMapsP: "Tactical maps are available exclusively to active members of the STAGE crew. Please log in using the terminal above.",
-                lockBoardH: "Terminal Locked", lockBoardP: "The interactive maneuver coordination canvas is closed by protective shielding. Team member verification is required.",
-                chatsTitle: "Our Chats", creatorsTitle: "Our Creators", useful: "Useful Info", foundersTitle: "Founders", foundTile: "Founder",
-                m1Title: "Submit Application", m1L1: "Game ID", m1L2: "In-game Nickname", m1L3: "Your Telegram ID", m1Law: "I accept the terms of the entertainment community and consent to data processing.",
-                m2Title: "Verification", m2P: "Enter your Telegram username. If the clan leader has approved you, the gateway will unlock.", m2L: "Your Telegram ID", m3Title: "Application Sent",
-                m3P: "Data transmitted. To ensure the bot can automatically forward your login keys after approval, make sure you launch it.", m3Bot: "1. Activate Bot in TG", m3Close: "2. Close Window",
-                m4Title: "User Agreement", m4Content: "<p>STAGE Clan is a non-commercial voluntary union of Modern Warships players.</p><h4>1. Principle of Voluntariness</h4><p>The user provides their public Game ID and Telegram contact voluntarily.</p>",
-                m5Title: "Member Authentication", m5L1: "Telegram username (Login)", m5L2: "Password", btnSubmit: "Send Request", btnAuth: "Authenticate", btnCheck: "Check Access", btnVerifyLink: "Already approved? Check status", btnFormLink: "Return to Application Form", btnShowAll: "Show All Members", btnHideAll: "Hide Members"
-            },
-            RU: {
-                home: "Главная", roster: "Состав", maps: "Карты", board: "Доска", chats: "Чат", creators: "Креаторы",
-                agreement: "Соглашение", stats: "Статистика", login: "Вход", rosterTitle: "Состав клана", rosterSubTitle: "Участники клана",
-                leader: "Глава", secWelcome: "ДОСТУП РАЗРЕШЕН. ДОБРО ПОЖАЛОВАТЬ ВО ФЛОТ", secBtn: "Войти в чат клана", secLogout: "Выйти из аккаунта (Сбросить допуск)",
-                recruitBtn: "Подать заявку / Верификация", mapsTitle: "Тактические Карты", boardTitle: "Тактическая доска", fullscreenOn: "Развернуть во весь экран", fullscreenOff: "Свернуть доску",
-                lockMapsH: "Доступ Ограничен", lockMapsP: "Тактические карты доступны исключительно действующим членам экипажа STAGE. Пожалуйста, авторизуйтесь через терминал \"Вход\" в верхнем меню.",
-                lockBoardH: "Терминал Заблокирован", lockBoardP: "Интерактивный холст координации маневров заблокирован. Требуется подтверждение прав члена команды.",
-                chatsTitle: "Наши чаты", creatorsTitle: "Наши креаторы", useful: "Полезно", foundersTitle: "Основатели", foundTile: "Основатель",
-                m1Title: "Подать заявку", m1L1: "Игровой ID", m1L2: "Никнейм в игре", m1L3: "Твой Telegram-Ник", m1Law: "Я принимаю условия развлекательного сообщества и даю согласие на обработку данных.",
-                m2Title: "Верификация допуска", m2P: "Введите ваш Telegram-никнейм. Если глава клана перевел вас в статус «Одобрен», шлюз откроется.", m2L: "Ваш Telegram-Ник", m3Title: "Заявка в штабе",
-                m3P: "Данные отправлены. Чтобы бот смог автоматически прислать вам Логин и Пароль после одобрения главой, обязательно запустите бота.", m3Bot: "1. Активировать бота в ТГ", m3Close: "2. Закрыть окно",
-                m4Title: "Пользовательское Соглашение", m4Content: "<p>Клан STAGE является некоммерческим добровольным объединением игроков Modern Warships.</p><h4>1. Принцип добровольности</h4><p>Пользователь предоставляет свой публичный Игровой ID и контакт Telegram добровольно для верификации профиля.</p>",
-                m5Title: "Вход для Членов Клана", m5L1: "Ваш Telegram Тэг (Логин)", m5L2: "Пароль", btnSubmit: "Отправить заявку", btnAuth: "Авторизоваться", btnCheck: "Проверить допуск", btnVerifyLink: "Уже одобрен главой? Проверить допуск", btnFormLink: "Вернуться к подаче заявки", btnShowAll: "Показать всех участников", btnHideAll: "Скрыть список"
-            }
-        };
+        let views = parseInt(localStorage.getItem('stage_views') || '0');
+        let isUnique = localStorage.getItem('stage_unique_user');
+        let uniqueVisits = parseInt(localStorage.getItem('stage_uniques') || '0');
+        let totalRequests = parseInt(localStorage.getItem('stage_requests_count') || '0');
 
-        let currentLang = "RU";
+        views++; localStorage.setItem('stage_views', views.toString());
+        if (!isUnique) { localStorage.setItem('stage_unique_user', 'true'); uniqueVisits++; localStorage.setItem('stage_uniques', uniqueVisits.toString()); }
+
+        const openModalBtn = document.getElementById('openModalBtn');
+        const recruitForm = document.getElementById('recruitForm');
+        const verifyBlock = document.getElementById('verifyBlock');
+        const submitBtn = document.getElementById('submitBtn');
+        const lawAgree = document.getElementById('lawAgree');
+        const playersGrid = document.getElementById('playersGrid');
+        const secretTgBox = document.getElementById('secretTgBox');
+        const recruitBoxBtn = document.getElementById('recruitBoxBtn');
+        const toggleRosterBtn = document.getElementById('toggleRosterBtn');
+        const adminBadge = document.getElementById('adminBadge');
+
+        const navLawBtn = document.getElementById('navLawBtn');
+        const navLoginBtn = document.getElementById('navLoginBtn');
+        const navStatsBtn = document.getElementById('navStatsBtn');
+        const navMapsLink = document.getElementById('navMapsLink');
+        const navBoardLink = document.getElementById('navBoardLink');
+
+        const lawModalOverlay = document.getElementById('lawModalOverlay');
+        const loginModalOverlay = document.getElementById('loginModalOverlay');
+        const statsModalOverlay = document.getElementById('statsModalOverlay');
+
+        const closeLawModalBtn = document.getElementById('closeLawModalBtn');
+        const closeLoginModalBtn = document.getElementById('closeLoginModalBtn');
+        const closeStatsModalBtn = document.getElementById('closeStatsModalBtn');
+
+        const submitAdminLoginBtn = document.getElementById('submitAdminLoginBtn');
+        const adminEmailInput = document.getElementById('adminEmailInput');
+        const adminPasswordInput = document.getElementById('adminPasswordInput');
+
+        const switchToVerify = document.getElementById('switchToVerify');
+        const switchToForm = document.getElementById('switchToForm');
+        const checkVerifyBtn = document.getElementById('checkVerifyBtn');
+        const verifyTgInput = document.getElementById('verifyTgInput');
+        const boardContainer = document.getElementById('boardContainer');
+        const excalidrawFrame = document.getElementById('excalidrawFrame');
+        const toggleFullscreenBtn = document.getElementById('toggleFullscreenBtn');
+
+        const rawTelegramInput = document.getElementById('rawTelegramInput');
+        const terminalStatusBox = document.getElementById('terminalStatusBox');
+        const parsedNickText = document.getElementById('parsedNickText');
+        const parsedTgText = document.getElementById('parsedTgText');
+
+        let isRosterExpanded = false;
+        let isLeaderMode = false;
+        let currentParsedData = null;
         let cloudDatabase = { recruits: {}, pairs: {}, banned: [], kickedNicks: [] };
 
-        const langSwitchBtn = document.getElementById('langSwitchBtn');
-        langSwitchBtn.addEventListener('click', () => {
-            currentLang = currentLang === "RU" ? "EN" : "RU";
-            langSwitchBtn.textContent = currentLang === "RU" ? "EN" : "RU";
-            applyLanguage();
+        window.addEventListener('DOMContentLoaded', async () => {
+            if (window.location.hash && window.location.hash !== "#welcome") {
+                setTimeout(() => { window.location.hash = "#welcome"; window.scrollTo(0, 0); }, 50);
+            }
+
+            await syncWithCloud();
+
+            applyGlobalKickedFilters();
+            renderLocalRecruits();
+            generateTacticalMapsGrid();
+            
+            // 🛡️ АВТО-ВЫЛЕТ ИЗ АККАУНТА ДЛЯ УДАЛЕННЫХ ПОЛЬЗОВАТЕЛЕЙ
+            const userTg = localStorage.getItem('stage_user_registered_tg');
+            if (userTg && cloudDatabase.banned.includes(userTg.trim().toLowerCase())) {
+                forceAbsoluteLogout();
+                return;
+            }
+
+            if (localStorage.getItem('stage_team_logged') === 'true') { unlockTeamFeatures(); }
+            if (localStorage.getItem('stage_authorized') === 'true') { secretTgBox.style.display = 'block'; recruitBoxBtn.style.display = 'none'; }
+            if (localStorage.getItem('stage_leader_session') === 'true') { activateLeaderMode(); }
+            
+            setupDragAndDrop();
+
+            const sections = document.querySelectorAll('section');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('section-active'); });
+            }, { threshold: 0.1 });
+            sections.forEach(s => observer.observe(s));
         });
-
-        function applyLanguage() {
-            const l = translations[currentLang];
-            document.getElementById('lngNavHome').textContent = l.home;
-            document.getElementById('lngNavRoster').textContent = l.roster;
-            document.getElementById('navMapsLink').textContent = l.maps;
-            document.getElementById('navBoardLink').textContent = l.board;
-            document.getElementById('lngNavChats').textContent = l.chats;
-            document.getElementById('lngNavCreators').textContent = l.creators;
-            document.getElementById('navLawBtn').childNodes[0].textContent = l.agreement;
-            document.getElementById('navStatsBtn').childNodes[1].textContent = " " + l.stats;
-            if(localStorage.getItem('stage_team_logged') !== 'true') document.getElementById('navLoginBtn').innerHTML = `<i class="fa-solid fa-lock"></i> ` + l.login;
-            
-            document.getElementById('lngRosterTitle').textContent = l.rosterTitle;
-            document.getElementById('lngRosterSubTitle').textContent = l.rosterSubTitle;
-            document.getElementById('lngTagLeader').textContent = l.leader;
-            document.getElementById('lngSecretWelcome').textContent = l.secWelcome;
-            document.getElementById('lngSecretBtnText').textContent = l.secBtn;
-            document.getElementById('lngSecretLogout').textContent = l.secLogout;
-            document.getElementById('openModalBtn').innerHTML = `<i class="fa-solid fa-paper-plane"></i> ` + l.recruitBtn;
-            document.getElementById('lngMapsTitle').textContent = l.mapsTitle;
-            document.getElementById('lngLockMapsH').textContent = l.lockMapsH;
-            document.getElementById('lngLockMapsP').textContent = l.lockMapsP;
-            document.getElementById('lngBoardTitle').textContent = l.boardTitle;
-            document.getElementById('lngLockBoardH').textContent = l.lockBoardH;
-            document.getElementById('lngLockBoardP').textContent = l.lockBoardP;
-            document.getElementById('lngChatsTitle').textContent = l.chatsTitle;
-            document.getElementById('lngCreatorsTitle').textContent = l.creatorsTitle;
-            document.getElementById('lngUsefulTitle').textContent = l.useful;
-            document.getElementById('lngFoundersTitle').textContent = l.foundersTitle;
-            document.getElementById('lngTileLeader').textContent = l.foundTile;
-            document.querySelectorAll('.lngTileFound').forEach(el => el.textContent = l.foundTile);
-
-            document.getElementById('lngM1Title').textContent = l.m1Title;
-            document.getElementById('lngM1L1').textContent = l.m1L1;
-            document.getElementById('lngM1L2').textContent = l.m1L2;
-            document.getElementById('lngM1L3').textContent = l.m1L3;
-            document.getElementById('submitBtn').textContent = l.btnSubmit;
-            document.getElementById('switchToVerify').textContent = l.btnVerifyLink;
-            document.getElementById('lngM2Title').textContent = l.m2Title;
-            document.getElementById('lngM2P').textContent = l.m2P;
-            document.getElementById('lngM2L').textContent = l.m2L;
-            document.getElementById('checkVerifyBtn').textContent = l.btnCheck;
-            document.getElementById('switchToForm').textContent = l.btnFormLink;
-            document.getElementById('lngM3Title').textContent = l.m3Title;
-            document.getElementById('lngM3P').textContent = l.m3P;
-            document.getElementById('lngM3Bot').textContent = l.m3Bot;
-            document.getElementById('lngM3Close').textContent = l.m3Close;
-            document.getElementById('lngM4Title').textContent = l.m4Title;
-            document.getElementById('lngM4Content').innerHTML = l.m4Content;
-            document.getElementById('lngM5Title').textContent = l.m5Title;
-            document.getElementById('lngM5L1').textContent = l.m5L1;
-            document.getElementById('lngM5L2').textContent = l.m5L2;
-            document.getElementById('submitAdminLoginBtn').textContent = l.btnAuth;
-            document.getElementById('toggleRosterBtn').textContent = isRosterExpanded ? l.btnHideAll : l.btnShowAll;
-            
-            const isFs = boardContainer.classList.contains('fullscreen-active');
-            document.getElementById('fullscreenBtnText').textContent = isFs ? l.fullscreenOff : l.fullscreenOn;
-        }
 
         async function syncWithCloud() {
             if(BIN_ID.includes("ВСТАВЬ_СЮДА")) return; 
@@ -661,7 +630,6 @@
                 });
                 if (response.ok) {
                     const data = await response.json();
-                    // 🔥 ЗАЩИТА: ЕСЛИ ОБЛАКО ПУСТОЕ {}, ЗАПОЛНЯЕМ СТРУКТУРУ В ПАМЯТИ АВТОМАТИЧЕСКИ
                     if(data.record) {
                         cloudDatabase.recruits = data.record.recruits || {};
                         cloudDatabase.pairs = data.record.pairs || {};
@@ -709,7 +677,7 @@
         window.executeTerminalApprove = async function() {
             if(!isLeaderMode || !currentParsedData) return;
             const acceptBtn = document.getElementById('terminalAcceptBtn');
-            acceptBtn.textContent = "...";
+            acceptBtn.textContent = "Запись...";
             acceptBtn.disabled = true;
 
             const generatedPassword = "ST-" + Math.floor(1000 + Math.random() * 9000);
@@ -754,21 +722,15 @@
             localStorage.removeItem('stage_approved_list');
             localStorage.removeItem('stage_user_registered_tg');
             localStorage.removeItem('stage_team_logged');
-            localStorage.removeItem('stage_leader_logged');
+            localStorage.removeItem('stage_leader_session');
             location.reload();
         }
 
-        navLoginBtn.addEventListener('click', () => {
-            if(isLeaderMode || localStorage.getItem('stage_team_logged') === 'true') {
-                if(confirm("Выйти из текущей учетной записи?")) {
-                    forceAbsoluteLogout();
-                }
-            } else {
-                adminEmailInput.value = ""; adminPasswordInput.value = "";
-                loginModalOverlay.classList.add('active');
+        window.resetUserAuth = function() {
+            if(confirm("Вы действительно хотите выйти из аккаунта клана? Карты и доска закроются.")) {
+                forceAbsoluteLogout();
             }
-        });
-        closeLoginModalBtn.addEventListener('click', () => loginModalOverlay.classList.remove('active'));
+        }
 
         submitAdminLoginBtn.addEventListener('click', () => {
             const inputLogin = adminEmailInput.value.trim();
@@ -780,7 +742,7 @@
             }
 
             if (inputLogin === SUPER_ADMIN.email && inputPassword === SUPER_ADMIN.password) {
-                localStorage.setItem('stage_leader_logged', 'true');
+                localStorage.setItem('stage_leader_session', 'true');
                 localStorage.setItem('stage_team_logged', 'true');
                 activateLeaderMode(); unlockTeamFeatures(); loginModalOverlay.classList.remove('active');
                 alert("Доступ подтвержден. Приветствую, Глава флота STAGE!");
@@ -805,7 +767,6 @@
         });
 
         function applyGlobalKickedFilters() {
-            if(!cloudDatabase.kickedNicks) return;
             cloudDatabase.kickedNicks.forEach(kickedNick => {
                 const cardToRemove = document.querySelector(`.player-card[data-nick="${kickedNick}"]`);
                 if (cardToRemove) cardToRemove.remove();
@@ -817,14 +778,13 @@
             document.getElementById('boardLockBox').style.display = 'none';
             document.getElementById('mapsActualGrid').style.display = 'grid';
             document.getElementById('boardActualContainer').style.display = 'flex';
-            
-            navLoginBtn.innerHTML = `<i class="fa-solid fa-user-check" style="color:#00f2fe;"></i> ` + (currentLang === "RU" ? "В команде" : "In Team");
+            navLoginBtn.innerHTML = `<i class="fa-solid fa-user-check" style="color:#00f2fe;"></i> В команде`;
             navLoginBtn.style.background = "rgba(0, 242, 254, 0.15)"; navLoginBtn.style.borderColor = "#00f2fe";
         }
 
         function activateLeaderMode() {
             isLeaderMode = true; adminBadge.style.display = 'block'; navStatsBtn.style.display = 'block'; 
-            navLoginBtn.innerHTML = `<i class="fa-solid fa-user-gear" style="color:#ff0055;"></i> ` + (currentLang === "RU" ? "Админ" : "Admin");
+            navLoginBtn.innerHTML = `<i class="fa-solid fa-user-gear" style="color:#ff0055;"></i> Админ`;
             navLoginBtn.style.background = "rgba(255, 0, 85, 0.15)"; navLoginBtn.style.borderColor = "#ff0055";
             document.querySelectorAll('.kick-btn').forEach(btn => btn.style.display = 'inline-block');
         }
@@ -852,8 +812,8 @@
                 card.className = 'map-card'; card.setAttribute('draggable', 'true');
                 card.innerHTML = `
                     <div class="map-img-holder" style="background-image: url('map${i}.png');"></div>
-                    <div class="map-info"><div class="map-name">${currentLang === "RU" ? "КАРТА №" : "MAP №"}${i}</div></div>
-                    <a href="map${i}.png" download="STAGE_Map_${i}.png" class="btn-map-download"><i class="fa-solid fa-cloud-arrow-down"></i> ${currentLang === "RU" ? "Скачать карту" : "Download Map"}</a>
+                    <div class="map-info"><div class="map-name">КАРТА №${i}</div></div>
+                    <a href="map${i}.png" download="STAGE_Map_${i}.png" class="btn-map-download"><i class="fa-solid fa-cloud-arrow-down"></i> Скачать карту</a>
                 `;
                 card.addEventListener('dragstart', (e) => { e.dataTransfer.setData('text/plain', `map${i}.png`); });
                 container.appendChild(card);
@@ -869,25 +829,25 @@
                 if (mapFileName && mapFileName.includes('.png')) {
                     const fullMapUrl = window.location.origin + '/' + mapFileName;
                     excalidrawFrame.contentWindow.postMessage({ type: "excalidraw-load-image", url: fullMapUrl }, "*");
-                    alert(`Тактическая Карта №${mapFileName.replace(/\D/g, '')} развернута на холсте!`);
+                    alert("Тактическая Карта развернута на холсте!");
                 }
             });
         }
 
-        toggleFullscreenBtn.addEventListener('click', () => {
-            const isCurrentlyFullscreen = boardContainer.classList.contains('fullscreen-active');
-            if (!isCurrentlyFullscreen) {
-                boardContainer.classList.add('fullscreen-active');
-                toggleFullscreenBtn.style.position = "fixed";
-                toggleFullscreenBtn.style.top = "15px";
-                toggleFullscreenBtn.style.right = "15px";
-                toggleFullscreenBtn.style.zIndex = "10000";
-                toggleFullscreenBtn.innerHTML = `<i class="fa-solid fa-compress"></i> ` + (currentLang === "RU" ? "Свернуть доску" : "Collapse Board");
-            } else {
-                boardContainer.classList.remove('fullscreen-active');
-                toggleFullscreenBtn.style.position = "static";
-                toggleFullscreenBtn.innerHTML = `<i class="fa-solid fa-expand"></i> ` + (currentLang === "RU" ? "Развернуть во весь экран" : "Fullscreen Mode");
-            }
+        checkVerifyBtn.addEventListener('click', () => {
+            let inputNick = verifyTgInput.value.trim().toLowerCase();
+            if(!inputNick.startsWith('@')) { inputNick = '@' + inputNick; }
+            
+            if(cloudDatabase.banned.includes(inputNick)) { alert("Доступ заблокирован штабом клана."); return; }
+
+            const localApproved = JSON.parse(localStorage.getItem('stage_approved_list')) || [];
+            if (APPROVED_TELEGRAMS.map(v => v.toLowerCase()).includes(inputNick) || localApproved.includes(inputNick) || cloudDatabase.pairs[verifyTgInput.value.trim()]) {
+                localStorage.setItem('stage_authorized', 'true');
+                localStorage.setItem('stage_user_registered_tg', verifyTgInput.value.trim()); 
+                secretTgBox.style.display = 'block'; recruitBoxBtn.style.display = 'none';
+                document.getElementById('modalOverlay').classList.remove('active');
+                alert("Верификация пройдена успешно! Доступ к ссылке чата открыт.");
+            } else { alert("Ошибка! Ваш Telegram-никнейм не найден в списке одобренных. Пройдите авторизацию через 'Вход' вверху."); }
         });
 
         function renderLocalRecruits() {
@@ -895,7 +855,6 @@
             const oneDayInMs = 24 * 60 * 60 * 1000;
             const now = Date.now();
 
-            if(!cloudDatabase.recruits) return;
             for (let nick in cloudDatabase.recruits) {
                 const approveTime = cloudDatabase.recruits[nick];
                 const card = document.createElement('div');
@@ -903,7 +862,7 @@
                 
                 if (now - approveTime < oneDayInMs) {
                     card.className = 'player-card new-recruit-dynamic';
-                    card.innerHTML = `<span>${nick}</span><span class="tag">${currentLang === "RU" ? "Новобранец" : "Recruit"}</span><i class="fa-solid fa-xmark kick-btn" onclick="kickPlayer(this, '${nick}', false)"></i>`;
+                    card.innerHTML = `<span>${nick}</span><span class="tag">Новобранец</span><i class="fa-solid fa-xmark kick-btn" onclick="kickPlayer(this, '${nick}', false)"></i>`;
                 } else {
                     card.className = 'player-card new-recruit-dynamic';
                     card.innerHTML = `<span>${nick}</span><i class="fa-solid fa-xmark kick-btn" onclick="kickPlayer(this, '${nick}', false)"></i>`;
@@ -922,17 +881,17 @@
                 const cleanNick = nick.replace(/\s+/g, '').toLowerCase();
                 const possibleTgs = [`@${cleanNick}`, `@${cleanNick}_mw`, `@${cleanNick}_stage`, `@${cleanNick}mw`, `@${cleanNick}stage`];
                 
-                if(cloudDatabase.recruits) delete cloudDatabase.recruits[nick];
+                delete cloudDatabase.recruits[nick];
                 possibleTgs.forEach(tg => {
-                    if(cloudDatabase.pairs) delete cloudDatabase.pairs[tg];
+                    delete cloudDatabase.pairs[tg];
                     for(let key in cloudDatabase.pairs) {
                         if(key.toLowerCase() === tg) delete cloudDatabase.pairs[key];
                     }
-                    if(cloudDatabase.banned && !cloudDatabase.banned.includes(tg)) cloudDatabase.banned.push(tg);
+                    if(!cloudDatabase.banned.includes(tg)) cloudDatabase.banned.push(tg);
                 });
 
                 if (isStatic) { 
-                    if(cloudDatabase.kickedNicks && !cloudDatabase.kickedNicks.includes(nick)) cloudDatabase.kickedNicks.push(nick);
+                    if(!cloudDatabase.kickedNicks.includes(nick)) cloudDatabase.kickedNicks.push(nick);
                 }
 
                 await saveToCloud();
@@ -949,7 +908,7 @@
                 if (isRosterExpanded) { card.style.display = 'flex'; setTimeout(() => { card.style.opacity = '1'; card.style.transform = 'translateY(0)'; }, 10); } 
                 else { card.style.opacity = '0'; card.style.transform = 'translateY(-10px)'; setTimeout(() => { card.style.display = 'none'; }, 300); }
             });
-            toggleRosterBtn.textContent = isRosterExpanded ? (currentLang === "RU" ? "Скрыть список" : "Hide Members") : (currentLang === "RU" ? "Показать всех участников" : "Show All Members");
+            toggleRosterBtn.textContent = isRosterExpanded ? "Скрыть список" : "Показать всех участников";
         });
 
         lawAgree.addEventListener('change', function() { submitBtn.disabled = !this.checked; });
@@ -965,8 +924,24 @@
         openLawBtn.addEventListener('click', openLawModal); navLawBtn.addEventListener('click', openLawModal);
         closeLawModalBtn.addEventListener('click', closeLawModal); acceptLawBtn.addEventListener('click', closeLawModal);
 
+        toggleFullscreenBtn.addEventListener('click', () => {
+            const isCurrentlyFullscreen = boardContainer.classList.contains('fullscreen-active');
+            if (!isCurrentlyFullscreen) {
+                boardContainer.classList.add('fullscreen-active');
+                toggleFullscreenBtn.style.position = "fixed";
+                toggleFullscreenBtn.style.top = "15px";
+                toggleFullscreenBtn.style.right = "15px";
+                toggleFullscreenBtn.style.zIndex = "10000";
+                toggleFullscreenBtn.innerHTML = `<i class="fa-solid fa-compress"></i> Свернуть доску`;
+            } else {
+                boardContainer.classList.remove('fullscreen-active');
+                toggleFullscreenBtn.style.position = "static";
+                toggleFullscreenBtn.innerHTML = `<i class="fa-solid fa-expand"></i> Развернуть во весь экран`;
+            }
+        });
+
         recruitForm.addEventListener('submit', function(e) {
-            e.preventDefault(); submitBtn.textContent = "...";
+            e.preventDefault(); submitBtn.textContent = "Передача...";
             const gameNick = document.getElementById('gameNick').value.trim();
             const gameId = document.getElementById('gameId').value.trim();
             let tgLink = document.getElementById('tgLink').value.trim();
@@ -982,7 +957,7 @@
                     recruitForm.style.display = 'none'; document.getElementById('successResult').style.display = 'block'; 
                     totalRequests++; localStorage.setItem('stage_requests_count', totalRequests.toString());
                 } else { alert("Ошибка отправки заявки!"); }
-                submitBtn.textContent = translations[currentLang].btnSubmit;
+                submitBtn.textContent = "Отправить заявку";
             });
         });
     </script>
