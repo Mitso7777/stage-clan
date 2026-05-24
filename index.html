@@ -602,7 +602,6 @@
             renderLocalRecruits();
             generateTacticalMapsGrid();
             
-            // 🛡️ АВТО-ВЫЛЕТ ИЗ АККАУНТА ДЛЯ УДАЛЕННЫХ ПОЛЬЗОВАТЕЛЕЙ
             const userTg = localStorage.getItem('stage_user_registered_tg');
             if (userTg && cloudDatabase.banned.includes(userTg.trim().toLowerCase())) {
                 forceAbsoluteLogout();
@@ -611,6 +610,8 @@
 
             if (localStorage.getItem('stage_team_logged') === 'true') { unlockTeamFeatures(); }
             if (localStorage.getItem('stage_authorized') === 'true') { secretTgBox.style.display = 'block'; recruitBoxBtn.style.display = 'none'; }
+            
+            // Проверяем сессию админа строго из кэша
             if (localStorage.getItem('stage_leader_session') === 'true') { activateLeaderMode(); }
             
             setupDragAndDrop();
@@ -717,6 +718,7 @@
             currentParsedData = null;
         }
 
+        // 🔥 ИСПРАВЛЕННАЯ ЛОГИКА ПОЛНОГО РАЗЛОГИНА И СБРОСА ВСЕХ СЕССИЙ ПРИ ВЫХОДЕ
         function forceAbsoluteLogout() {
             localStorage.removeItem('stage_authorized');
             localStorage.removeItem('stage_approved_list');
@@ -732,6 +734,19 @@
             }
         }
 
+        // 🔥 ИСПРАВЛЕННЫЙ ТРИГГЕР КНОПКИ ВХОДА И ВЫХОДА ДЛЯ АДМИНА И КОМАНДЫ
+        navLoginBtn.addEventListener('click', () => {
+            if(isLeaderMode || localStorage.getItem('stage_team_logged') === 'true') {
+                if(confirm("Выйти из текущей учетной записи?")) {
+                    forceAbsoluteLogout();
+                }
+            } else {
+                adminEmailInput.value = ""; adminPasswordInput.value = "";
+                loginModalOverlay.classList.add('active');
+            }
+        });
+        closeLoginModalBtn.addEventListener('click', () => loginModalOverlay.classList.remove('active'));
+
         submitAdminLoginBtn.addEventListener('click', () => {
             const inputLogin = adminEmailInput.value.trim();
             const inputPassword = adminPasswordInput.value.trim();
@@ -741,6 +756,7 @@
                 return;
             }
 
+            // Вход для Лидера (Только после ручного ввода данных)
             if (inputLogin === SUPER_ADMIN.email && inputPassword === SUPER_ADMIN.password) {
                 localStorage.setItem('stage_leader_session', 'true');
                 localStorage.setItem('stage_team_logged', 'true');
@@ -850,6 +866,11 @@
             } else { alert("Ошибка! Ваш Telegram-никнейм не найден в списке одобренных. Пройдите авторизацию через 'Вход' вверху."); }
         });
 
+        function removePlayerCardsByNick(nick) {
+            const cards = document.querySelectorAll(`.player-card[data-nick="${nick}"]`);
+            cards.forEach(c => c.remove());
+        }
+
         function renderLocalRecruits() {
             document.querySelectorAll('.player-card.new-recruit-dynamic').forEach(c => c.remove());
             const oneDayInMs = 24 * 60 * 60 * 1000;
@@ -922,7 +943,7 @@
         const openLawModal = () => lawModalOverlay.classList.add('active');
         const closeLawModal = () => lawModalOverlay.classList.remove('active');
         openLawBtn.addEventListener('click', openLawModal); navLawBtn.addEventListener('click', openLawModal);
-        closeLawModalBtn.addEventListener('click', closeLawModal); acceptLawBtn.addEventListener('click', closeLawModal);
+        closeLawModalBtn.classList.add('close-btn'); acceptLawBtn.addEventListener('click', closeLawModal);
 
         toggleFullscreenBtn.addEventListener('click', () => {
             const isCurrentlyFullscreen = boardContainer.classList.contains('fullscreen-active');
