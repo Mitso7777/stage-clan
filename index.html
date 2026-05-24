@@ -106,6 +106,8 @@
             background-attachment: fixed;
         }
 
+        .maps-screen, .board-screen { display: none; }
+
         .welcome-screen > *, .roster-container, .social-container, .founders-grid, .section-title, .recruit-box, .secret-tg-box, .sub-section-title, .maps-grid, .board-container, .btn-fullscreen-toggle, .lock-overlay-box {
             opacity: 0;
             transform: translateY(30px);
@@ -453,8 +455,8 @@
 
             <div class="success-result" id="successResult">
                 <div class="modal-title" style="color: #00f2fe;">Заявка в штабе</div>
-                <p style="text-align:center; margin-bottom:12px; color: #94a3b8; font-size: 14px;">Данные отправлены. Чтобы бот смог прислать вам **Логин и Пароль** после одобрения главой, обязательно запустите бота кнопкой ниже.</p>
-                <a href="https://t.me/StageClanRecruit_bot" id="botRedirectUrl" target="_blank" class="btn-submit" style="display:inline-block; text-decoration:none; margin-bottom:10px; background:#0088cc; color:#fff; text-align:center; padding:10px 0; width:100%; border-radius: 30px;">1. Активировать бота в ТГ</a>
+                <p style="text-align:center; margin-bottom:12px; color: #94a3b8; font-size: 14px;">Данные отправлены. Чтобы бот смог прислать вам **Логин и Пароль** после одобрения главой, обязательно запустите бота.</p>
+                <a href="https://t.me/StageClanRecruit_bot" target="_blank" class="btn-submit" style="display:inline-block; text-decoration:none; margin-bottom:10px; background:#0088cc; color:#fff; text-align:center; padding:10px 0; width:100%; border-radius: 30px;">1. Активировать бота в ТГ</a>
                 <button type="button" class="btn-submit" onclick="document.getElementById('modalOverlay').classList.remove('active');" style="background:#1e293b; color:#94a3b8;">2. Закрыть окно</button>
             </div>
         </div>
@@ -498,7 +500,7 @@
             <div style="border-top: 1px solid rgba(168, 85, 247, 0.2); margin-top: 15px; padding-top: 15px;">
                 <div class="rank-title" style="color:#00f2fe; font-size:14px; border:none; margin-bottom:5px; text-align:left;">Обработка рапортов Telegram</div>
                 <div class="form-group">
-                    <label>Вставьте скопированный text заявки из чата ТГ:</label>
+                    <label>Вставьте скопированный текст заявки из чата ТГ:</label>
                     <textarea id="rawTelegramInput" rows="3" placeholder="⚓️ Новая заявка STAGE!&#10;👤 Ник: Vanya_STAGE&#10;✈️ TG: @vova" style="resize:none; font-size:12px; border-color:rgba(0,242,254,0.2);"></textarea>
                 </div>
                 
@@ -590,28 +592,19 @@
         let isLeaderMode = false;
         let currentParsedData = null;
         let cloudDatabase = { recruits: {}, pairs: {}, banned: [], kickedNicks: [] };
-        let isCloudReady = false; // Маркер готовности базы для входа с чужих ПК
 
         window.addEventListener('DOMContentLoaded', async () => {
             if (window.location.hash && window.location.hash !== "#welcome") {
                 setTimeout(() => { window.location.hash = "#welcome"; window.scrollTo(0, 0); }, 50);
             }
 
-            // Блокируем сабмит входа, пока идет синхронизация
-            submitAdminLoginBtn.disabled = true;
-            submitAdminLoginBtn.textContent = "Синхронизация...";
-
             await syncWithCloud();
-
-            // Снимаем блокировку входа
-            isCloudReady = true;
-            submitAdminLoginBtn.disabled = false;
-            submitAdminLoginBtn.textContent = "Авторизоваться";
 
             applyGlobalKickedFilters();
             renderLocalRecruits();
             generateTacticalMapsGrid();
             
+            // ПРИНУДИТЕЛЬНЫЙ ВЫЛЕТ НА УСТРОЙСТВЕ КИКНУТОГО ИГРОКА
             const userTg = localStorage.getItem('stage_user_registered_tg');
             if (userTg && cloudDatabase.banned.includes(userTg.trim().toLowerCase())) {
                 forceAbsoluteLogout();
@@ -635,8 +628,7 @@
             if(BIN_ID.includes("ВСТАВЬ_СЮДА")) return; 
             try {
                 const response = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
-                    headers: { "X-Master-Key": MASTER_KEY },
-                    cache: "no-store" // Принудительно отключаем кэш браузера для чужих устройств
+                    headers: { "X-Master-Key": MASTER_KEY }
                 });
                 if (response.ok) {
                     const data = await response.json();
@@ -664,6 +656,78 @@
             } catch (err) { console.error("Ошибка сохранения в облако:", err); }
         }
 
+        rawTelegramInput.addEventListener('input', function() {
+            const val = this.value;
+            if(!val) { terminalStatusBox.style.display = 'none'; return; }
+
+            const nickMatch = val.match(/(?:Ник:)\s*([^\n🆔]+)/i);
+            const tgMatch = val.match(/(?:TG:)\s*([^\n⚖️]+)/i);
+
+            if (nickMatch && tgMatch) {
+                currentParsedData = {
+                    nick: nickMatch[1].trim(),
+                    tg: tgMatch[1].trim()
+                };
+                parsedNickText.textContent = currentParsedData.nick;
+                parsedTgText.textContent = currentParsedData.tg;
+                terminalStatusBox.style.display = 'block';
+            } else {
+                terminalStatusBox.style.display = 'none';
+            }
+        });
+
+        // 🔥 ОТПРАВКА ДАННЫХ В ЛС ПОЛЬЗОВАТЕЛЮ ЧЕРЕЗ ХЕНДЛЕР БОТА
+        window.executeTerminalApprove = async function() {
+            if(!isLeaderMode || !currentParsedData) return;
+            const acceptBtn = document.getElementById('terminalAcceptBtn');
+            acceptBtn.textContent = "Запись...";
+            acceptBtn.disabled = true;
+
+            const generatedPassword = "ST-" + Math.floor(1000 + Math.random() * 9000);
+            
+            cloudDatabase.recruits[currentParsedData.nick] = Date.now();
+            cloudDatabase.pairs[currentParsedData.tg.trim()] = generatedPassword.trim();
+            
+            cloudDatabase.banned = cloudDatabase.banned.filter(tg => tg !== currentParsedData.tg.trim().toLowerCase());
+            cloudDatabase.kickedNicks = cloudDatabase.kickedNicks.filter(n => n.toLowerCase() !== currentParsedData.nick.toLowerCase());
+
+            await saveToCloud();
+
+            const reportMessage = `🟢 <b>Игрок ${currentParsedData.nick} ПРИНЯТ в клан STAGE!</b>\n\n👤 Логин (ТГ): <code>${currentParsedData.tg}</code>\n🔑 Пароль: <code>${generatedPassword}</code>\n🆔 ID Клана: <code>${CLAN_ID}</code>\n\nСекретный рапорт продублирован в личные сообщения.`;
+
+            // 1. Отправка рапорта в закрытую ветку группы
+            fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: TG_CHAT_ID, message_thread_id: TG_THREAD_ID, text: reportMessage, parse_mode: 'html' })
+            });
+
+            // 2. Отправка личного сообщения самому игроку в ЛС от лица бота
+            const userPrivateMessage = `🎉 <b>Приветствуем на борту, боец ${currentParsedData.nick}!</b>\n\nВаш рапорт одобрен Лидером. Шлюзы тактического управления открыты.\n\n🔐 <b>Ваши персональные данные для входа на сайт:</b>\n👤 <b>Логин (ТГ):</b> <code>${currentParsedData.tg}</code>\n🔑 <b>Пароль:</b> <code>${generatedPassword}</code>\n🆔 <b>ID Клана:</b> <code>${CLAN_ID}</code>\n\n⚓️ <b>Секретные каналы связи клана:</b>\n✈️ <b>Telegram чат:</b> https://t.me/+0kNCkvxktdozZTYy\n🎮 <b>Discord сервер:</b> https://discord.gg/U3zekgCn7\n\nВводите данные в меню "Вход" вверху сайта. Удачи в боях!`;
+
+            fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: currentParsedData.tg, text: userPrivateMessage, parse_mode: 'html' })
+            }).catch(e => console.log("Игрок не активировал бота, личная отправка заблокирована API."));
+
+            alert(`Игрок ${currentParsedData.nick} зачислен! Облачная база обновлена.`);
+            
+            rawTelegramInput.value = "";
+            terminalStatusBox.style.display = 'none';
+            currentParsedData = null;
+            acceptBtn.textContent = "Принять";
+            acceptBtn.disabled = false;
+            renderLocalRecruits();
+        }
+
+        window.executeTerminalReject = function() {
+            if(!confirm("Отклонить рапорт бойца?")) return;
+            rawTelegramInput.value = "";
+            terminalStatusBox.style.display = 'none';
+            currentParsedData = null;
+        }
+
         function forceAbsoluteLogout() {
             localStorage.removeItem('stage_authorized');
             localStorage.removeItem('stage_approved_list');
@@ -679,20 +743,7 @@
             }
         }
 
-        navLoginBtn.addEventListener('click', () => {
-            if(isLeaderMode || localStorage.getItem('stage_team_logged') === 'true') {
-                if(confirm("Выйти из текущей учетной записи?")) {
-                    forceAbsoluteLogout();
-                }
-            } else {
-                adminEmailInput.value = ""; adminPasswordInput.value = "";
-                loginModalOverlay.classList.add('active');
-            }
-        });
-        closeLoginModalBtn.addEventListener('click', () => loginModalOverlay.classList.remove('active'));
-
         submitAdminLoginBtn.addEventListener('click', () => {
-            if(!isCloudReady) { alert("База данных обновляется. Подождите пару секунд..."); return; }
             const inputLogin = adminEmailInput.value.trim();
             const inputPassword = adminPasswordInput.value.trim();
 
@@ -725,71 +776,6 @@
 
             alert("Ошибка доступа! Неверное сочетание Логина (ТГ) и Пароля.");
         });
-
-        // 🔥 ПРИНЯТИЕ ЗАЯВКИ С ОДНОВРЕМЕННОЙ ОТПРАВКОЙ В ГРУППУ И В ЛС ПОЛЬЗОВАТЕЛЮ
-        window.executeTerminalApprove = async function() {
-            if(!isLeaderMode || !currentParsedData) return;
-            const acceptBtn = document.getElementById('terminalAcceptBtn');
-            acceptBtn.textContent = "Запись...";
-            acceptBtn.disabled = true;
-
-            const generatedPassword = "ST-" + Math.floor(1000 + Math.random() * 9000);
-            
-            cloudDatabase.recruits[currentParsedData.nick] = Date.now();
-            cloudDatabase.pairs[currentParsedData.tg.trim()] = generatedPassword.trim();
-            
-            cloudDatabase.banned = cloudDatabase.banned.filter(tg => tg !== currentParsedData.tg.trim().toLowerCase());
-            cloudDatabase.kickedNicks = cloudDatabase.kickedNicks.filter(n => n.toLowerCase() !== currentParsedData.nick.toLowerCase());
-
-            await saveToCloud();
-
-            // Текст сообщения (идентичный для группы и лички)
-            const notificationText = `🟢 <b>Игрок ${currentParsedData.nick} ПРИНЯТ в клан STAGE!</b>\n\n👤 <b>Логин (ТГ):</b> <code>${currentParsedData.tg}</code>\n🔑 <b>Пароль:</b> <code>${generatedPassword}</code>\n🆔 <b>ID Клана:</b> <code>${CLAN_ID}</code>\n\n⚓️ <b>Секретные ссылки:</b>\n✈️ Telegram: https://t.me/+0kNCkvxktdozZTYy\n🎮 Discord: https://discord.gg/U3zekgCn7`;
-
-            // 1. Отправка рапорта в штабной лог-чат группы
-            fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    chat_id: TG_CHAT_ID, 
-                    message_thread_id: TG_THREAD_ID, 
-                    text: notificationText,
-                    parse_mode: 'html'
-                })
-            });
-
-            // 2. ОТПРАВКА ДАННЫХ ИГРОКУ В ЛИЧНЫЕ СООБЩЕНИЯ ЧЕРЕЗ ЕГО ИД ЗАЯВКИ
-            const cleanTgUsername = currentParsedData.tg.replace('@', '');
-            const savedChatId = localStorage.getItem(`stage_chatid_${cleanTgUsername}`);
-            
-            if (savedChatId) {
-                fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        chat_id: savedChatId, 
-                        text: `🎉 <b>Рапорт одобрен! Данные вашей учетной записи:</b>\n\n${notificationText}`,
-                        parse_mode: 'html'
-                    })
-                });
-            }
-
-            alert(`Игрок ${currentParsedData.nick} зачислен! Облачная база обновлена, данные ушли в ЛС и группу.`);
-            
-            rawTelegramInput.value = "";
-            terminalStatusBox.style.display = 'none';
-            currentParsedData = null;
-            acceptBtn.textContent = "Принять";
-            acceptBtn.disabled = false;
-            renderLocalRecruits();
-        }
-
-        window.executeTerminalReject = function() {
-            if(!confirm("Отклонить рапорт бойца?")) return;
-            rawTelegramInput.value = "";
-            terminalStatusBox.style.display = 'none';
-            currentParsedData = null;
-        }
 
         function applyGlobalKickedFilters() {
             cloudDatabase.kickedNicks.forEach(kickedNick => {
@@ -971,15 +957,6 @@
             const gameId = document.getElementById('gameId').value.trim();
             let tgLink = document.getElementById('tgLink').value.trim();
             if(!tgLink.startsWith('@')) tgLink = '@' + tgLink;
-
-            const cleanUsername = tgLink.replace('@', '');
-            const generatedRequestId = Math.floor(100000 + Math.random() * 900000);
-            
-            // Запоминаем временный идентификационный токен, чтобы бот знал кому слать ответ в ЛС
-            localStorage.setItem(`stage_chatid_${cleanUsername}`, generatedRequestId);
-
-            // Генерируем глубокую диплинк-ссылку активации для кнопки
-            document.getElementById('botRedirectUrl').href = `https://t.me/StageClanRecruit_bot?start=${generatedRequestId}`;
 
             const textMessage = `⚓️ <b>Новая заявка STAGE!</b>\n\n👤 <b>Ник:</b> ${gameNick}\n🆔 <b>ID:</b> ${gameId}\n✈️ <b>TG:</b> ${tgLink}`;
             
