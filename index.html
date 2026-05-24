@@ -705,6 +705,7 @@
             }
         });
 
+        // 🔥 ИСПРАВЛЕНО: Убрана какая-либо отправка сообщений ботом в общий чат после одобрения заявки!
         window.executeTerminalApprove = async function() {
             if(!isLeaderMode || !currentParsedData) return;
             const acceptBtn = document.getElementById('terminalAcceptBtn');
@@ -723,23 +724,16 @@
 
             await saveToCloud();
 
-            const groupMessage = `🟢 <b>Игрок ${currentParsedData.nick} успешно ПРИНЯТ в состав флота STAGE!</b>\n\n👤 <b>Боец:</b> <code>${userTgHandle}</code>\n🆔 <b>ID Клана:</b> <code>${CLAN_ID}</code>\n\nПерсональные ключи доступа сгенерированы и высланы ботом в личные сообщения.`;
-
             const personalMessage = `🎉 <b>Приветствуем на борту, боец ${currentParsedData.nick}!</b>\n\nВаш рапорт в клан <b>STAGE</b> успешно утвержден Руководством флота!\n\n🔐 <b>Ваши персональные ключи доступа к Штабу:</b>\n👤 <b>Логин (Ваш ТГ):</b> <code>${userTgHandle}</code>\n🔑 <b>Пароль:</b> <code>${generatedPassword}</code>\n🆔 <b>ID Клана:</b> <code>${CLAN_ID}</code>\n\n⚓️ <b>Секретные шлюзы коммуникации:</b>\n✈️ Telegram чат: https://t.me/+0kNCkvxktdozZTYy\n\nВозвращайтесь на сайт, авторизуйтесь через терминал "Вход" — Добро пожаловать в клан STAGE. Полный вперёд! 🚢🔥`;
 
-            await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: TG_CHAT_ID, message_thread_id: TG_THREAD_ID, text: groupMessage, parse_mode: 'html' })
-            });
-
+            // ⚡️ Отправка идет ИСКЛЮЧИТЕЛЬНО в личные сообщения бойцу по его ID. В группу ничего не отправляется.
             await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ chat_id: currentParsedData.chatId, text: personalMessage, parse_mode: 'html' })
             });
 
-            alert(`Игрок ${currentParsedData.nick} зачислен! Пароль отправлен ему в ЛС. База синхронизирована.`);
+            alert(`Игрок ${currentParsedData.nick} зачислен! Пароль отправлен ему в ЛС. База обновлена.`);
             
             rawTelegramInput.value = "";
             terminalStatusBox.style.display = 'none';
@@ -878,7 +872,6 @@
                     </div>
                 `;
                 
-                // Передаем картинку и как URL, и как HTML элемент для перетаскивания
                 card.addEventListener('dragstart', (e) => { 
                     e.dataTransfer.setData('text/plain', fullMapUrl); 
                     e.dataTransfer.setData('text/html', `<img src="${fullMapUrl}" alt="Map">`);
@@ -887,7 +880,6 @@
             }
         }
 
-        // 🔥 ПОЛНОЕ ИСПРАВЛЕНИЕ: Теперь в буфер пишется HTML-код картинки. Excalidraw примет её именно как ИЗОБРАЖЕНИЕ, а не ссылку!
         window.copyMapUrlToClipboard = function(url) {
             const htmlContent = `<img src="${url}" alt="Tactical Map">`;
             
@@ -902,13 +894,11 @@
             navigator.clipboard.write([clipboardItem]).then(() => {
                 alert("Карта скопирована в буфер как изображение! Кликните на Тактическую доску ниже и просто нажмите Ctrl+V.");
             }).catch(err => {
-                // Запасной текстовый вариант, если браузер блокирует расширенный буфер
                 navigator.clipboard.writeText(url);
                 alert("Ссылка скопирована! Если при Ctrl+V вставился текст, перетащите карту на доску мышкой.");
             });
         }
 
-        // 🔥 ПОЛНОЕ ИСПРАВЛЕНИЕ: Интеграция Drag & Drop через обработку text/html
         function setupDragAndDrop() {
             boardContainer.addEventListener('dragover', (e) => { e.preventDefault(); boardContainer.classList.add('drag-over'); });
             boardContainer.addEventListener('dragleave', () => { boardContainer.classList.remove('drag-over'); });
@@ -926,7 +916,6 @@
                         'text/html': blobHtml
                     });
 
-                    // Автоматически перекладываем в буфер обмена при дропе, чтобы пользователь мог сразу нажать Ctrl+V внутри фрейма
                     navigator.clipboard.write([clipboardItem]).then(() => {
                         alert("Карта принята шлюзом доски! Кликните по холсту доски и нажмите Ctrl+V для её установки.");
                     });
