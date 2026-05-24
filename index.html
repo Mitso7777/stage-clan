@@ -287,7 +287,7 @@
         @media (max-width: 768px) {
             .nav-bar { top: auto; bottom: 15px; padding: 8px 15px; gap: 4px; width: 98%; left: 50%; transform: translateX(-50%); }
             .nav-links-left { gap: 6px; }
-            .nav-links-right { gap: 6px; padding-left: 6px; }
+            .nav-links-right { gap: 6px; padding-left: 6px; align-items: center; }
             .nav-bar a, .nav-bar span.nav-link-btn { font-size: 8px; letter-spacing: 0.3px; }
             .btn-nav-login { padding: 4px 10px; font-size: 9px; }
             .welcome-screen, .roster-screen, .maps-screen, .board-screen, .chat-screen, .creators-screen, .founders-screen { padding: 60px 10px 80px; background-attachment: scroll; }
@@ -764,15 +764,8 @@
 
             await saveToCloud();
 
-            const groupMessage = `🟢 <b>Игрок ${currentParsedData.nick} ПРИНЯТ в клан STAGE!</b>\n\n👤 <b>Логин (ТГ Тэг):</b> <code>${currentParsedData.tg}</code>\n🔑 <b>Пароль:</b> <code>${generatedPassword}</code>\n🆔 <b>ID Клана:</b> <code>${CLAN_ID}</code>\n\nДанные доступа высланы в личные сообщения бойца.`;
-
+            // Оставляем только персональное уведомление в личные сообщения бойцу
             const personalMessage = `🎉 <b>Приветствуем на борту, боец ${currentParsedData.nick}!</b>\n\nВаш рапорт в клан <b>STAGE</b> успешно утвержден Руководством флота!\n\n🔐 <b>Ваши персональные ключи доступа к Штабу:</b>\n👤 <b>Логин (Ваш ТГ):</b> <code>${currentParsedData.tg}</code>\n🔑 <b>Пароль:</b> <code>${generatedPassword}</code>\n🆔 <b>ID Клана:</b> <code>${CLAN_ID}</code>\n\n⚓️ <b>Секретные шлюзы коммуникации:</b>\n✈️ Telegram чат: https://t.me/+0kNCkvxktdozZTYy\n🎮 Discord server: https://discord.gg/U3zekgCn7\n\nВозвращайтесь на сайт, авторизуйтесь через терминал "Вход" — Карты и Доска открыты. Полный вперёд! 🚢🔥`;
-
-            await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: TG_CHAT_ID, message_thread_id: TG_THREAD_ID, text: groupMessage, parse_mode: 'html' })
-            });
 
             await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
                 method: 'POST',
@@ -902,7 +895,6 @@
         });
         closeStatsModalBtn.addEventListener('click', () => statsModalOverlay.classList.remove('active'));
 
-        // ИСПРАВЛЕНО: Кнопка "На доску" теперь автоматически транслирует изображение прямо во фрейм Excalidraw!
         function generateTacticalMapsGrid() {
             const container = document.getElementById('mapsActualGrid');
             container.innerHTML = "";
@@ -1065,22 +1057,18 @@
         switchToVerify.addEventListener('click', () => { recruitForm.style.display = 'none'; verifyBlock.style.display = 'block'; });
         switchToForm.addEventListener('click', () => { verifyBlock.style.display = 'none'; recruitForm.style.display = 'block'; });
 
-        // ДОБАВЛЕНО: Прямая загрузка изображения на доску без использования буфера обмена!
         window.sendMapToBoard = function(mapFileName, buttonElement) {
             const fullMapUrl = window.location.origin + '/' + mapFileName;
             const iframe = document.getElementById('excalidrawFrame');
             
             if (iframe && iframe.contentWindow) {
-                // Отправляем команду во фрейм Excalidraw загрузить картинку
                 iframe.contentWindow.postMessage({ type: "excalidraw-load-image", url: fullMapUrl }, "*");
                 
-                // Визуальный отклик на кнопке
                 const originalText = buttonElement.innerHTML;
                 buttonElement.innerHTML = `<i class="fa-solid fa-circle-check"></i> На доске!`;
                 buttonElement.style.borderColor = "#22c55e";
                 buttonElement.style.color = "#22c55e";
                 
-                // Плавно скроллим игрока к доске, чтобы он сразу увидел результат
                 document.getElementById('board').scrollIntoView({ behavior: 'smooth' });
                 
                 setTimeout(() => {
