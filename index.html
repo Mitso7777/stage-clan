@@ -553,9 +553,7 @@
 
         const APPROVED_TELEGRAMS = ["@bymitso", "@banan4uks", "@Dark_ControI", "@saveliy_li", "@Mr_JOKER017"];
 
-        // СЛОВАРЬ ПЕРЕВОДА НА АНГЛИЙСКИЙ ЯЗЫК
-        let currentLang = "RU";
-        const translations = {
+        let translations = {
             EN: {
                 home: "Home", roster: "Roster", maps: "Maps", board: "Board", chats: "Chats", creators: "Creators",
                 agreement: "Agreement", stats: "Stats", login: "Login", rosterTitle: "Clan Roster", rosterSubTitle: "Clan Members",
@@ -586,6 +584,7 @@
             }
         };
 
+        let currentLang = "RU";
         let cloudDatabase = { recruits: {}, pairs: {}, banned: [], kickedNicks: [] };
 
         const langSwitchBtn = document.getElementById('langSwitchBtn');
@@ -605,7 +604,7 @@
             document.getElementById('lngNavCreators').textContent = l.creators;
             document.getElementById('navLawBtn').childNodes[0].textContent = l.agreement;
             document.getElementById('navStatsBtn').childNodes[1].textContent = " " + l.stats;
-            if(!isLeaderMode && localStorage.getItem('stage_team_logged') !== 'true') document.getElementById('navLoginBtn').childNodes[1].textContent = " " + l.login;
+            if(localStorage.getItem('stage_team_logged') !== 'true') document.getElementById('navLoginBtn').innerHTML = `<i class="fa-solid fa-lock"></i> ` + l.login;
             
             document.getElementById('lngRosterTitle').textContent = l.rosterTitle;
             document.getElementById('lngRosterSubTitle').textContent = l.rosterSubTitle;
@@ -613,7 +612,7 @@
             document.getElementById('lngSecretWelcome').textContent = l.secWelcome;
             document.getElementById('lngSecretBtnText').textContent = l.secBtn;
             document.getElementById('lngSecretLogout').textContent = l.secLogout;
-            document.getElementById('lngRecruitBtn').textContent = l.recruitBtn;
+            document.getElementById('openModalBtn').innerHTML = `<i class="fa-solid fa-paper-plane"></i> ` + l.recruitBtn;
             document.getElementById('lngMapsTitle').textContent = l.mapsTitle;
             document.getElementById('lngLockMapsH').textContent = l.lockMapsH;
             document.getElementById('lngLockMapsP').textContent = l.lockMapsP;
@@ -631,7 +630,6 @@
             document.getElementById('lngM1L1').textContent = l.m1L1;
             document.getElementById('lngM1L2').textContent = l.m1L2;
             document.getElementById('lngM1L3').textContent = l.m1L3;
-            document.getElementById('lngM1Law').childNodes[0].textContent = l.m1Law.split("развлекательного")[0];
             document.getElementById('submitBtn').textContent = l.btnSubmit;
             document.getElementById('switchToVerify').textContent = l.btnVerifyLink;
             document.getElementById('lngM2Title').textContent = l.m2Title;
@@ -655,90 +653,6 @@
             document.getElementById('fullscreenBtnText').textContent = isFs ? l.fullscreenOff : l.fullscreenOn;
         }
 
-        let views = parseInt(localStorage.getItem('stage_views') || '0');
-        let isUnique = localStorage.getItem('stage_unique_user');
-        let uniqueVisits = parseInt(localStorage.getItem('stage_uniques') || '0');
-        let totalRequests = parseInt(localStorage.getItem('stage_requests_count') || '0');
-
-        views++; localStorage.setItem('stage_views', views.toString());
-        if (!isUnique) { localStorage.setItem('stage_unique_user', 'true'); uniqueVisits++; localStorage.setItem('stage_uniques', uniqueVisits.toString()); }
-
-        const openModalBtn = document.getElementById('openModalBtn');
-        const recruitForm = document.getElementById('recruitForm');
-        const verifyBlock = document.getElementById('verifyBlock');
-        const submitBtn = document.getElementById('submitBtn');
-        const lawAgree = document.getElementById('lawAgree');
-        const playersGrid = document.getElementById('playersGrid');
-        const secretTgBox = document.getElementById('secretTgBox');
-        const recruitBoxBtn = document.getElementById('recruitBoxBtn');
-        const toggleRosterBtn = document.getElementById('toggleRosterBtn');
-        const adminBadge = document.getElementById('adminBadge');
-
-        const navLawBtn = document.getElementById('navLawBtn');
-        const navLoginBtn = document.getElementById('navLoginBtn');
-        const navStatsBtn = document.getElementById('navStatsBtn');
-        const navMapsLink = document.getElementById('navMapsLink');
-        const navBoardLink = document.getElementById('navBoardLink');
-
-        const lawModalOverlay = document.getElementById('lawModalOverlay');
-        const loginModalOverlay = document.getElementById('loginModalOverlay');
-        const statsModalOverlay = document.getElementById('statsModalOverlay');
-
-        const closeLawModalBtn = document.getElementById('closeLawModalBtn');
-        const closeLoginModalBtn = document.getElementById('closeLoginModalBtn');
-        const closeStatsModalBtn = document.getElementById('closeStatsModalBtn');
-
-        const submitAdminLoginBtn = document.getElementById('submitAdminLoginBtn');
-        const adminEmailInput = document.getElementById('adminEmailInput');
-        const adminPasswordInput = document.getElementById('adminPasswordInput');
-
-        const switchToVerify = document.getElementById('switchToVerify');
-        const switchToForm = document.getElementById('switchToForm');
-        const checkVerifyBtn = document.getElementById('checkVerifyBtn');
-        const verifyTgInput = document.getElementById('verifyTgInput');
-        const boardContainer = document.getElementById('boardContainer');
-        const excalidrawFrame = document.getElementById('excalidrawFrame');
-        const toggleFullscreenBtn = document.getElementById('toggleFullscreenBtn');
-
-        const rawTelegramInput = document.getElementById('rawTelegramInput');
-        const terminalStatusBox = document.getElementById('terminalStatusBox');
-        const parsedNickText = document.getElementById('parsedNickText');
-        const parsedTgText = document.getElementById('parsedTgText');
-
-        let currentParsedData = null;
-
-        window.addEventListener('DOMContentLoaded', async () => {
-            if (window.location.hash && window.location.hash !== "#welcome") {
-                setTimeout(() => { window.location.hash = "#welcome"; window.scrollTo(0, 0); }, 50);
-            }
-
-            await syncWithCloud();
-
-            // 🔥 ЖЕСТКИЙ СБРОС И ПРОДОЛЖИТЕЛЬНАЯ ПРОВЕРКА ЕСЛИ ЮЗЕР БЫЛ КИКНУТ АДМИНОМ С ДРУГОГО УСТРОЙСТВА
-            const userTg = localStorage.getItem('stage_user_registered_tg');
-            if (userTg && cloudDatabase.banned.includes(userTg.trim().toLowerCase())) {
-                forceAbsoluteLogout();
-                return;
-            }
-
-            applyGlobalKickedFilters();
-            renderLocalRecruits();
-            generateTacticalMapsGrid();
-
-            // УДАЛЕНА СЕССИОННОСТЬ. ТЕПЕРЬ САЙТ ПОСТОЯННО ХРАНИТ ВХОД
-            if (localStorage.getItem('stage_team_logged') === 'true') { unlockTeamFeatures(); }
-            if (localStorage.getItem('stage_authorized') === 'true') { secretTgBox.style.display = 'block'; recruitBoxBtn.style.display = 'none'; }
-            if (localStorage.getItem('stage_leader_logged') === 'true') { activateLeaderMode(); }
-            
-            setupDragAndDrop();
-
-            const sections = document.querySelectorAll('section');
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('section-active'); });
-            }, { threshold: 0.1 });
-            sections.forEach(s => observer.observe(s));
-        });
-
         async function syncWithCloud() {
             if(BIN_ID.includes("ВСТАВЬ_СЮДА")) return; 
             try {
@@ -747,6 +661,7 @@
                 });
                 if (response.ok) {
                     const data = await response.json();
+                    // 🔥 ЗАЩИТА: ЕСЛИ ОБЛАКО ПУСТОЕ {}, ЗАПОЛНЯЕМ СТРУКТУРУ В ПАМЯТИ АВТОМАТИЧЕСКИ
                     if(data.record) {
                         cloudDatabase.recruits = data.record.recruits || {};
                         cloudDatabase.pairs = data.record.pairs || {};
@@ -807,7 +722,6 @@
 
             await saveToCloud();
 
-            // 🔥 ХЭНДЛ ИСПРАВЛЕН СТРОГО НА @StageClanRecruit_bot ВО ВСЕХ СВЯЗКАХ
             fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -844,13 +758,6 @@
             location.reload();
         }
 
-        window.resetUserAuth = function() {
-            if(confirm("Вы действительно хотите выйти из аккаунта клана? Карты и доска закроются.")) {
-                forceAbsoluteLogout();
-            }
-        }
-
-        // 🔥 ПОЛНОСТЬЮ ОТКЛЮЧЕНО ПРИНУДИТЕЛЬНОЕ ИЗМЕНЕНИЕ РЕГИСТРА ДАННЫХ ПРИ ВХОДЕ
         navLoginBtn.addEventListener('click', () => {
             if(isLeaderMode || localStorage.getItem('stage_team_logged') === 'true') {
                 if(confirm("Выйти из текущей учетной записи?")) {
@@ -886,7 +793,6 @@
                 return;
             }
 
-            // ПРОВЕРКА БЕЗ СМЕНЫ РЕГИСТРА СИМВОЛОВ (ИДЕНТИЧНО ТОМУ, ЧТО ВЫСЛАЛ БОТ)
             if (cloudDatabase.pairs[inputLogin] && cloudDatabase.pairs[inputLogin] === inputPassword) {
                 localStorage.setItem('stage_team_logged', 'true');
                 localStorage.setItem('stage_user_registered_tg', inputLogin);
@@ -899,6 +805,7 @@
         });
 
         function applyGlobalKickedFilters() {
+            if(!cloudDatabase.kickedNicks) return;
             cloudDatabase.kickedNicks.forEach(kickedNick => {
                 const cardToRemove = document.querySelector(`.player-card[data-nick="${kickedNick}"]`);
                 if (cardToRemove) cardToRemove.remove();
@@ -911,7 +818,6 @@
             document.getElementById('mapsActualGrid').style.display = 'grid';
             document.getElementById('boardActualContainer').style.display = 'flex';
             
-            const l = translations[currentLang];
             navLoginBtn.innerHTML = `<i class="fa-solid fa-user-check" style="color:#00f2fe;"></i> ` + (currentLang === "RU" ? "В команде" : "In Team");
             navLoginBtn.style.background = "rgba(0, 242, 254, 0.15)"; navLoginBtn.style.borderColor = "#00f2fe";
         }
@@ -984,12 +890,12 @@
             }
         });
 
-        // 🔥 АВТОМАТИЧЕСКИЙ ТАЙМЕР НА 24 ЧАСА ДЛЯ УБИРАНИЯ ПЛАШКИ НОВОБРАНЕЦ С СИНХРОНИЗАЦИЕЙ ОБЛАКА
         function renderLocalRecruits() {
             document.querySelectorAll('.player-card.new-recruit-dynamic').forEach(c => c.remove());
             const oneDayInMs = 24 * 60 * 60 * 1000;
             const now = Date.now();
 
+            if(!cloudDatabase.recruits) return;
             for (let nick in cloudDatabase.recruits) {
                 const approveTime = cloudDatabase.recruits[nick];
                 const card = document.createElement('div');
@@ -1016,17 +922,17 @@
                 const cleanNick = nick.replace(/\s+/g, '').toLowerCase();
                 const possibleTgs = [`@${cleanNick}`, `@${cleanNick}_mw`, `@${cleanNick}_stage`, `@${cleanNick}mw`, `@${cleanNick}stage`];
                 
-                delete cloudDatabase.recruits[nick];
+                if(cloudDatabase.recruits) delete cloudDatabase.recruits[nick];
                 possibleTgs.forEach(tg => {
-                    delete cloudDatabase.pairs[tg];
+                    if(cloudDatabase.pairs) delete cloudDatabase.pairs[tg];
                     for(let key in cloudDatabase.pairs) {
                         if(key.toLowerCase() === tg) delete cloudDatabase.pairs[key];
                     }
-                    if(!cloudDatabase.banned.includes(tg)) cloudDatabase.banned.push(tg);
+                    if(cloudDatabase.banned && !cloudDatabase.banned.includes(tg)) cloudDatabase.banned.push(tg);
                 });
 
                 if (isStatic) { 
-                    if(!cloudDatabase.kickedNicks.includes(nick)) cloudDatabase.kickedNicks.push(nick);
+                    if(cloudDatabase.kickedNicks && !cloudDatabase.kickedNicks.includes(nick)) cloudDatabase.kickedNicks.push(nick);
                 }
 
                 await saveToCloud();
