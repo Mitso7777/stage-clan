@@ -216,6 +216,8 @@
         .lock-overlay-box h3 { font-family: 'Orbitron', sans-serif; font-size: 20px; letter-spacing: 2px; margin-bottom: 10px; text-transform: uppercase; }
         .lock-overlay-box p { color: #94a3b8; font-size: 14px; line-height: 1.4; }
 
+
+
         /* КНОПКИ */
         .social-container { max-width: 500px; width: 100%; display: flex; flex-direction: column; gap: 15px; align-items: center; }
         .social-btn { display: flex; align-items: center; justify-content: center; gap: 15px; width: 100%; padding: 18px; border-radius: 8px; text-decoration: none; font-family: 'Orbitron', sans-serif; font-size: clamp(18px, 5vw, 24px); font-weight: 900; text-transform: uppercase; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); backdrop-filter: blur(5px); color: #fff; }
@@ -527,7 +529,7 @@
         const TG_TOKEN = "8640087886:AAGj3tevg54WEW0Qyo-rrtBlT8fRE9RuCDM";
         const TG_CHAT_ID = "-1002619697984"; 
         const TG_THREAD_ID = 5264;          
-        const CLAN_ID = "250489";
+        const CLAN_ID = "YRD9HT";
 
         // ☁️ ПРИВЯЗКА К ОБЛАЧНОЙ БАЗЕ ДАННЫХ JSONBIN.IO
         const BIN_ID = "6a12294c6877513b27c06650"; 
@@ -706,7 +708,7 @@
 
             const groupMessage = `🟢 <b>Игрок ${currentParsedData.nick} ПРИНЯТ в клан STAGE!</b>\n\n👤 <b>Логин (ТГ Тэг):</b> <code>${currentParsedData.tg}</code>\n🔑 <b>Пароль:</b> <code>${generatedPassword}</code>\n🆔 <b>ID Клана:</b> <code>${CLAN_ID}</code>\n\nДанные доступа высланы в личные сообщения бойца.`;
 
-            const personalMessage = `🎉 <b>Приветствуем на борту, боец ${currentParsedData.nick}!</b>\n\nВаш рапорт в клан <b>STAGE</b> успешно утвержден Руководством флота!\n\n🔐 <b>Ваши персональные ключи доступа к Штабу:</b>\n👤 <b>Логин (Ваш ТГ):</b> <code>${currentParsedData.tg}</code>\n🔑 <b>Пароль:</b> <code>${generatedPassword}</code>\n🆔 <b>ID Клана:</b> <code>${CLAN_ID}</code>\n\n⚓️ <b>Секретные шлюзы коммуникации:</b>\n✈️ Telegram чат: https://t.me/+0kNCkvxktdozZTYy\n🎮 Discord сервер: https://discord.gg/U3zekgCn7\n\nВозвращайтесь на сайт, авторизуйтесь через терминал "Вход" — Карты и Доска открыты. Полный вперёд! 🚢🔥`;
+            const personalMessage = `🎉 <b>Приветствуем на борту, боец ${currentParsedData.nick}!</b>\n\nВаш рапорт в клан <b>STAGE</b> успешно утвержден Руководством флота!\n\n🔐 <b>Ваши персональные ключи доступа к Штабу:</b>\n👤 <b>Логин (Ваш ТГ):</b> <code>${currentParsedData.tg}</code>\n🔑 <b>Пароль:</b> <code>${generatedPassword}</code>\n🆔 <b>ID Клана:</b> <code>${CLAN_ID}</code>\n\n⚓️ <b>Секретные шлюзы коммуникации:</b>\n✈️ Telegram чат: https://t.me/+0kNCkvxktdozZTYy\n\nВозвращайтесь на сайт, авторизуйтесь через терминал "Вход" — Добро пожаловать в клан Stage. Полный вперёд! 🚢🔥`;
 
             // 1. Отправка отчета в штабной чат клана
             await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
@@ -807,7 +809,7 @@
             });
         }
 
-        function unlockTeamFeatures() {
+                function unlockTeamFeatures() {
             document.getElementById('mapsLockBox').style.display = 'none';
             document.getElementById('boardLockBox').style.display = 'none';
             document.getElementById('mapsActualGrid').style.display = 'grid';
@@ -818,7 +820,7 @@
 
         function activateLeaderMode() {
             isLeaderMode = true; adminBadge.style.display = 'block'; navStatsBtn.style.display = 'block'; 
-            navLoginBtn.innerHTML = `<i class="fa-solid fa-user-gear" style="color:#ff0055;"></i>  Админ`;
+            navLoginBtn.innerHTML = `<i class="fa-solid fa-user-gear" style="color:#ff0055;"></i> Админ`;
             navLoginBtn.style.background = "rgba(255, 0, 85, 0.15)"; navLoginBtn.style.borderColor = "#ff0055";
             document.querySelectorAll('.kick-btn').forEach(btn => btn.style.display = 'inline-block');
         }
@@ -910,7 +912,7 @@
 
         window.kickPlayer = async function(element, nick, isStatic = true) {
             if (!isLeaderMode) return;
-            if (confirm(`Исключить игрока ${nick} из состава? Логин и пароль будут аннулированы везде.`)) {
+            if (confirm(`Исключить игрока ${nick} из состава? Логин и пароль будут аннулированы везде.`)) return; {
                 
                 const cleanNick = nick.replace(/\s+/g, '').toLowerCase();
                 const possibleTgs = [`@${cleanNick}`, `@${cleanNick}_mw`, `@${cleanNick}_stage`, `@${cleanNick}mw`, `@${cleanNick}stage`];
