@@ -147,7 +147,6 @@
         .rank-section { background: rgba(15, 23, 42, 0.65); border: 1px solid rgba(0, 242, 254, 0.2); padding: 25px; border-radius: 6px; backdrop-filter: blur(5px); position: relative; width: 100%; }
         .rank-title { font-family: 'Orbitron', sans-serif; font-size: clamp(16px, 4vw, 20px); color: #00f2fe; letter-spacing: 2px; margin-bottom: 20px; text-transform: uppercase; text-align: center; border-bottom: 1px dashed rgba(0, 242, 254, 0.2); padding-bottom: 10px; }
         
-        /* ИСПРАВЛЕНО: Горизонтальный адаптивный список участников */
         .players-grid { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; width: 100%; }
         .player-card { background: rgba(15, 23, 42, 0.85); border-left: 4px solid #00f2fe; padding: 12px 20px; border-radius: 4px; font-size: 16px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; transition: opacity 0.3s ease, transform 0.3s ease; position: relative; flex: 1 1 calc(20% - 12px); min-width: 200px; max-width: 280px; }
         .player-card.leader { border-left-color: #00f2fe; background: rgba(15, 23, 42, 0.85); }
@@ -199,8 +198,13 @@
         .map-img-holder { width: 100%; height: 140px; background-color: #02050a; background-size: cover; background-position: center; border-radius: 4px; border: 1px solid rgba(255,255,255,0.05); pointer-events: none; }
         .map-info { display: flex; justify-content: space-between; align-items: center; pointer-events: none; }
         .map-name { font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: bold; letter-spacing: 1px; }
+        
         .btn-map-download { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 10px; background: rgba(0, 242, 254, 0.1); border: 1px solid #00f2fe; color: #00f2fe; font-family: 'Orbitron', sans-serif; font-size: 12px; font-weight: bold; text-transform: uppercase; text-decoration: none; border-radius: 4px; transition: all 0.3s; }
         .btn-map-download:hover { background: #00f2fe; color: #02050a; box-shadow: 0 0 15px rgba(0, 242, 254, 0.3); }
+
+        /* Кнопка скопировать карту */
+        .btn-map-copy { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 10px; background: rgba(168, 85, 247, 0.1); border: 1px solid #a855f7; color: #a855f7; font-family: 'Orbitron', sans-serif; font-size: 12px; font-weight: bold; text-transform: uppercase; border-radius: 4px; transition: all 0.3s; cursor: pointer; margin-top: -4px; }
+        .btn-map-copy:hover { background: #a855f7; color: #ffffff; box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); }
 
         .board-screen { background-image: linear-gradient(rgba(2, 5, 10, 0.75), rgba(2, 5, 10, 0.9)), url('board_bg.png'); }
         .btn-fullscreen-toggle { background: rgba(168, 85, 247, 0.1); border: 2px solid #a855f7; color: #a855f7; padding: 10px 24px; border-radius: 4px; font-family: 'Orbitron', sans-serif; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; margin-bottom: 20px; box-shadow: 0 0 15px rgba(168, 85, 247, 0.2); transition: all 0.3s ease; display: flex; align-items: center; gap: 10px; outline: none; }
@@ -288,7 +292,6 @@
             .btn-nav-login { padding: 4px 10px; font-size: 9px; }
             .welcome-screen, .roster-screen, .maps-screen, .board-screen, .chat-screen, .creators-screen, .founders-screen { padding: 60px 10px 80px; background-attachment: scroll; }
             
-            /* На мобилках карточки выстраиваем аккуратно по две в ряд или по одной */
             .players-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
             .player-card { flex: none; max-width: none; width: 100%; font-size: 14px; padding: 10px 12px; }
             .players-grid .player-card:nth-child(n+7) { display: none; opacity: 0; transform: translateY(-10px); }
@@ -418,7 +421,7 @@
                 <h3 style="font-size: 15px;">Связь Заблокирована</h3>
                 <p style="font-size: 12px;">Голосовой канал Яндекс Телемост доступен только авторизованным бойцам.</p>
             </div>
-            <a href="https://telemost.yandex.ru/j/39266084996792" id="telemostActualBtn" target="_blank" class="social-btn btn-telemost" style="display: none;"><i class="fa-solid fa-headset"></i><span>Яндекс Телемост</span></a>
+            <a href="https://telemost.yandex.ru/j/02002400708623" id="telemostActualBtn" target="_blank" class="social-btn btn-telemost" style="display: none;"><i class="fa-solid fa-headset"></i><span>Яндекс Телемост</span></a>
         </div>
     </section>
 
@@ -866,12 +869,12 @@
             document.getElementById('mapsLockBox').style.display = 'none';
             document.getElementById('boardLockBox').style.display = 'none';
             document.getElementById('telemostLockBox').style.display = 'none';
-            document.getElementById('tgChatLockBox').style.display = 'none'; // 🔥 Разблокировка Telegram-чата
+            document.getElementById('tgChatLockBox').style.display = 'none'; 
             
             document.getElementById('mapsActualGrid').style.display = 'grid';
             document.getElementById('boardActualContainer').style.display = 'flex';
             document.getElementById('telemostActualBtn').style.display = 'flex';
-            document.getElementById('tgChatActualBtn').style.display = 'flex'; // 🔥 Показ кнопки Telegram-чата
+            document.getElementById('tgChatActualBtn').style.display = 'flex'; 
             
             navLoginBtn.innerHTML = `<i class="fa-solid fa-user-check" style="color:#00f2fe;"></i> В команде`;
             navLoginBtn.style.background = "rgba(0, 242, 254, 0.15)"; navLoginBtn.style.borderColor = "#00f2fe";
@@ -899,6 +902,7 @@
         });
         closeStatsModalBtn.addEventListener('click', () => statsModalOverlay.classList.remove('active'));
 
+        // ИСПРАВЛЕНО: Добавлены кнопки "Скопировать" с триггером копирования ссылки на изображение
         function generateTacticalMapsGrid() {
             const container = document.getElementById('mapsActualGrid');
             container.innerHTML = "";
@@ -909,6 +913,7 @@
                     <div class="map-img-holder" style="background-image: url('map${i}.png');"></div>
                     <div class="map-info"><div class="map-name">КАРТА №${i}</div></div>
                     <a href="map${i}.png" download="STAGE_Map_${i}.png" class="btn-map-download"><i class="fa-solid fa-cloud-arrow-down"></i> Скачать карту</a>
+                    <button type="button" class="btn-map-copy" onclick="copyMapToClipboard('map${i}.png', this)"><i class="fa-solid fa-copy"></i> Скопировать</button>
                 `;
                 card.addEventListener('dragstart', (e) => { e.dataTransfer.setData('text/plain', `map${i}.png`); });
                 container.appendChild(card);
@@ -997,7 +1002,6 @@
         }
 
         toggleRosterBtn.addEventListener('click', () => {
-            // На мобилках скрываем элементы после 6-го (с учетом грид-разметки)
             const hiddenCards = document.querySelectorAll('.players-grid .player-card:nth-child(n+7)');
             isRosterExpanded = !isRosterExpanded;
             hiddenCards.forEach(card => {
@@ -1060,6 +1064,27 @@
 
         switchToVerify.addEventListener('click', () => { recruitForm.style.display = 'none'; verifyBlock.style.display = 'block'; });
         switchToForm.addEventListener('click', () => { verifyBlock.style.display = 'none'; recruitForm.style.display = 'block'; });
+
+        // ДОБАВЛЕНО: Функция копирования прямой ссылки на карту в буфер обмена для мгновенной вставки через Ctrl+V в Excalidraw
+        window.copyMapToClipboard = function(mapFileName, buttonElement) {
+            const fullMapUrl = window.location.origin + '/' + mapFileName;
+            
+            navigator.clipboard.writeText(fullMapUrl).then(() => {
+                const originalText = buttonElement.innerHTML;
+                buttonElement.innerHTML = `<i class="fa-solid fa-check"></i> Скопировано!`;
+                buttonElement.style.borderColor = "#22c55e";
+                buttonElement.style.color = "#22c55e";
+                
+                setTimeout(() => {
+                    buttonElement.innerHTML = originalText;
+                    buttonElement.style.borderColor = "#a855f7";
+                    buttonElement.style.color = "#a855f7";
+                }, 2000);
+            }).catch(err => {
+                console.error("Ошибка копирования: ", err);
+                alert("Не удалось скопировать автоматически. Ссылка на карту: " + fullMapUrl);
+            });
+        }
     </script>
 </body>
 </html>
