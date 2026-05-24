@@ -378,7 +378,7 @@
     </section>
 
     <section id="maps" class="maps-screen">
-        <h2 class="section-title">Тактические Карты</h2>
+        <h2 class="section-title">Карты</h2>
         <div class="lock-overlay-box" id="mapsLockBox">
             <i class="fa-solid fa-building-shield"></i>
             <h3>Доступ Ограничен</h3>
@@ -388,7 +388,7 @@
     </section>
 
     <section id="board" class="board-screen">
-        <h2 class="section-title">Тактическая доска</h2>
+        <h2 class="section-title">Доска</h2>
         <div class="lock-overlay-box" id="boardLockBox">
             <i class="fa-solid fa-user-lock"></i>
             <h3>Терминал Заблокирован</h3>
@@ -766,7 +766,7 @@
 
             const groupMessage = `🟢 <b>Игрок ${currentParsedData.nick} ПРИНЯТ в клан STAGE!</b>\n\n👤 <b>Логин (ТГ Тэг):</b> <code>${currentParsedData.tg}</code>\n🔑 <b>Пароль:</b> <code>${generatedPassword}</code>\n🆔 <b>ID Клана:</b> <code>${CLAN_ID}</code>\n\nДанные доступа высланы в личные сообщения бойца.`;
 
-            const personalMessage = `🎉 <b>Приветствуем на борту, боец ${currentParsedData.nick}!</b>\n\nВаш рапорт в клан <b>STAGE</b> успешно утвержден Руководством флота!\n\n🔐 <b>Ваши персональные ключи доступа к Штабу:</b>\n👤 <b>Логин (Ваш ТГ):</b> <code>${currentParsedData.tg}</code>\n🔑 <b>Пароль:</b> <code>${generatedPassword}</code>\n🆔 <b>ID Клана:</b> <code>${CLAN_ID}</code>\n\n⚓️ <b>Секретные шлюзы коммуникации:</b>\n✈️ Telegram чат: https://t.me/+0kNCkvxktdozZTYy\n🎮 Discord server: https://discord.gg/U3zekgCn7\n\nВозвращайтесь на сайт, авторизуйтесь через терминал "Вход" — Карты и Доска открыты. Полный вперёд! 🚢🔥`;
+            const personalMessage = `🎉 <b>Приветствуем на борту, боец ${currentParsedData.nick}!</b>\n\nВаш рапорт в клан <b>STAGE</b> успешно утвержден Руководством флота!\n\n🔐 <b>Ваши персональные ключи доступа к Штабу:</b>\n👤 <b>Логин (Ваш ТГ):</b> <code>${currentParsedData.tg}</code>\n🔑 <b>Пароль:</b> <code>${generatedPassword}</code>\n🆔 <b>ID Клана:</b> <code>${CLAN_ID}</code>\n\n⚓️ <b>Секретные шлюзы коммуникации:</b>\n✈️ Telegram чат: https://t.me/+0kNCkvxktdozZTYy\n\nВозвращайтесь на сайт, авторизуйтесь через терминал "Вход" — Добро Пожаловать в клан STAGE! 🚢🔥`;
 
             await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
                 method: 'POST',
