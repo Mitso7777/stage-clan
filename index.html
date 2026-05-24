@@ -859,7 +859,6 @@
         });
         closeStatsModalBtn.addEventListener('click', () => statsModalOverlay.classList.remove('active'));
 
-        // 🔥 ИСПРАВЛЕНО: Генерация карт с поддержкой копирования ссылок напрямую для Excalidraw
         function generateTacticalMapsGrid() {
             const container = document.getElementById('mapsActualGrid');
             container.innerHTML = "";
@@ -878,33 +877,58 @@
                         <button type="button" class="btn-map-copy" onclick="copyMapUrlToClipboard('${fullMapUrl}')"><i class="fa-solid fa-copy"></i> Копировать для доски</button>
                     </div>
                 `;
-                // Передача текста-ссылки и html-изображения для максимальной совместимости Drag & Drop
+                
+                // Передаем картинку и как URL, и как HTML элемент для перетаскивания
                 card.addEventListener('dragstart', (e) => { 
                     e.dataTransfer.setData('text/plain', fullMapUrl); 
-                    e.dataTransfer.setData('text/uri-list', fullMapUrl);
+                    e.dataTransfer.setData('text/html', `<img src="${fullMapUrl}" alt="Map">`);
                 });
                 container.appendChild(card);
             }
         }
 
+        // 🔥 ПОЛНОЕ ИСПРАВЛЕНИЕ: Теперь в буфер пишется HTML-код картинки. Excalidraw примет её именно как ИЗОБРАЖЕНИЕ, а не ссылку!
         window.copyMapUrlToClipboard = function(url) {
-            navigator.clipboard.writeText(url).then(() => {
-                alert("Прямая ссылка на карту скопирована! Перейдите на Тактическую доску ниже и просто нажмите Ctrl+V (или зажмите холст и выберите 'Вставить')");
+            const htmlContent = `<img src="${url}" alt="Tactical Map">`;
+            
+            const blobText = new Blob([url], { type: 'text/plain' });
+            const blobHtml = new Blob([htmlContent], { type: 'text/html' });
+            
+            const clipboardItem = new ClipboardItem({
+                'text/plain': blobText,
+                'text/html': blobHtml
+            });
+
+            navigator.clipboard.write([clipboardItem]).then(() => {
+                alert("Карта скопирована в буфер как изображение! Кликните на Тактическую доску ниже и просто нажмите Ctrl+V.");
             }).catch(err => {
-                console.error("Не удалось скопировать:", err);
+                // Запасной текстовый вариант, если браузер блокирует расширенный буфер
+                navigator.clipboard.writeText(url);
+                alert("Ссылка скопирована! Если при Ctrl+V вставился текст, перетащите карту на доску мышкой.");
             });
         }
 
-        // 🔥 ИСПРАВЛЕНО: Безопасный кросс-доменный дроп. Направляем ссылку в буфер или текстовое поле Excalidraw
+        // 🔥 ПОЛНОЕ ИСПРАВЛЕНИЕ: Интеграция Drag & Drop через обработку text/html
         function setupDragAndDrop() {
             boardContainer.addEventListener('dragover', (e) => { e.preventDefault(); boardContainer.classList.add('drag-over'); });
             boardContainer.addEventListener('dragleave', () => { boardContainer.classList.remove('drag-over'); });
             boardContainer.addEventListener('drop', (e) => {
                 e.preventDefault(); boardContainer.classList.remove('drag-over');
-                const mapUrl = e.dataTransfer.getData('text/plain') || e.dataTransfer.getData('text/uri-list');
+                
+                const mapUrl = e.dataTransfer.getData('text/plain');
                 if (mapUrl) {
-                    navigator.clipboard.writeText(mapUrl).then(() => {
-                        alert("Карта подготовлена! Нажмите на холсте доски Ctrl+V (Вставить) для отображения картинки.");
+                    const htmlContent = `<img src="${mapUrl}" alt="Tactical Map">`;
+                    const blobText = new Blob([mapUrl], { type: 'text/plain' });
+                    const blobHtml = new Blob([htmlContent], { type: 'text/html' });
+                    
+                    const clipboardItem = new ClipboardItem({
+                        'text/plain': blobText,
+                        'text/html': blobHtml
+                    });
+
+                    // Автоматически перекладываем в буфер обмена при дропе, чтобы пользователь мог сразу нажать Ctrl+V внутри фрейма
+                    navigator.clipboard.write([clipboardItem]).then(() => {
+                        alert("Карта принята шлюзом доски! Кликните по холсту доски и нажмите Ctrl+V для её установки.");
                     });
                 }
             });
