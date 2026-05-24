@@ -374,7 +374,7 @@
         <div class="lock-overlay-box" id="mapsLockBox">
             <i class="fa-solid fa-building-shield"></i>
             <h3>Доступ Ограничен</h3>
-            <p>Тактические карты доступны исключительно действующим членам экипажа STAGE. Пожалуйста, авторизуйтесь через terminal "Вход" в верхнем меню.</p>
+            <p>Тактические карты доступны исключительно действующим членам экипажа STAGE. Пожалуйста, авторизуйтесь через терминал "Вход" в верхнем меню.</p>
         </div>
         <div class="maps-grid" id="mapsActualGrid" style="display: none; width: 100%;"></div>
     </section>
@@ -444,7 +444,10 @@
                 <div class="form-group"><label>Ваш Telegram Тэг (Логин)</label><input type="text" id="tgLink" placeholder="Например: @vova" required></div>
                 
                 <div class="form-group">
-                    <label>Ваш цифровой Telegram ID (<a href="tg://resolve?domain=userinfobot" target="_blank" rel="noopener noreferrer" style="color:#00f2fe; text-decoration:underline;">Узнать свой ID в боте</a>)</label>
+                    <label>Ваш цифровой Telegram ID</label>
+                    <button type="button" id="androidBotLink" class="btn-law-link" style="font-size: 14px; text-align: left; margin-bottom: 8px; display: block; font-weight: bold; color: #00f2fe;">
+                        ⚓️ Узнать свой ID в боте (Кликни сюда)
+                    </button>
                     <input type="text" id="gameChatId" placeholder="Вставьте цифры, полученные от бота (например: 74928421)" required>
                 </div>
 
@@ -471,7 +474,7 @@
             <div class="success-result" id="successResult">
                 <div class="modal-title" style="color: #00f2fe;">Заявка в штабе</div>
                 <p style="text-align:center; margin-bottom:12px; color: #94a3b8; font-size: 14px;">Данные отправлены. Чтобы бот смог автоматически прислать вам **Логин и Пароль** после одобрения главой, обязательно запустите бота.</p>
-                <a href="tg://resolve?domain=StageClanRecruit_bot" target="_blank" rel="noopener noreferrer" class="btn-submit" style="display:inline-block; text-decoration:none; margin-bottom:10px; background:#0088cc; color:#fff; text-align:center; padding:10px 0; width:100%; border-radius: 30px;">1. Активировать бота в ТГ</a>
+                <button type="button" id="androidBotSuccessLink" class="btn-submit" style="display:inline-block; margin-bottom:10px; background:#0088cc; color:#fff; text-align:center; padding:10px 0; width:100%; border-radius: 30px; border:none; font-family: 'Orbitron', sans-serif; font-weight:900;">1. Активировать бота в ТГ</button>
                 <button type="button" class="btn-submit" onclick="document.getElementById('modalOverlay').classList.remove('active');" style="background:#1e293b; color:#94a3b8;">2. Закрыть окно</button>
             </div>
         </div>
@@ -609,12 +612,46 @@
         let isLeaderMode = false;
         let currentParsedData = null;
         let cloudDatabase = { recruits: {}, pairs: {}, banned: [], kickedNicks: [] };
+        let ignoreHashReset = false; // Системный флаг блокировки сброса фокуса страницы
+
+        // УМНЫЙ МЕТОД ОТКРЫТИЯ ДЛЯ ANDROID (Обходит блокировки WebView)
+        function openTelegramBot(botUsername) {
+            ignoreHashReset = true; // Приказываем JS не закрывать модальное окно сайта
+            
+            const tgUrl = `tg://resolve?domain=${botUsername}`;
+            const webUrl = `https://t.me/${botUsername}`;
+            
+            // 1. Пытаемся запустить нативное приложение Telegram напрямую через интент
+            window.location.href = tgUrl;
+            
+            // 2. Если WebView заблокировал интент, через полсекунды страхуем открытием веб-зеркала в новой вкладке
+            setTimeout(() => {
+                window.open(webUrl, '_blank', 'noopener,noreferrer');
+                setTimeout(() => { ignoreHashReset = false; }, 1000);
+            }, 500);
+        }
+
+        // Привязываем события к кнопкам
+        document.getElementById('androidBotLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            openTelegramBot('userinfobot');
+        });
+
+        document.getElementById('androidBotSuccessLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            openTelegramBot('StageClanRecruit_bot');
+        });
 
         window.addEventListener('DOMContentLoaded', async () => {
-            // ИСПРАВЛЕНО ДЛЯ ANDROID: Используем sessionStorage, чтобы предотвратить циклический сброс хэша при переключении окон на смартфонах
-            if (window.location.hash && window.location.hash !== "#welcome" && !sessionStorage.getItem('stage_initial_loaded')) {
-                sessionStorage.setItem('stage_initial_loaded', 'true');
-                setTimeout(() => { window.location.hash = "#welcome"; window.scrollTo(0, 0); }, 50);
+            if (window.location.hash && window.location.hash !== "#welcome") {
+                if (!ignoreHashReset) {
+                    setTimeout(() => { 
+                        if (!ignoreHashReset) {
+                            window.location.hash = "#welcome"; 
+                            window.scrollTo(0, 0); 
+                        }
+                    }, 50);
+                }
             }
 
             await syncWithCloud();
@@ -640,6 +677,12 @@
                 entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('section-active'); });
             }, { threshold: 0.1 });
             sections.forEach(s => observer.observe(s));
+        });
+
+        // Защита: когда юзер возвращается из телеги обратно в браузер
+        window.addEventListener('focus', () => {
+            ignoreHashReset = true;
+            setTimeout(() => { ignoreHashReset = false; }, 1000);
         });
 
         async function syncWithCloud() {
@@ -1007,7 +1050,6 @@
             });
         });
 
-        // Вспомогательные обработчики для модалок (переключение блоков)
         switchToVerify.addEventListener('click', () => { recruitForm.style.display = 'none'; verifyBlock.style.display = 'block'; });
         switchToForm.addEventListener('click', () => { verifyBlock.style.display = 'none'; recruitForm.style.display = 'block'; });
     </script>
