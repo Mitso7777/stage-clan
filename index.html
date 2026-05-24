@@ -141,16 +141,19 @@
         .section-title { font-family: 'Orbitron', sans-serif; font-size: clamp(24px, 5vw, 36px); text-transform: uppercase; letter-spacing: 3px; margin-bottom: 40px; color: #fff; border-bottom: 2px solid #00f2fe; padding-bottom: 10px; text-shadow: 0 0 15px rgba(0, 242, 254, 0.3); text-align: center; }
         .sub-section-title { font-family: 'Orbitron', sans-serif; font-size: clamp(18px, 4vw, 22px); text-transform: uppercase; letter-spacing: 2px; margin: 25px 0 15px; color: #a855f7; text-shadow: 0 0 10px rgba(168, 85, 247, 0.4); text-align: center; width: 100%; }
 
-        /* СОСТАВ КЛАНА */
+        /* СОСТАВ КЛАНА (ИЗМЕНЕНО НА ГОРИЗОНТАЛЬНЫЙ СТИЛЬ) */
         .roster-screen { background-image: linear-gradient(rgba(2, 5, 10, 0.75), rgba(2, 5, 10, 0.9)), url('roster_bg.png'); }
-        .roster-container { max-width: 1200px; width: 100%; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+        .roster-container { max-width: 1200px; width: 100%; }
         .rank-section { background: rgba(15, 23, 42, 0.65); border: 1px solid rgba(0, 242, 254, 0.2); padding: 25px; border-radius: 6px; backdrop-filter: blur(5px); position: relative; }
         .rank-title { font-family: 'Orbitron', sans-serif; font-size: clamp(16px, 4vw, 20px); color: #00f2fe; letter-spacing: 2px; margin-bottom: 20px; text-transform: uppercase; text-align: center; border-bottom: 1px dashed rgba(0, 242, 254, 0.2); padding-bottom: 10px; }
-        .players-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
         
-        .player-card { background: rgba(15, 23, 42, 0.85); border-left: 4px solid #00f2fe; padding: 12px 15px; border-radius: 4px; font-size: clamp(16px, 4vw, 20px); font-weight: bold; display: flex; justify-content: space-between; align-items: center; transition: opacity 0.3s ease, transform 0.3s ease; position: relative; }
+        /* Сетка заменена на гибкий горизонтальный контейнер */
+        .players-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+        
+        /* Карточки подстраиваются под горизонтальный поток */
+        .player-card { background: rgba(15, 23, 42, 0.85); border-left: 4px solid #00f2fe; padding: 12px 20px; border-radius: 4px; font-size: clamp(15px, 3.5vw, 18px); font-weight: bold; display: flex; justify-content: space-between; align-items: center; transition: opacity 0.3s ease, transform 0.3s ease; position: relative; min-width: 180px; max-width: max-content; }
         .player-card.leader { border-left-color: #00f2fe; background: rgba(15, 23, 42, 0.85); }
-        .player-card .tag { font-size: 12px; font-family: 'Orbitron', sans-serif; text-transform: uppercase; padding: 2px 8px; border-radius: 3px; font-weight: 900; background: #00f2fe; color: #02050a; box-shadow: 0 0 10px #00f2fe; }
+        .player-card .tag { font-size: 11px; font-family: 'Orbitron', sans-serif; text-transform: uppercase; padding: 2px 6px; border-radius: 3px; font-weight: 900; background: #00f2fe; color: #02050a; box-shadow: 0 0 10px #00f2fe; margin-left: 10px; }
 
         .kick-btn { display: none; color: #ff0055; cursor: pointer; font-size: 16px; margin-left: 10px; transition: transform 0.2s; }
         .kick-btn:hover { transform: scale(1.3); text-shadow: 0 0 10px #ff0055; }
@@ -286,7 +289,9 @@
             .nav-bar a, .nav-bar span.nav-link-btn { font-size: 8px; letter-spacing: 0.3px; }
             .btn-nav-login { padding: 4px 10px; font-size: 9px; }
             .welcome-screen, .roster-screen, .maps-screen, .board-screen, .chat-screen, .creators-screen, .founders-screen { padding: 60px 10px 80px; background-attachment: scroll; }
-            .players-grid { grid-template-columns: 1fr; }
+            
+            /* На мобильных сохраняем аккуратный горизонтальный перенос */
+            .players-grid { justify-content: center; }
             .players-grid .player-card:nth-child(n+6) { display: none; opacity: 0; transform: translateY(-10px); }
             .toggle-roster-btn { display: block; }
             .maps-grid { grid-template-columns: 1fr; gap: 15px; }
@@ -354,6 +359,12 @@
                 </div>
                 <button type="button" class="toggle-roster-btn" id="toggleRosterBtn">Показать всех участников</button>
             </div>
+        </div>
+
+        <div class="lock-overlay-box" id="secretTgLockBox" style="margin-top: 25px;">
+            <i class="fa-solid fa-comment-slash"></i>
+            <h3>Ссылка заблокирована</h3>
+            <p>Вход в закрытый Telegram-чат доступен только подтвержденным членам экипажа. Авторизуйтесь в меню сверху.</p>
         </div>
 
         <div class="secret-tg-box" id="secretTgBox">
@@ -541,7 +552,6 @@
         const TG_THREAD_ID = 5264;          
         const CLAN_ID = "250489";
 
-        // ☁️ ПРИВЯЗКА К ОБЛАЧНОЙ БАЗЕ ДАННЫХ JSONBIN.IO
         const BIN_ID = "6a12294c6877513b27c06650"; 
         const MASTER_KEY = "$2a$10$v7z4/8N8GC8M8hitL86knebm9goe4YeILXuk0ApLLcpdRNJIWqjzu"; 
 
@@ -612,26 +622,22 @@
         let isLeaderMode = false;
         let currentParsedData = null;
         let cloudDatabase = { recruits: {}, pairs: {}, banned: [], kickedNicks: [] };
-        let ignoreHashReset = false; // Системный флаг блокировки сброса фокуса страницы
+        let ignoreHashReset = false; 
 
-        // УМНЫЙ МЕТОД ОТКРЫТИЯ ДЛЯ ANDROID (Обходит блокировки WebView)
         function openTelegramBot(botUsername) {
-            ignoreHashReset = true; // Приказываем JS не закрывать модальное окно сайта
+            ignoreHashReset = true; 
             
             const tgUrl = `tg://resolve?domain=${botUsername}`;
             const webUrl = `https://t.me/${botUsername}`;
             
-            // 1. Пытаемся запустить нативное приложение Telegram напрямую через интент
             window.location.href = tgUrl;
             
-            // 2. Если WebView заблокировал интент, через полсекунды страхуем открытием веб-зеркала в новой вкладке
             setTimeout(() => {
                 window.open(webUrl, '_blank', 'noopener,noreferrer');
                 setTimeout(() => { ignoreHashReset = false; }, 1000);
             }, 500);
         }
 
-        // Привязываем события к кнопкам
         document.getElementById('androidBotLink').addEventListener('click', (e) => {
             e.preventDefault();
             openTelegramBot('userinfobot');
@@ -667,7 +673,7 @@
             }
 
             if (localStorage.getItem('stage_team_logged') === 'true') { unlockTeamFeatures(); }
-            if (localStorage.getItem('stage_authorized') === 'true') { secretTgBox.style.display = 'block'; recruitBoxBtn.style.display = 'none'; }
+            if (localStorage.getItem('stage_authorized') === 'true') { unlockTelegramSection(); }
             if (localStorage.getItem('stage_leader_session') === 'true') { activateLeaderMode(); }
             
             setupDragAndDrop();
@@ -679,7 +685,6 @@
             sections.forEach(s => observer.observe(s));
         });
 
-        // Защита: когда юзер возвращается из телеги обратно в браузер
         window.addEventListener('focus', () => {
             ignoreHashReset = true;
             setTimeout(() => { ignoreHashReset = false; }, 1000);
@@ -799,7 +804,7 @@
         }
 
         window.resetUserAuth = function() {
-            if(confirm("Вы действительно хотите выйти из аккаунта клана? Карты и доска закроются.")) {
+            if(confirm("Вы действительно хотите выйти из аккаунта клана? Ссылка закроется.")) {
                 forceAbsoluteLogout();
             }
         }
@@ -870,6 +875,13 @@
             navLoginBtn.style.background = "rgba(0, 242, 254, 0.15)"; navLoginBtn.style.borderColor = "#00f2fe";
         }
 
+        // Активация показа ссылки ТГ при прохождении верификации
+        function unlockTelegramSection() {
+            document.getElementById('secretTgLockBox').style.display = 'none';
+            secretTgBox.style.display = 'block'; 
+            recruitBoxBtn.style.display = 'none';
+        }
+
         function activateLeaderMode() {
             isLeaderMode = true; adminBadge.style.display = 'block'; navStatsBtn.style.display = 'block'; 
             navLoginBtn.innerHTML = `<i class="fa-solid fa-user-gear" style="color:#ff0055;"></i> Админ`;
@@ -932,7 +944,7 @@
             if (APPROVED_TELEGRAMS.map(v => v.toLowerCase()).includes(inputNick) || localApproved.includes(inputNick) || cloudDatabase.pairs[verifyTgInput.value.trim()]) {
                 localStorage.setItem('stage_authorized', 'true');
                 localStorage.setItem('stage_user_registered_tg', verifyTgInput.value.trim()); 
-                secretTgBox.style.display = 'block'; recruitBoxBtn.style.display = 'none';
+                unlockTelegramSection();
                 document.getElementById('modalOverlay').classList.remove('active');
                 alert("Верификация пройдена успешно! Доступ к ссылке чата открыт.");
             } else { alert("Ошибка! Ваш Telegram-никнейм не найден в списке одобренных. Пройдите авторизацию через 'Вход' вверху."); }
@@ -993,6 +1005,7 @@
             const hiddenCards = document.querySelectorAll('.players-grid .player-card:nth-child(n+6)');
             isRosterExpanded = !isRosterExpanded;
             hiddenCards.forEach(card => {
+                // Изменено с flex на флекс-поток горизонтальных элементов
                 if (isRosterExpanded) { card.style.display = 'flex'; setTimeout(() => { card.style.opacity = '1'; card.style.transform = 'translateY(0)'; }, 10); } 
                 else { card.style.opacity = '0'; card.style.transform = 'translateY(-10px)'; setTimeout(() => { card.style.display = 'none'; }, 300); }
             });
