@@ -148,7 +148,6 @@
         .rank-title { font-family: 'Orbitron', sans-serif; font-size: clamp(16px, 4vw, 20px); color: #00f2fe; letter-spacing: 2px; margin-bottom: 20px; text-transform: uppercase; text-align: center; border-bottom: 1px dashed rgba(0, 242, 254, 0.2); padding-bottom: 10px; }
         .players-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
         
-        /* Возвращены исходные стили карточек состава */
         .player-card { background: rgba(15, 23, 42, 0.85); border-left: 4px solid #00f2fe; padding: 12px 15px; border-radius: 4px; font-size: clamp(16px, 4vw, 20px); font-weight: bold; display: flex; justify-content: space-between; align-items: center; transition: opacity 0.3s ease, transform 0.3s ease; position: relative; }
         .player-card.leader { border-left-color: #00f2fe; background: rgba(15, 23, 42, 0.85); }
         .player-card .tag { font-size: 12px; font-family: 'Orbitron', sans-serif; text-transform: uppercase; padding: 2px 8px; border-radius: 3px; font-weight: 900; background: #00f2fe; color: #02050a; box-shadow: 0 0 10px #00f2fe; }
@@ -402,12 +401,13 @@
         <div class="social-container">
             <a href="https://discord.gg/U3zekgCn7" target="_blank" class="social-btn btn-discord"><i class="fa-brands fa-discord"></i><span>Discord</span></a>
             <a href="https://t.me/+0kNCkvxktdozZTYy" target="_blank" class="social-btn btn-telegram"><i class="fa-solid fa-paper-plane"></i><span>Telegram</span></a>
+            
             <div class="lock-overlay-box" id="telemostLockBox" style="margin: 0; padding: 20px; max-width: 100%;">
                 <i class="fa-solid fa-microphone-lines" style="font-size: 30px; margin-bottom: 10px;"></i>
                 <h3 style="font-size: 15px;">Связь Заблокирована</h3>
                 <p style="font-size: 12px;">Голосовой канал Яндекс Телемост доступен только авторизованным бойцам.</p>
             </div>
-            <a href="https://telemost.yandex.ru/j/13364951204869" id="telemostActualBtn" target="_blank" class="social-btn btn-telemost" style="display: none;"><i class="fa-solid fa-headset"></i><span>Яндекс Телемост</span></a>
+            <a href="https://telemost.yandex.ru/j/02002400708623" id="telemostActualBtn" target="_blank" class="social-btn btn-telemost" style="display: none;"><i class="fa-solid fa-headset"></i><span>Яндекс Телемост</span></a>
         </div>
     </section>
 
@@ -695,6 +695,7 @@
             }
         });
 
+        // 🔥 ПОЛНОЕ ИСПРАВЛЕНИЕ СИНХРОНИЗАЦИИ ОДОБРЕНИЯ И ОТПРАВКИ В ЛС ПО ЦИФРОВОМУ CHAT_ID
         window.executeTerminalApprove = async function() {
             if(!isLeaderMode || !currentParsedData) return;
             const acceptBtn = document.getElementById('terminalAcceptBtn');
@@ -709,18 +710,21 @@
             cloudDatabase.banned = cloudDatabase.banned.filter(tg => tg !== currentParsedData.tg.trim().toLowerCase());
             cloudDatabase.kickedNicks = cloudDatabase.kickedNicks.filter(n => n.toLowerCase() !== currentParsedData.nick.toLowerCase());
 
+            // Фиксация в облаке JSONbin.io
             await saveToCloud();
 
             const groupMessage = `🟢 <b>Игрок ${currentParsedData.nick} ПРИНЯТ в клан STAGE!</b>\n\n👤 <b>Логин (ТГ Тэг):</b> <code>${currentParsedData.tg}</code>\n🔑 <b>Пароль:</b> <code>${generatedPassword}</code>\n🆔 <b>ID Клана:</b> <code>${CLAN_ID}</code>\n\nДанные доступа высланы в личные сообщения бойца.`;
 
             const personalMessage = `🎉 <b>Приветствуем на борту, боец ${currentParsedData.nick}!</b>\n\nВаш рапорт в клан <b>STAGE</b> успешно утвержден Руководством флота!\n\n🔐 <b>Ваши персональные ключи доступа к Штабу:</b>\n👤 <b>Логин (Ваш ТГ):</b> <code>${currentParsedData.tg}</code>\n🔑 <b>Пароль:</b> <code>${generatedPassword}</code>\n🆔 <b>ID Клана:</b> <code>${CLAN_ID}</code>\n\n⚓️ <b>Секретные шлюзы коммуникации:</b>\n✈️ Telegram чат: https://t.me/+0kNCkvxktdozZTYy\n🎮 Discord server: https://discord.gg/U3zekgCn7\n\nВозвращайтесь на сайт, авторизуйтесь через терминал "Вход" — Карты и Доска открыты. Полный вперёд! 🚢🔥`;
 
+            // 1. Отправка отчета в штабной чат клана
             await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ chat_id: TG_CHAT_ID, message_thread_id: TG_THREAD_ID, text: groupMessage, parse_mode: 'html' })
             });
 
+            // 2. ⚡️ ЖЕЛЕЗОБЕТОННАЯ ЖЕСТКАЯ ОТПРАВКА СТРОГО В ЛС ИГРОКУ ПО ЕГО ЦИФРОВОМУ TG ID
             await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -759,6 +763,18 @@
             }
         }
 
+        navLoginBtn.addEventListener('click', () => {
+            if(isLeaderMode || localStorage.getItem('stage_team_logged') === 'true') {
+                if(confirm("Выйти из текущей учетной записи?")) {
+                    forceAbsoluteLogout();
+                }
+            } else {
+                adminEmailInput.value = ""; adminPasswordInput.value = "";
+                loginModalOverlay.classList.add('active');
+            }
+        });
+        closeLoginModalBtn.addEventListener('click', () => loginModalOverlay.classList.remove('active'));
+
         submitAdminLoginBtn.addEventListener('click', () => {
             const inputLogin = adminEmailInput.value.trim();
             const inputPassword = adminPasswordInput.value.trim();
@@ -793,7 +809,6 @@
             alert("Ошибка доступа! Неверное сочетание Логина (ТГ) и Пароля.");
         });
 
-        // 🔥 Исправлен фильтр: скрывает только тех статических игроков, которые были целенаправленно кикнуты
         function applyGlobalKickedFilters() {
             cloudDatabase.kickedNicks.forEach(kickedNick => {
                 const cardToRemove = document.querySelector(`.player-card[data-nick="${kickedNick}"]`);
@@ -804,11 +819,11 @@
         function unlockTeamFeatures() {
             document.getElementById('mapsLockBox').style.display = 'none';
             document.getElementById('boardLockBox').style.display = 'none';
-            document.getElementById('telemostLockBox').style.display = 'none';
+            document.getElementById('telemostLockBox').style.display = 'none'; // 🔥 Разблокировка Телемоста
             
             document.getElementById('mapsActualGrid').style.display = 'grid';
             document.getElementById('boardActualContainer').style.display = 'flex';
-            document.getElementById('telemostActualBtn').style.display = 'flex';
+            document.getElementById('telemostActualBtn').style.display = 'flex'; // 🔥 Показ кнопки Телемоста
             
             navLoginBtn.innerHTML = `<i class="fa-solid fa-user-check" style="color:#00f2fe;"></i> В команде`;
             navLoginBtn.style.background = "rgba(0, 242, 254, 0.15)"; navLoginBtn.style.borderColor = "#00f2fe";
@@ -882,16 +897,12 @@
             } else { alert("Ошибка! Ваш Telegram-никнейм не найден в списке одобренных. Пройдите авторизацию через 'Вход' вверху."); }
         });
 
-        // 🔥 Выводит динамических новобранцев из облачной базы данных
         function renderLocalRecruits() {
             document.querySelectorAll('.player-card.new-recruit-dynamic').forEach(c => c.remove());
             const oneDayInMs = 24 * 60 * 60 * 1000;
             const now = Date.now();
 
             for (let nick in cloudDatabase.recruits) {
-                // Если имя нового игрока совпадает со статическим списком, пропускаем дублирование
-                if (document.querySelector(`.player-card[data-nick="${nick}"]:not(.new-recruit-dynamic)`)) continue;
-
                 const approveTime = cloudDatabase.recruits[nick];
                 const card = document.createElement('div');
                 card.setAttribute('data-nick', nick);
