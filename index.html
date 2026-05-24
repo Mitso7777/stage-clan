@@ -107,20 +107,14 @@
         }
 
         .maps-screen, .board-screen { display: none; }
-        .maps-screen.unlocked, .board-screen.unlocked { display: flex; }
 
         .welcome-screen > *, .roster-container, .social-container, .founders-grid, .section-title, .recruit-box, .secret-tg-box, .sub-section-title, .maps-grid, .board-container, .btn-fullscreen-toggle, .lock-overlay-box {
-            opacity: 1;
-            transform: translateY(0);
+            opacity: 0;
+            transform: translateY(30px);
             transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        .js-animated {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        .section-active .js-animated,
-        .section-active>*, 
+        .section-active > *, 
         .section-active .roster-container, 
         .section-active .social-container, 
         .section-active .founders-grid, 
@@ -199,19 +193,15 @@
 
         /* КАРТЫ И ДОСКА */
         .maps-screen { background-image: linear-gradient(rgba(2, 5, 10, 0.75), rgba(2, 5, 10, 0.9)), url('maps_bg.png'); }
-        .maps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; max-width: 1200px; width: 100%; }
-        .map-card { background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(0, 242, 254, 0.2); border-radius: 6px; padding: 15px; display: flex; flex-direction: column; gap: 10px; backdrop-filter: blur(5px); transition: border 0.3s, box-shadow 0.3s, transform 0.2s; cursor: grab; user-select: none; }
+        .maps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; max-width: 1200px; width: 100%; }
+        .map-card { background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(0, 242, 254, 0.2); border-radius: 6px; padding: 15px; display: flex; flex-direction: column; gap: 12px; backdrop-filter: blur(5px); transition: border 0.3s, box-shadow 0.3s, transform 0.2s; cursor: grab; user-select: none; }
         .map-card:active { cursor: grabbing; transform: scale(0.98); }
         .map-card:hover { border-color: #00f2fe; box-shadow: 0 0 15px rgba(0, 242, 254, 0.3); }
         .map-img-holder { width: 100%; height: 140px; background-color: #02050a; background-size: cover; background-position: center; border-radius: 4px; border: 1px solid rgba(255,255,255,0.05); pointer-events: none; }
         .map-info { display: flex; justify-content: space-between; align-items: center; pointer-events: none; }
         .map-name { font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: bold; letter-spacing: 1px; }
-        
-        .map-actions { display: flex; flex-direction: column; gap: 6px; margin-top: 5px; }
-        .btn-map-download { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 8px; background: rgba(0, 242, 254, 0.1); border: 1px solid #00f2fe; color: #00f2fe; font-family: 'Orbitron', sans-serif; font-size: 11px; font-weight: bold; text-transform: uppercase; text-decoration: none; border-radius: 4px; transition: all 0.3s; }
+        .btn-map-download { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 10px; background: rgba(0, 242, 254, 0.1); border: 1px solid #00f2fe; color: #00f2fe; font-family: 'Orbitron', sans-serif; font-size: 12px; font-weight: bold; text-transform: uppercase; text-decoration: none; border-radius: 4px; transition: all 0.3s; }
         .btn-map-download:hover { background: #00f2fe; color: #02050a; box-shadow: 0 0 15px rgba(0, 242, 254, 0.3); }
-        .btn-map-copy { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 8px; background: rgba(168, 85, 247, 0.1); border: 1px solid #a855f7; color: #c084fc; font-family: 'Orbitron', sans-serif; font-size: 11px; font-weight: bold; text-transform: uppercase; border-radius: 4px; cursor: pointer; transition: all 0.3s; }
-        .btn-map-copy:hover { background: #a855f7; color: #fff; box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); }
 
         .board-screen { background-image: linear-gradient(rgba(2, 5, 10, 0.75), rgba(2, 5, 10, 0.9)), url('board_bg.png'); }
         .btn-fullscreen-toggle { background: rgba(168, 85, 247, 0.1); border: 2px solid #a855f7; color: #a855f7; padding: 10px 24px; border-radius: 4px; font-family: 'Orbitron', sans-serif; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; margin-bottom: 20px; box-shadow: 0 0 15px rgba(168, 85, 247, 0.2); transition: all 0.3s ease; display: flex; align-items: center; gap: 10px; outline: none; }
@@ -226,7 +216,7 @@
         .lock-overlay-box h3 { font-family: 'Orbitron', sans-serif; font-size: 20px; letter-spacing: 2px; margin-bottom: 10px; text-transform: uppercase; }
         .lock-overlay-box p { color: #94a3b8; font-size: 14px; line-height: 1.4; }
 
-        /* КНОПКИ */
+        /* КНОПКИ СЕТЕЙ */
         .social-container { max-width: 500px; width: 100%; display: flex; flex-direction: column; gap: 15px; align-items: center; }
         .social-btn { display: flex; align-items: center; justify-content: center; gap: 15px; width: 100%; padding: 18px; border-radius: 8px; text-decoration: none; font-family: 'Orbitron', sans-serif; font-size: clamp(18px, 5vw, 24px); font-weight: 900; text-transform: uppercase; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); backdrop-filter: blur(5px); color: #fff; }
         .social-btn:hover { transform: scale(1.08); color: #02050a; }
@@ -234,6 +224,11 @@
         .btn-discord:hover { background: #5865f2; }
         .btn-telegram { border: 2px solid #0088cc; background: rgba(0, 136, 204, 0.15); }
         .btn-telegram:hover { background: #0088cc; }
+        
+        /* КНОПКА ЯНДЕКС ТЕЛЕМОСТ */
+        .btn-telemost { border: 2px solid #a855f7; background: rgba(168, 85, 247, 0.15); box-shadow: 0 0 15px rgba(168, 85, 247, 0.2); }
+        .btn-telemost:hover { background: #a855f7; box-shadow: 0 0 35px rgba(168, 85, 247, 0.6); color: #ffffff !important; }
+
         .btn-creator { border: 2px solid #00f2fe; background: rgba(0, 242, 254, 0.1); }
         .btn-creator:hover { background: #00f2fe; }
         .btn-wiki { border: 2px solid #a855f7; background: rgba(168, 85, 247, 0.15); box-shadow: 0 0 15px rgba(168, 85, 247, 0.2); }
@@ -409,6 +404,7 @@
         <div class="social-container">
             <a href="https://discord.gg/U3zekgCn7" target="_blank" class="social-btn btn-discord"><i class="fa-brands fa-discord"></i><span>Discord</span></a>
             <a href="https://t.me/+0kNCkvxktdozZTYy" target="_blank" class="social-btn btn-telegram"><i class="fa-solid fa-paper-plane"></i><span>Telegram</span></a>
+            <a href="https://telemost.yandex.ru/j/22586635424569" target="_blank" class="social-btn btn-telemost"><i class="fa-solid fa-headset"></i><span>Яндекс Телемост</span></a>
         </div>
     </section>
 
@@ -442,7 +438,7 @@
                 <div class="modal-title">Подать заявку</div>
                 <div class="form-group"><label>Игровой ID</label><input type="text" id="gameId" placeholder="Например: 49284729" required></div>
                 <div class="form-group"><label>Никнейм в игре</label><input type="text" id="gameNick" placeholder="Твой ник" required></div>
-                <div class="form-group"><label>Ваш Телеграм Тэг (Логин)</label><input type="text" id="tgLink" placeholder="Например: @vova" required></div>
+                <div class="form-group"><label>Ваш Telegram Тэг (Логин)</label><input type="text" id="tgLink" placeholder="Например: @vova" required></div>
                 
                 <div class="form-group">
                     <label>Ваш цифровой Telegram ID (<a href="https://t.me/userinfobot" target="_blank" style="color:#00f2fe; text-decoration:underline;">Узнать свой ID в боте</a>)</label>
@@ -537,8 +533,9 @@
         const TG_TOKEN = "8640087886:AAGj3tevg54WEW0Qyo-rrtBlT8fRE9RuCDM";
         const TG_CHAT_ID = "-1002619697984"; 
         const TG_THREAD_ID = 5264;          
-        const CLAN_ID = "YRD9HT";
+        const CLAN_ID = "250489";
 
+        // ☁️ ПРИВЯЗКА К ОБЛАЧНОЙ БАЗЕ ДАННЫХ JSONBIN.IO
         const BIN_ID = "6a12294c6877513b27c06650"; 
         const MASTER_KEY = "$2a$10$v7z4/8N8GC8M8hitL86knebm9goe4YeILXuk0ApLLcpdRNJIWqjzu"; 
 
@@ -608,8 +605,7 @@
         let isRosterExpanded = false;
         let isLeaderMode = false;
         let currentParsedData = null;
-        
-        let cloudDatabase = { recruits: {}, pairs: {}, nickToTgMap: {}, banned: [], kickedNicks: [] };
+        let cloudDatabase = { recruits: {}, pairs: {}, banned: [], kickedNicks: [] };
 
         window.addEventListener('DOMContentLoaded', async () => {
             if (window.location.hash && window.location.hash !== "#welcome") {
@@ -635,18 +631,10 @@
             setupDragAndDrop();
 
             const sections = document.querySelectorAll('section');
-            if ('IntersectionObserver' in window) {
-                sections.forEach(s => {
-                    const children = s.children;
-                    for(let child of children) { child.classList.add('js-animated'); }
-                });
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('section-active'); });
-                }, { threshold: 0.05 });
-                sections.forEach(s => observer.observe(s));
-            } else {
-                sections.forEach(s => s.classList.add('section-active'));
-            }
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('section-active'); });
+            }, { threshold: 0.1 });
+            sections.forEach(s => observer.observe(s));
         });
 
         async function syncWithCloud() {
@@ -660,7 +648,6 @@
                     if(data.record) {
                         cloudDatabase.recruits = data.record.recruits || {};
                         cloudDatabase.pairs = data.record.pairs || {};
-                        cloudDatabase.nickToTgMap = data.record.nickToTgMap || {};
                         cloudDatabase.banned = data.record.banned || [];
                         cloudDatabase.kickedNicks = data.record.kickedNicks || [];
                     }
@@ -705,7 +692,6 @@
             }
         });
 
-        // 🔥 ИСПРАВЛЕНО: Убрана какая-либо отправка сообщений ботом в общий чат после одобрения заявки!
         window.executeTerminalApprove = async function() {
             if(!isLeaderMode || !currentParsedData) return;
             const acceptBtn = document.getElementById('terminalAcceptBtn');
@@ -713,27 +699,32 @@
             acceptBtn.disabled = true;
 
             const generatedPassword = "ST-" + Math.floor(1000 + Math.random() * 9000);
-            const userTgHandle = currentParsedData.tg.trim();
             
             cloudDatabase.recruits[currentParsedData.nick] = Date.now();
-            cloudDatabase.pairs[userTgHandle] = generatedPassword.trim();
-            cloudDatabase.nickToTgMap[currentParsedData.nick] = userTgHandle;
+            cloudDatabase.pairs[currentParsedData.tg.trim()] = generatedPassword.trim();
             
-            cloudDatabase.banned = cloudDatabase.banned.filter(tg => tg !== userTgHandle.toLowerCase());
+            cloudDatabase.banned = cloudDatabase.banned.filter(tg => tg !== currentParsedData.tg.trim().toLowerCase());
             cloudDatabase.kickedNicks = cloudDatabase.kickedNicks.filter(n => n.toLowerCase() !== currentParsedData.nick.toLowerCase());
 
             await saveToCloud();
 
-            const personalMessage = `🎉 <b>Приветствуем на борту, боец ${currentParsedData.nick}!</b>\n\nВаш рапорт в клан <b>STAGE</b> успешно утвержден Руководством флота!\n\n🔐 <b>Ваши персональные ключи доступа к Штабу:</b>\n👤 <b>Логин (Ваш ТГ):</b> <code>${userTgHandle}</code>\n🔑 <b>Пароль:</b> <code>${generatedPassword}</code>\n🆔 <b>ID Клана:</b> <code>${CLAN_ID}</code>\n\n⚓️ <b>Секретные шлюзы коммуникации:</b>\n✈️ Telegram чат: https://t.me/+0kNCkvxktdozZTYy\n\nВозвращайтесь на сайт, авторизуйтесь через терминал "Вход" — Добро пожаловать в клан STAGE. Полный вперёд! 🚢🔥`;
+            const groupMessage = `🟢 <b>Игрок ${currentParsedData.nick} ПРИНЯТ в клан STAGE!</b>\n\n👤 <b>Логин (ТГ Тэг):</b> <code>${currentParsedData.tg}</code>\n🔑 <b>Пароль:</b> <code>${generatedPassword}</code>\n🆔 <b>ID Клана:</b> <code>${CLAN_ID}</code>\n\nДанные доступа высланы в личные сообщения бойца.`;
 
-            // ⚡️ Отправка идет ИСКЛЮЧИТЕЛЬНО в личные сообщения бойцу по его ID. В группу ничего не отправляется.
+            const personalMessage = `🎉 <b>Приветствуем на борту, боец ${currentParsedData.nick}!</b>\n\nВаш рапорт в клан <b>STAGE</b> успешно утвержден Руководством флота!\n\n🔐 <b>Ваши персональные ключи доступа к Штабу:</b>\n👤 <b>Логин (Ваш ТГ):</b> <code>${currentParsedData.tg}</code>\n🔑 <b>Пароль:</b> <code>${generatedPassword}</code>\n🆔 <b>ID Клана:</b> <code>${CLAN_ID}</code>\n\n⚓️ <b>Секретные шлюзы коммуникации:</b>\n✈️ Telegram чат: https://t.me/+0kNCkvxktdozZTYy\n🎮 Discord server: https://discord.gg/U3zekgCn7\n\nВозвращайтесь на сайт, авторизуйтесь через терминал "Вход" — Карты и Доска открыты. Полный вперёд! 🚢🔥`;
+
+            await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: TG_CHAT_ID, message_thread_id: TG_THREAD_ID, text: groupMessage, parse_mode: 'html' })
+            });
+
             await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ chat_id: currentParsedData.chatId, text: personalMessage, parse_mode: 'html' })
             });
 
-            alert(`Игрок ${currentParsedData.nick} зачислен! Пароль отправлен ему в ЛС. База обновлена.`);
+            alert(`Игрок ${currentParsedData.nick} зачислен! Облачная база обновлена. Бот отправил уведомление в ЛС.`);
             
             rawTelegramInput.value = "";
             terminalStatusBox.style.display = 'none';
@@ -744,7 +735,7 @@
         }
 
         window.executeTerminalReject = function() {
-            if(!confirm("Отклонить рапорт?")) return;
+            if(!confirm("Отклонить рапорт бойца?")) return;
             rawTelegramInput.value = "";
             terminalStatusBox.style.display = 'none';
             currentParsedData = null;
@@ -796,7 +787,7 @@
 
             if (BASE_CLAN_MEMBERS[inputLogin.toLowerCase()] && BASE_CLAN_MEMBERS[inputLogin.toLowerCase()] === inputPassword.toLowerCase()) {
                 localStorage.setItem('stage_team_logged', 'true'); unlockTeamFeatures(); loginModalOverlay.classList.remove('active');
-                alert(`Доступ разрешен. С возвращением в строй!`);
+                alert("Доступ разрешен. С возвращением в строй, боец!");
                 return;
             }
 
@@ -804,7 +795,7 @@
                 localStorage.setItem('stage_team_logged', 'true');
                 localStorage.setItem('stage_user_registered_tg', inputLogin);
                 unlockTeamFeatures(); loginModalOverlay.classList.remove('active');
-                alert(`Верификация пройдена. Добро пожаловать в штаб STAGE!`);
+                alert("Верификация пройдена успешно. Добро пожаловать в тактический штаб STAGE!");
                 return;
             }
 
@@ -821,10 +812,6 @@
         function unlockTeamFeatures() {
             document.getElementById('mapsLockBox').style.display = 'none';
             document.getElementById('boardLockBox').style.display = 'none';
-            
-            document.getElementById('maps').classList.add('unlocked');
-            document.getElementById('board').classList.add('unlocked');
-            
             document.getElementById('mapsActualGrid').style.display = 'grid';
             document.getElementById('boardActualContainer').style.display = 'flex';
             navLoginBtn.innerHTML = `<i class="fa-solid fa-user-check" style="color:#00f2fe;"></i> В команде`;
@@ -856,47 +843,17 @@
         function generateTacticalMapsGrid() {
             const container = document.getElementById('mapsActualGrid');
             container.innerHTML = "";
-            const currentOrigin = window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
-            
             for (let i = 1; i <= 17; i++) {
                 const card = document.createElement('div');
                 card.className = 'map-card'; card.setAttribute('draggable', 'true');
-                const fullMapUrl = `${currentOrigin}/map${i}.png`;
-                
                 card.innerHTML = `
-                    <div class="map-img-holder" style="background-image: url('${fullMapUrl}');"></div>
+                    <div class="map-img-holder" style="background-image: url('map${i}.png');"></div>
                     <div class="map-info"><div class="map-name">КАРТА №${i}</div></div>
-                    <div class="map-actions">
-                        <a href="${fullMapUrl}" download="STAGE_Map_${i}.png" class="btn-map-download"><i class="fa-solid fa-cloud-arrow-down"></i> Скачать</a>
-                        <button type="button" class="btn-map-copy" onclick="copyMapUrlToClipboard('${fullMapUrl}')"><i class="fa-solid fa-copy"></i> Копировать для доски</button>
-                    </div>
+                    <a href="map${i}.png" download="STAGE_Map_${i}.png" class="btn-map-download"><i class="fa-solid fa-cloud-arrow-down"></i> Скачать карту</a>
                 `;
-                
-                card.addEventListener('dragstart', (e) => { 
-                    e.dataTransfer.setData('text/plain', fullMapUrl); 
-                    e.dataTransfer.setData('text/html', `<img src="${fullMapUrl}" alt="Map">`);
-                });
+                card.addEventListener('dragstart', (e) => { e.dataTransfer.setData('text/plain', `map${i}.png`); });
                 container.appendChild(card);
             }
-        }
-
-        window.copyMapUrlToClipboard = function(url) {
-            const htmlContent = `<img src="${url}" alt="Tactical Map">`;
-            
-            const blobText = new Blob([url], { type: 'text/plain' });
-            const blobHtml = new Blob([htmlContent], { type: 'text/html' });
-            
-            const clipboardItem = new ClipboardItem({
-                'text/plain': blobText,
-                'text/html': blobHtml
-            });
-
-            navigator.clipboard.write([clipboardItem]).then(() => {
-                alert("Карта скопирована в буфер как изображение! Кликните на Тактическую доску ниже и просто нажмите Ctrl+V.");
-            }).catch(err => {
-                navigator.clipboard.writeText(url);
-                alert("Ссылка скопирована! Если при Ctrl+V вставился текст, перетащите карту на доску мышкой.");
-            });
         }
 
         function setupDragAndDrop() {
@@ -904,21 +861,11 @@
             boardContainer.addEventListener('dragleave', () => { boardContainer.classList.remove('drag-over'); });
             boardContainer.addEventListener('drop', (e) => {
                 e.preventDefault(); boardContainer.classList.remove('drag-over');
-                
-                const mapUrl = e.dataTransfer.getData('text/plain');
-                if (mapUrl) {
-                    const htmlContent = `<img src="${mapUrl}" alt="Tactical Map">`;
-                    const blobText = new Blob([mapUrl], { type: 'text/plain' });
-                    const blobHtml = new Blob([htmlContent], { type: 'text/html' });
-                    
-                    const clipboardItem = new ClipboardItem({
-                        'text/plain': blobText,
-                        'text/html': blobHtml
-                    });
-
-                    navigator.clipboard.write([clipboardItem]).then(() => {
-                        alert("Карта принята шлюзом доски! Кликните по холсту доски и нажмите Ctrl+V для её установки.");
-                    });
+                const mapFileName = e.dataTransfer.getData('text/plain');
+                if (mapFileName && mapFileName.includes('.png')) {
+                    const fullMapUrl = window.location.origin + '/' + mapFileName;
+                    excalidrawFrame.contentWindow.postMessage({ type: "excalidraw-load-image", url: fullMapUrl }, "*");
+                    alert("Тактическая Карта развернута на холсте!");
                 }
             });
         }
@@ -965,19 +912,19 @@
 
         window.kickPlayer = async function(element, nick, isStatic = true) {
             if (!isLeaderMode) return;
-            if (confirm(`Исключить игрока ${nick} из состава клана STAGE? Его логин, пароль и допуск будут аннулированы безвозвратно.`)) {
+            if (confirm(`Исключить игрока ${nick} из состава? Логин и пароль будут аннулированы везде.`)) {
                 
-                const associatedTg = cloudDatabase.nickToTgMap[nick];
+                const cleanNick = nick.replace(/\s+/g, '').toLowerCase();
+                const possibleTgs = [`@${cleanNick}`, `@${cleanNick}_mw`, `@${cleanNick}_stage`, `@${cleanNick}mw`, `@${cleanNick}stage`];
                 
                 delete cloudDatabase.recruits[nick];
-                if (associatedTg) {
-                    delete cloudDatabase.pairs[associatedTg];
-                    const lowercaseTg = associatedTg.toLowerCase();
-                    if(!cloudDatabase.banned.includes(lowercaseTg)) {
-                        cloudDatabase.banned.push(lowercaseTg);
+                possibleTgs.forEach(tg => {
+                    delete cloudDatabase.pairs[tg];
+                    for(let key in cloudDatabase.pairs) {
+                        if(key.toLowerCase() === tg) delete cloudDatabase.pairs[key];
                     }
-                }
-                delete cloudDatabase.nickToTgMap[nick];
+                    if(!cloudDatabase.banned.includes(tg)) cloudDatabase.banned.push(tg);
+                });
 
                 if (isStatic) { 
                     if(!cloudDatabase.kickedNicks.includes(nick)) cloudDatabase.kickedNicks.push(nick);
@@ -985,13 +932,8 @@
 
                 await saveToCloud();
                 
-                const localUserTg = localStorage.getItem('stage_user_registered_tg');
-                if (localUserTg && associatedTg && localUserTg.toLowerCase() === associatedTg.toLowerCase()) {
-                    forceAbsoluteLogout();
-                }
-
                 element.parentElement.remove(); 
-                alert(`Игрок ${nick} успешно удален. Его ТГ-тег и пароль полностью стёрты из базы данных.`);
+                alert(`Игрок ${nick} успешно вырезан из глобальной базы данных сайта на всех устройствах.`);
             }
         }
 
