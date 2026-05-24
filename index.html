@@ -106,15 +106,21 @@
             background-attachment: fixed;
         }
 
-        .maps-screen, .board-screen { display: flex !important; }
+        .maps-screen, .board-screen { display: none; }
+        .maps-screen.unlocked, .board-screen.unlocked { display: flex; }
 
         .welcome-screen > *, .roster-container, .social-container, .founders-grid, .section-title, .recruit-box, .secret-tg-box, .sub-section-title, .maps-grid, .board-container, .btn-fullscreen-toggle, .lock-overlay-box {
-            opacity: 0;
-            transform: translateY(30px);
+            opacity: 1;
+            transform: translateY(0);
             transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        .section-active > *, 
+        .js-animated {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        .section-active .js-animated,
+        .section-active>*, 
         .section-active .roster-container, 
         .section-active .social-container, 
         .section-active .founders-grid, 
@@ -193,15 +199,19 @@
 
         /* КАРТЫ И ДОСКА */
         .maps-screen { background-image: linear-gradient(rgba(2, 5, 10, 0.75), rgba(2, 5, 10, 0.9)), url('maps_bg.png'); }
-        .maps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; max-width: 1200px; width: 100%; }
-        .map-card { background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(0, 242, 254, 0.2); border-radius: 6px; padding: 15px; display: flex; flex-direction: column; gap: 12px; backdrop-filter: blur(5px); transition: border 0.3s, box-shadow 0.3s, transform 0.2s; cursor: grab; user-select: none; }
+        .maps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; max-width: 1200px; width: 100%; }
+        .map-card { background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(0, 242, 254, 0.2); border-radius: 6px; padding: 15px; display: flex; flex-direction: column; gap: 10px; backdrop-filter: blur(5px); transition: border 0.3s, box-shadow 0.3s, transform 0.2s; cursor: grab; user-select: none; }
         .map-card:active { cursor: grabbing; transform: scale(0.98); }
         .map-card:hover { border-color: #00f2fe; box-shadow: 0 0 15px rgba(0, 242, 254, 0.3); }
         .map-img-holder { width: 100%; height: 140px; background-color: #02050a; background-size: cover; background-position: center; border-radius: 4px; border: 1px solid rgba(255,255,255,0.05); pointer-events: none; }
         .map-info { display: flex; justify-content: space-between; align-items: center; pointer-events: none; }
         .map-name { font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: bold; letter-spacing: 1px; }
-        .btn-map-download { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 10px; background: rgba(0, 242, 254, 0.1); border: 1px solid #00f2fe; color: #00f2fe; font-family: 'Orbitron', sans-serif; font-size: 12px; font-weight: bold; text-transform: uppercase; text-decoration: none; border-radius: 4px; transition: all 0.3s; }
+        
+        .map-actions { display: flex; flex-direction: column; gap: 6px; margin-top: 5px; }
+        .btn-map-download { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 8px; background: rgba(0, 242, 254, 0.1); border: 1px solid #00f2fe; color: #00f2fe; font-family: 'Orbitron', sans-serif; font-size: 11px; font-weight: bold; text-transform: uppercase; text-decoration: none; border-radius: 4px; transition: all 0.3s; }
         .btn-map-download:hover { background: #00f2fe; color: #02050a; box-shadow: 0 0 15px rgba(0, 242, 254, 0.3); }
+        .btn-map-copy { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 8px; background: rgba(168, 85, 247, 0.1); border: 1px solid #a855f7; color: #c084fc; font-family: 'Orbitron', sans-serif; font-size: 11px; font-weight: bold; text-transform: uppercase; border-radius: 4px; cursor: pointer; transition: all 0.3s; }
+        .btn-map-copy:hover { background: #a855f7; color: #fff; box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); }
 
         .board-screen { background-image: linear-gradient(rgba(2, 5, 10, 0.75), rgba(2, 5, 10, 0.9)), url('board_bg.png'); }
         .btn-fullscreen-toggle { background: rgba(168, 85, 247, 0.1); border: 2px solid #a855f7; color: #a855f7; padding: 10px 24px; border-radius: 4px; font-family: 'Orbitron', sans-serif; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; margin-bottom: 20px; box-shadow: 0 0 15px rgba(168, 85, 247, 0.2); transition: all 0.3s ease; display: flex; align-items: center; gap: 10px; outline: none; }
@@ -529,7 +539,6 @@
         const TG_THREAD_ID = 5264;          
         const CLAN_ID = "YRD9HT";
 
-        // ☁️ ПРИВЯЗКА К ОБЛАЧНОЙ БАЗЕ ДАННЫХ JSONBIN.IO
         const BIN_ID = "6a12294c6877513b27c06650"; 
         const MASTER_KEY = "$2a$10$v7z4/8N8GC8M8hitL86knebm9goe4YeILXuk0ApLLcpdRNJIWqjzu"; 
 
@@ -599,7 +608,8 @@
         let isRosterExpanded = false;
         let isLeaderMode = false;
         let currentParsedData = null;
-        let cloudDatabase = { recruits: {}, pairs: {}, banned: [], kickedNicks: [] };
+        
+        let cloudDatabase = { recruits: {}, pairs: {}, nickToTgMap: {}, banned: [], kickedNicks: [] };
 
         window.addEventListener('DOMContentLoaded', async () => {
             if (window.location.hash && window.location.hash !== "#welcome") {
@@ -625,10 +635,18 @@
             setupDragAndDrop();
 
             const sections = document.querySelectorAll('section');
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('section-active'); });
-            }, { threshold: 0.1 });
-            sections.forEach(s => observer.observe(s));
+            if ('IntersectionObserver' in window) {
+                sections.forEach(s => {
+                    const children = s.children;
+                    for(let child of children) { child.classList.add('js-animated'); }
+                });
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('section-active'); });
+                }, { threshold: 0.05 });
+                sections.forEach(s => observer.observe(s));
+            } else {
+                sections.forEach(s => s.classList.add('section-active'));
+            }
         });
 
         async function syncWithCloud() {
@@ -642,6 +660,7 @@
                     if(data.record) {
                         cloudDatabase.recruits = data.record.recruits || {};
                         cloudDatabase.pairs = data.record.pairs || {};
+                        cloudDatabase.nickToTgMap = data.record.nickToTgMap || {};
                         cloudDatabase.banned = data.record.banned || [];
                         cloudDatabase.kickedNicks = data.record.kickedNicks || [];
                     }
@@ -686,7 +705,6 @@
             }
         });
 
-        // 🔥 ПОЛНОЕ ИСПРАВЛЕНИЕ СИНХРОНИЗАЦИИ ОДОБРЕНИЯ И ОТПРАВКИ В ЛС ПО ЦИФРОВОМУ CHAT_ID
         window.executeTerminalApprove = async function() {
             if(!isLeaderMode || !currentParsedData) return;
             const acceptBtn = document.getElementById('terminalAcceptBtn');
@@ -694,35 +712,34 @@
             acceptBtn.disabled = true;
 
             const generatedPassword = "ST-" + Math.floor(1000 + Math.random() * 9000);
+            const userTgHandle = currentParsedData.tg.trim();
             
             cloudDatabase.recruits[currentParsedData.nick] = Date.now();
-            cloudDatabase.pairs[currentParsedData.tg.trim()] = generatedPassword.trim();
+            cloudDatabase.pairs[userTgHandle] = generatedPassword.trim();
+            cloudDatabase.nickToTgMap[currentParsedData.nick] = userTgHandle;
             
-            cloudDatabase.banned = cloudDatabase.banned.filter(tg => tg !== currentParsedData.tg.trim().toLowerCase());
+            cloudDatabase.banned = cloudDatabase.banned.filter(tg => tg !== userTgHandle.toLowerCase());
             cloudDatabase.kickedNicks = cloudDatabase.kickedNicks.filter(n => n.toLowerCase() !== currentParsedData.nick.toLowerCase());
 
-            // Фиксация в облаке JSONbin.io
             await saveToCloud();
 
-            const groupMessage = `🟢 <b>Игрок ${currentParsedData.nick} ПРИНЯТ в клан STAGE!</b>\n\n👤 <b>Логин (ТГ Тэг):</b> <code>${currentParsedData.tg}</code>\n🔑 <b>Пароль:</b> <code>${generatedPassword}</code>\n🆔 <b>ID Клана:</b> <code>${CLAN_ID}</code>\n\nДанные доступа высланы в личные сообщения бойца.`;
+            const groupMessage = `🟢 <b>Игрок ${currentParsedData.nick} успешно ПРИНЯТ в состав флота STAGE!</b>\n\n👤 <b>Боец:</b> <code>${userTgHandle}</code>\n🆔 <b>ID Клана:</b> <code>${CLAN_ID}</code>\n\nПерсональные ключи доступа сгенерированы и высланы ботом в личные сообщения.`;
 
-            const personalMessage = `🎉 <b>Приветствуем на борту, боец ${currentParsedData.nick}!</b>\n\nВаш рапорт в клан <b>STAGE</b> успешно утвержден Руководством флота!\n\n🔐 <b>Ваши персональные ключи доступа к Штабу:</b>\n👤 <b>Логин (Ваш ТГ):</b> <code>${currentParsedData.tg}</code>\n🔑 <b>Пароль:</b> <code>${generatedPassword}</code>\n🆔 <b>ID Клана:</b> <code>${CLAN_ID}</code>\n\n⚓️ <b>Секретные шлюзы коммуникации:</b>\n✈️ Telegram чат: https://t.me/+0kNCkvxktdozZTYy\n\nВозвращайтесь на сайт, авторизуйтесь через терминал "Вход" — Добро пожаловать в клан STAGE. Полный вперёд! 🚢🔥`;
+            const personalMessage = `🎉 <b>Приветствуем на борту, боец ${currentParsedData.nick}!</b>\n\nВаш рапорт в клан <b>STAGE</b> успешно утвержден Руководством флота!\n\n🔐 <b>Ваши персональные ключи доступа к Штабу:</b>\n👤 <b>Логин (Ваш ТГ):</b> <code>${userTgHandle}</code>\n🔑 <b>Пароль:</b> <code>${generatedPassword}</code>\n🆔 <b>ID Клана:</b> <code>${CLAN_ID}</code>\n\n⚓️ <b>Секретные шлюзы коммуникации:</b>\n✈️ Telegram чат: https://t.me/+0kNCkvxktdozZTYy\n\nВозвращайтесь на сайт, авторизуйтесь через терминал "Вход" — Добро пожаловать в клан STAGE. Полный вперёд! 🚢🔥`;
 
-            // 1. Отправка отчета в штабной чат клана
             await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ chat_id: TG_CHAT_ID, message_thread_id: TG_THREAD_ID, text: groupMessage, parse_mode: 'html' })
             });
 
-            // 2. ⚡️ ЖЕЛЕЗОБЕТОННАЯ ЖЕСТКАЯ ОТПРАВКА СТРОГО В ЛС ИГРОКУ ПО ЕГО ЦИФРОВОМУ TG ID
             await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ chat_id: currentParsedData.chatId, text: personalMessage, parse_mode: 'html' })
             });
 
-            alert(`Игрок ${currentParsedData.nick} зачислен! Облачная база обновлена. Бот отправил уведомление в ЛС.`);
+            alert(`Игрок ${currentParsedData.nick} зачислен! Пароль отправлен ему в ЛС. База синхронизирована.`);
             
             rawTelegramInput.value = "";
             terminalStatusBox.style.display = 'none';
@@ -733,7 +750,7 @@
         }
 
         window.executeTerminalReject = function() {
-            if(!confirm("Отклонить рапорт бойца?")) return;
+            if(!confirm("Отклонить рапорт?")) return;
             rawTelegramInput.value = "";
             terminalStatusBox.style.display = 'none';
             currentParsedData = null;
@@ -785,7 +802,7 @@
 
             if (BASE_CLAN_MEMBERS[inputLogin.toLowerCase()] && BASE_CLAN_MEMBERS[inputLogin.toLowerCase()] === inputPassword.toLowerCase()) {
                 localStorage.setItem('stage_team_logged', 'true'); unlockTeamFeatures(); loginModalOverlay.classList.remove('active');
-                alert(`Доступ разрешен. С возвращением в строй, боец!`);
+                alert(`Доступ разрешен. С возвращением в строй!`);
                 return;
             }
 
@@ -793,7 +810,7 @@
                 localStorage.setItem('stage_team_logged', 'true');
                 localStorage.setItem('stage_user_registered_tg', inputLogin);
                 unlockTeamFeatures(); loginModalOverlay.classList.remove('active');
-                alert(`Верификация пройдена. Добро пожаловать в тактический штаб STAGE!`);
+                alert(`Верификация пройдена. Добро пожаловать в штаб STAGE!`);
                 return;
             }
 
@@ -810,6 +827,10 @@
         function unlockTeamFeatures() {
             document.getElementById('mapsLockBox').style.display = 'none';
             document.getElementById('boardLockBox').style.display = 'none';
+            
+            document.getElementById('maps').classList.add('unlocked');
+            document.getElementById('board').classList.add('unlocked');
+            
             document.getElementById('mapsActualGrid').style.display = 'grid';
             document.getElementById('boardActualContainer').style.display = 'flex';
             navLoginBtn.innerHTML = `<i class="fa-solid fa-user-check" style="color:#00f2fe;"></i> В команде`;
@@ -818,7 +839,7 @@
 
         function activateLeaderMode() {
             isLeaderMode = true; adminBadge.style.display = 'block'; navStatsBtn.style.display = 'block'; 
-            navLoginBtn.innerHTML = `<i class="fa-solid fa-user-gear" style="color:#ff0055;"></i>  Админ`;
+            navLoginBtn.innerHTML = `<i class="fa-solid fa-user-gear" style="color:#ff0055;"></i> Админ`;
             navLoginBtn.style.background = "rgba(255, 0, 85, 0.15)"; navLoginBtn.style.borderColor = "#ff0055";
             document.querySelectorAll('.kick-btn').forEach(btn => btn.style.display = 'inline-block');
         }
@@ -838,32 +859,53 @@
         });
         closeStatsModalBtn.addEventListener('click', () => statsModalOverlay.classList.remove('active'));
 
+        // 🔥 ИСПРАВЛЕНО: Генерация карт с поддержкой копирования ссылок напрямую для Excalidraw
         function generateTacticalMapsGrid() {
             const container = document.getElementById('mapsActualGrid');
             container.innerHTML = "";
+            const currentOrigin = window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+            
             for (let i = 1; i <= 17; i++) {
                 const card = document.createElement('div');
                 card.className = 'map-card'; card.setAttribute('draggable', 'true');
+                const fullMapUrl = `${currentOrigin}/map${i}.png`;
+                
                 card.innerHTML = `
-                    <div class="map-img-holder" style="background-image: url('map${i}.png');"></div>
+                    <div class="map-img-holder" style="background-image: url('${fullMapUrl}');"></div>
                     <div class="map-info"><div class="map-name">КАРТА №${i}</div></div>
-                    <a href="map${i}.png" download="STAGE_Map_${i}.png" class="btn-map-download"><i class="fa-solid fa-cloud-arrow-down"></i> Скачать карту</a>
+                    <div class="map-actions">
+                        <a href="${fullMapUrl}" download="STAGE_Map_${i}.png" class="btn-map-download"><i class="fa-solid fa-cloud-arrow-down"></i> Скачать</a>
+                        <button type="button" class="btn-map-copy" onclick="copyMapUrlToClipboard('${fullMapUrl}')"><i class="fa-solid fa-copy"></i> Копировать для доски</button>
+                    </div>
                 `;
-                card.addEventListener('dragstart', (e) => { e.dataTransfer.setData('text/plain', `map${i}.png`); });
+                // Передача текста-ссылки и html-изображения для максимальной совместимости Drag & Drop
+                card.addEventListener('dragstart', (e) => { 
+                    e.dataTransfer.setData('text/plain', fullMapUrl); 
+                    e.dataTransfer.setData('text/uri-list', fullMapUrl);
+                });
                 container.appendChild(card);
             }
         }
 
+        window.copyMapUrlToClipboard = function(url) {
+            navigator.clipboard.writeText(url).then(() => {
+                alert("Прямая ссылка на карту скопирована! Перейдите на Тактическую доску ниже и просто нажмите Ctrl+V (или зажмите холст и выберите 'Вставить')");
+            }).catch(err => {
+                console.error("Не удалось скопировать:", err);
+            });
+        }
+
+        // 🔥 ИСПРАВЛЕНО: Безопасный кросс-доменный дроп. Направляем ссылку в буфер или текстовое поле Excalidraw
         function setupDragAndDrop() {
             boardContainer.addEventListener('dragover', (e) => { e.preventDefault(); boardContainer.classList.add('drag-over'); });
             boardContainer.addEventListener('dragleave', () => { boardContainer.classList.remove('drag-over'); });
             boardContainer.addEventListener('drop', (e) => {
                 e.preventDefault(); boardContainer.classList.remove('drag-over');
-                const mapFileName = e.dataTransfer.getData('text/plain');
-                if (mapFileName && mapFileName.includes('.png')) {
-                    const fullMapUrl = window.location.origin + '/' + mapFileName;
-                    excalidrawFrame.contentWindow.postMessage({ type: "excalidraw-load-image", url: fullMapUrl }, "*");
-                    alert("Тактическая Карта развернута на холсте!");
+                const mapUrl = e.dataTransfer.getData('text/plain') || e.dataTransfer.getData('text/uri-list');
+                if (mapUrl) {
+                    navigator.clipboard.writeText(mapUrl).then(() => {
+                        alert("Карта подготовлена! Нажмите на холсте доски Ctrl+V (Вставить) для отображения картинки.");
+                    });
                 }
             });
         }
@@ -910,19 +952,19 @@
 
         window.kickPlayer = async function(element, nick, isStatic = true) {
             if (!isLeaderMode) return;
-            if (confirm(`Исключить игрока ${nick} из состава? Логин и пароль будут аннулированы везде.`)) {
+            if (confirm(`Исключить игрока ${nick} из состава клана STAGE? Его логин, пароль и допуск будут аннулированы безвозвратно.`)) {
                 
-                const cleanNick = nick.replace(/\s+/g, '').toLowerCase();
-                const possibleTgs = [`@${cleanNick}`, `@${cleanNick}_mw`, `@${cleanNick}_stage`, `@${cleanNick}mw`, `@${cleanNick}stage`];
+                const associatedTg = cloudDatabase.nickToTgMap[nick];
                 
                 delete cloudDatabase.recruits[nick];
-                possibleTgs.forEach(tg => {
-                    delete cloudDatabase.pairs[tg];
-                    for(let key in cloudDatabase.pairs) {
-                        if(key.toLowerCase() === tg) delete cloudDatabase.pairs[key];
+                if (associatedTg) {
+                    delete cloudDatabase.pairs[associatedTg];
+                    const lowercaseTg = associatedTg.toLowerCase();
+                    if(!cloudDatabase.banned.includes(lowercaseTg)) {
+                        cloudDatabase.banned.push(lowercaseTg);
                     }
-                    if(!cloudDatabase.banned.includes(tg)) cloudDatabase.banned.push(tg);
-                });
+                }
+                delete cloudDatabase.nickToTgMap[nick];
 
                 if (isStatic) { 
                     if(!cloudDatabase.kickedNicks.includes(nick)) cloudDatabase.kickedNicks.push(nick);
@@ -930,8 +972,13 @@
 
                 await saveToCloud();
                 
+                const localUserTg = localStorage.getItem('stage_user_registered_tg');
+                if (localUserTg && associatedTg && localUserTg.toLowerCase() === associatedTg.toLowerCase()) {
+                    forceAbsoluteLogout();
+                }
+
                 element.parentElement.remove(); 
-                alert(`Игрок ${nick} успешно вырезан из глобальной базы данных сайта на всех устройствах.`);
+                alert(`Игрок ${nick} успешно удален. Его ТГ-тег и пароль полностью стёрты из базы данных.`);
             }
         }
 
@@ -982,7 +1029,6 @@
             let tgLink = document.getElementById('tgLink').value.trim();
             if(!tgLink.startsWith('@')) tgLink = '@' + tgLink;
 
-            // Формируем чистый текст рапорта с цифровым ID
             const textMessage = `⚓️ <b>Новая заявка STAGE!</b>\n\n👤 <b>Ник:</b> ${gameNick}\n🆔 <b>ID:</b> ${gameId}\n✈️ <b>TG:</b> ${tgLink}\n🆔 <b>CID:</b> ${gameChatId}`;
             
             fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
