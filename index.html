@@ -106,6 +106,8 @@
             background-attachment: fixed;
         }
 
+        .maps-screen, .board-screen { display: none; }
+
         .welcome-screen > *, .roster-container, .social-container, .founders-grid, .section-title, .recruit-box, .secret-tg-box, .sub-section-title, .maps-grid, .board-container, .btn-fullscreen-toggle, .lock-overlay-box {
             opacity: 0;
             transform: translateY(30px);
@@ -379,7 +381,7 @@
         <h2 class="section-title">Тактическая доска</h2>
         <div class="lock-overlay-box" id="boardLockBox">
             <i class="fa-solid fa-user-lock"></i>
-            <h3>Terminal Заблокирован</h3>
+            <h3>Терминал Заблокирован</h3>
             <p>Интерактивный холст координации маневров заблокирован. Требуется подтверждение прав члена команды.</p>
         </div>
         <div id="boardActualContainer" style="display: none; width: 100%; flex-direction: column; align-items: center;">
@@ -430,7 +432,13 @@
                 <div class="modal-title">Подать заявку</div>
                 <div class="form-group"><label>Игровой ID</label><input type="text" id="gameId" placeholder="Например: 49284729" required></div>
                 <div class="form-group"><label>Никнейм в игре</label><input type="text" id="gameNick" placeholder="Твой ник" required></div>
-                <div class="form-group"><label>Твой Telegram-Ник</label><input type="text" id="tgLink" placeholder="Например: @vova" required></div>
+                <div class="form-group"><label>Ваш Телеграм Тэг (Логин)</label><input type="text" id="tgLink" placeholder="Например: @vova" required></div>
+                
+                <div class="form-group">
+                    <label>Ваш цифровой Telegram ID (<a href="https://t.me/userinfobot" target="_blank" style="color:#00f2fe; text-decoration:underline;">Узнать свой ID в боте</a>)</label>
+                    <input type="text" id="gameChatId" placeholder="Вставьте цифры, полученные от бота (например: 74928421)" required>
+                </div>
+
                 <div class="law-box">
                     <input type="checkbox" id="lawAgree">
                     <div class="law-text">Я принимаю условия <button type="button" class="btn-law-link" id="openLawBtn">развлекательного сообщества</button> и даю согласие на обработку данных.</div>
@@ -498,13 +506,14 @@
             <div style="border-top: 1px solid rgba(168, 85, 247, 0.2); margin-top: 15px; padding-top: 15px;">
                 <div class="rank-title" style="color:#00f2fe; font-size:14px; border:none; margin-bottom:5px; text-align:left;">Обработка рапортов Telegram</div>
                 <div class="form-group">
-                    <label>Вставьте скопированный text заявки из чата ТГ:</label>
-                    <textarea id="rawTelegramInput" rows="3" placeholder="⚓️ Новая заявка STAGE!&#10;👤 Ник: Vanya_STAGE&#10;✈️ TG: @vova" style="resize:none; font-size:12px; border-color:rgba(0,242,254,0.2);"></textarea>
+                    <label>Вставьте скопированный текст заявки из чата ТГ:</label>
+                    <textarea id="rawTelegramInput" rows="3" placeholder="⚓️ Новая заявка STAGE!&#10;👤 Ник: Vanya_STAGE&#10;✈️ TG: @vova&#10;🆔 CID: 74928421" style="resize:none; font-size:12px; border-color:rgba(0,242,254,0.2);"></textarea>
                 </div>
                 
                 <div class="terminal-box" id="terminalStatusBox" style="display:none;">
                     <div>📝 <b>Боец:</b> <span id="parsedNickText" style="color:#00f2fe; font-weight:bold;">-</span></div>
                     <div>✈️ <b>Логин ТГ:</b> <span id="parsedTgText" style="color:#a855f7;">-</span></div>
+                    <div>🆔 <b>Цифровой ID:</b> <span id="parsedIdText" style="color:#eab308;">-</span></div>
                     <div class="terminal-actions">
                         <button type="button" class="btn-terminal-accept" id="terminalAcceptBtn" onclick="executeTerminalApprove()">Принять</button>
                         <button type="button" class="btn-terminal-reject" onclick="executeTerminalReject()">Отклонить</button>
@@ -585,6 +594,7 @@
         const terminalStatusBox = document.getElementById('terminalStatusBox');
         const parsedNickText = document.getElementById('parsedNickText');
         const parsedTgText = document.getElementById('parsedTgText');
+        const parsedIdText = document.getElementById('parsedIdText');
 
         let isRosterExpanded = false;
         let isLeaderMode = false;
@@ -658,26 +668,29 @@
             if(!val) { terminalStatusBox.style.display = 'none'; return; }
 
             const nickMatch = val.match(/(?:Ник:)\s*([^\n🆔]+)/i);
-            const tgMatch = val.match(/(?:TG:)\s*([^\n⚖️]+)/i);
+            const tgMatch = val.match(/(?:TG:)\s*([^\n🆔⚖️]+)/i);
+            const idMatch = val.match(/(?:CID:)\s*([^\n⚖️]+)/i);
 
-            if (nickMatch && tgMatch) {
+            if (nickMatch && tgMatch && idMatch) {
                 currentParsedData = {
                     nick: nickMatch[1].trim(),
-                    tg: tgMatch[1].trim()
+                    tg: tgMatch[1].trim(),
+                    chatId: idMatch[1].trim()
                 };
                 parsedNickText.textContent = currentParsedData.nick;
                 parsedTgText.textContent = currentParsedData.tg;
+                parsedIdText.textContent = currentParsedData.chatId;
                 terminalStatusBox.style.display = 'block';
             } else {
                 terminalStatusBox.style.display = 'none';
             }
         });
 
-        // 🔥 ПОЛНОЕ ИСПРАВЛЕНИЕ ЛОГИКИ ОДОБРЕНИЯ НА САЙТЕ С КОРРЕКТНЫМ PUT В ОБЛАКО И ЛС БОТА
+        // 🔥 ПОЛНОЕ ИСПРАВЛЕНИЕ СИНХРОНИЗАЦИИ ОДОБРЕНИЯ И ОТПРАВКИ В ЛС ПО ЦИФРОВОМУ CHAT_ID
         window.executeTerminalApprove = async function() {
             if(!isLeaderMode || !currentParsedData) return;
             const acceptBtn = document.getElementById('terminalAcceptBtn');
-            acceptBtn.textContent = "Запись...";
+            acceptBtn.textContent = "Синхронизация...";
             acceptBtn.disabled = true;
 
             const generatedPassword = "ST-" + Math.floor(1000 + Math.random() * 9000);
@@ -688,24 +701,28 @@
             cloudDatabase.banned = cloudDatabase.banned.filter(tg => tg !== currentParsedData.tg.trim().toLowerCase());
             cloudDatabase.kickedNicks = cloudDatabase.kickedNicks.filter(n => n.toLowerCase() !== currentParsedData.nick.toLowerCase());
 
-            // ЖЕЛЕЗНОЕ СОХРАНЕНИЕ В ОБЛАКО, ЧТОБЫ ДРУГИЕ УСТРОЙСТВА СРАЗУ ВИДЕЛИ ПАРОЛЬ
+            // Фиксация в облаке JSONbin.io
             await saveToCloud();
 
-            // 🔥 БОТ НАПРЯМУЮ ОТПРАВЛЯЕТ ДАННЫЕ В ЧАТ (ОТКУДА СЛУШАЕТ ПЕРЕСЫЛКУ В ЛС)
-            const textResponse = `🟢 <b>Игрок ${currentParsedData.nick} ПРИНЯТ в клан STAGE!</b>\n\n👤 <b>Логин (ТГ Тэг):</b> <code>${currentParsedData.tg}</code>\n🔑 <b>Пароль:</b> <code>${generatedPassword}</code>\n🆔 <b>ID Клана:</b> <code>${CLAN_ID}</code>\n\nДобро пожаловать в Штаб! Ссылки продублированы вам ботом.`;
+            const groupMessage = `🟢 <b>Игрок ${currentParsedData.nick} ПРИНЯТ в клан STAGE!</b>\n\n👤 <b>Логин (ТГ Тэг):</b> <code>${currentParsedData.tg}</code>\n🔑 <b>Пароль:</b> <code>${generatedPassword}</code>\n🆔 <b>ID Клана:</b> <code>${CLAN_ID}</code>\n\nДанные доступа высланы в личные сообщения бойца.`;
 
+            const personalMessage = `🎉 <b>Приветствуем на борту, боец ${currentParsedData.nick}!</b>\n\nВаш рапорт в клан <b>STAGE</b> успешно утвержден Руководством флота!\n\n🔐 <b>Ваши персональные ключи доступа к Штабу:</b>\n👤 <b>Логин (Ваш ТГ):</b> <code>${currentParsedData.tg}</code>\n🔑 <b>Пароль:</b> <code>${generatedPassword}</code>\n🆔 <b>ID Клана:</b> <code>${CLAN_ID}</code>\n\n⚓️ <b>Секретные шлюзы коммуникации:</b>\n✈️ Telegram чат: https://t.me/+0kNCkvxktdozZTYy\n🎮 Discord сервер: https://discord.gg/U3zekgCn7\n\nВозвращайтесь на сайт, авторизуйтесь через терминал "Вход" — Карты и Доска открыты. Полный вперёд! 🚢🔥`;
+
+            // 1. Отправка отчета в штабной чат клана
             await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    chat_id: TG_CHAT_ID, 
-                    message_thread_id: TG_THREAD_ID, 
-                    text: textResponse,
-                    parse_mode: 'html'
-                })
+                body: JSON.stringify({ chat_id: TG_CHAT_ID, message_thread_id: TG_THREAD_ID, text: groupMessage, parse_mode: 'html' })
             });
 
-            alert(`Игрок ${currentParsedData.nick} зачислен! Облачная база обновлена.`);
+            // 2. ⚡️ ЖЕЛЕЗОБЕТОННАЯ ЖЕСТКАЯ ОТПРАВКА СТРОГО В ЛС ИГРОКУ ПО ЕГО ЦИФРОВОМУ TG ID
+            await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: currentParsedData.chatId, text: personalMessage, parse_mode: 'html' })
+            });
+
+            alert(`Игрок ${currentParsedData.nick} зачислен! Облачная база обновлена. Бот отправил уведомление в ЛС.`);
             
             rawTelegramInput.value = "";
             terminalStatusBox.style.display = 'none';
@@ -801,7 +818,7 @@
 
         function activateLeaderMode() {
             isLeaderMode = true; adminBadge.style.display = 'block'; navStatsBtn.style.display = 'block'; 
-            navLoginBtn.innerHTML = `<i class="fa-solid fa-user-gear" style="color:#ff0055;"></i> Админ`;
+            navLoginBtn.innerHTML = `<i class="fa-solid fa-user-gear" style="color:#ff0055;"></i>  Админ`;
             navLoginBtn.style.background = "rgba(255, 0, 85, 0.15)"; navLoginBtn.style.borderColor = "#ff0055";
             document.querySelectorAll('.kick-btn').forEach(btn => btn.style.display = 'inline-block');
         }
@@ -961,10 +978,12 @@
             e.preventDefault(); submitBtn.textContent = "Передача...";
             const gameNick = document.getElementById('gameNick').value.trim();
             const gameId = document.getElementById('gameId').value.trim();
+            const gameChatId = document.getElementById('gameChatId').value.trim();
             let tgLink = document.getElementById('tgLink').value.trim();
             if(!tgLink.startsWith('@')) tgLink = '@' + tgLink;
 
-            const textMessage = `⚓️ <b>Новая заявка STAGE!</b>\n\n👤 <b>Ник:</b> ${gameNick}\n🆔 <b>ID:</b> ${gameId}\n✈️ <b>TG:</b> ${tgLink}`;
+            // Формируем чистый текст рапорта с цифровым ID
+            const textMessage = `⚓️ <b>Новая заявка STAGE!</b>\n\n👤 <b>Ник:</b> ${gameNick}\n🆔 <b>ID:</b> ${gameId}\n✈️ <b>TG:</b> ${tgLink}\n🆔 <b>CID:</b> ${gameChatId}`;
             
             fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
