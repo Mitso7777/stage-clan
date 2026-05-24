@@ -202,7 +202,7 @@
         .btn-map-download { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 10px; background: rgba(0, 242, 254, 0.1); border: 1px solid #00f2fe; color: #00f2fe; font-family: 'Orbitron', sans-serif; font-size: 12px; font-weight: bold; text-transform: uppercase; text-decoration: none; border-radius: 4px; transition: all 0.3s; }
         .btn-map-download:hover { background: #00f2fe; color: #02050a; box-shadow: 0 0 15px rgba(0, 242, 254, 0.3); }
 
-        /* Кнопка скопировать карту */
+        /* Кнопка мгновенной отправки карты на доску */
         .btn-map-copy { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 10px; background: rgba(168, 85, 247, 0.1); border: 1px solid #a855f7; color: #a855f7; font-family: 'Orbitron', sans-serif; font-size: 12px; font-weight: bold; text-transform: uppercase; border-radius: 4px; transition: all 0.3s; cursor: pointer; margin-top: -4px; }
         .btn-map-copy:hover { background: #a855f7; color: #ffffff; box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); }
 
@@ -902,7 +902,7 @@
         });
         closeStatsModalBtn.addEventListener('click', () => statsModalOverlay.classList.remove('active'));
 
-        // ИСПРАВЛЕНО: Добавлены кнопки "Скопировать" с триггером копирования ссылки на изображение
+        // ИСПРАВЛЕНО: Кнопка "На доску" теперь автоматически транслирует изображение прямо во фрейм Excalidraw!
         function generateTacticalMapsGrid() {
             const container = document.getElementById('mapsActualGrid');
             container.innerHTML = "";
@@ -913,7 +913,7 @@
                     <div class="map-img-holder" style="background-image: url('map${i}.png');"></div>
                     <div class="map-info"><div class="map-name">КАРТА №${i}</div></div>
                     <a href="map${i}.png" download="STAGE_Map_${i}.png" class="btn-map-download"><i class="fa-solid fa-cloud-arrow-down"></i> Скачать карту</a>
-                    <button type="button" class="btn-map-copy" onclick="copyMapToClipboard('map${i}.png', this)"><i class="fa-solid fa-copy"></i> Скопировать</button>
+                    <button type="button" class="btn-map-copy" onclick="sendMapToBoard('map${i}.png', this)"><i class="fa-solid fa-chalkboard"></i> На доску</button>
                 `;
                 card.addEventListener('dragstart', (e) => { e.dataTransfer.setData('text/plain', `map${i}.png`); });
                 container.appendChild(card);
@@ -1065,25 +1065,32 @@
         switchToVerify.addEventListener('click', () => { recruitForm.style.display = 'none'; verifyBlock.style.display = 'block'; });
         switchToForm.addEventListener('click', () => { verifyBlock.style.display = 'none'; recruitForm.style.display = 'block'; });
 
-        // ДОБАВЛЕНО: Функция копирования прямой ссылки на карту в буфер обмена для мгновенной вставки через Ctrl+V в Excalidraw
-        window.copyMapToClipboard = function(mapFileName, buttonElement) {
+        // ДОБАВЛЕНО: Прямая загрузка изображения на доску без использования буфера обмена!
+        window.sendMapToBoard = function(mapFileName, buttonElement) {
             const fullMapUrl = window.location.origin + '/' + mapFileName;
+            const iframe = document.getElementById('excalidrawFrame');
             
-            navigator.clipboard.writeText(fullMapUrl).then(() => {
+            if (iframe && iframe.contentWindow) {
+                // Отправляем команду во фрейм Excalidraw загрузить картинку
+                iframe.contentWindow.postMessage({ type: "excalidraw-load-image", url: fullMapUrl }, "*");
+                
+                // Визуальный отклик на кнопке
                 const originalText = buttonElement.innerHTML;
-                buttonElement.innerHTML = `<i class="fa-solid fa-check"></i> Скопировано!`;
+                buttonElement.innerHTML = `<i class="fa-solid fa-circle-check"></i> На доске!`;
                 buttonElement.style.borderColor = "#22c55e";
                 buttonElement.style.color = "#22c55e";
+                
+                // Плавно скроллим игрока к доске, чтобы он сразу увидел результат
+                document.getElementById('board').scrollIntoView({ behavior: 'smooth' });
                 
                 setTimeout(() => {
                     buttonElement.innerHTML = originalText;
                     buttonElement.style.borderColor = "#a855f7";
                     buttonElement.style.color = "#a855f7";
                 }, 2000);
-            }).catch(err => {
-                console.error("Ошибка копирования: ", err);
-                alert("Не удалось скопировать автоматически. Ссылка на карту: " + fullMapUrl);
-            });
+            } else {
+                alert("Ошибка: Не удалось найти тактическую доску на странице.");
+            }
         }
     </script>
 </body>
