@@ -106,6 +106,8 @@
             background-attachment: fixed;
         }
 
+        .maps-screen, .board-screen { display: none; }
+
         .welcome-screen > *, .roster-container, .social-container, .founders-grid, .section-title, .recruit-box, .secret-tg-box, .sub-section-title, .maps-grid, .board-container, .btn-fullscreen-toggle, .lock-overlay-box {
             opacity: 0;
             transform: translateY(30px);
@@ -143,7 +145,7 @@
 
         /* СОСТАВ КЛАНА */
         .roster-screen { background-image: linear-gradient(rgba(2, 5, 10, 0.75), rgba(2, 5, 10, 0.9)), url('roster_bg.png'); }
-        .roster-container { max-width: 1200px; width: 100%; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+        .roster-container { max-width: 1200px; width: 100%; display: grid; grid-template-columns: 1fr; gap: 30px; }
         .rank-section { background: rgba(15, 23, 42, 0.65); border: 1px solid rgba(0, 242, 254, 0.2); padding: 25px; border-radius: 6px; backdrop-filter: blur(5px); position: relative; }
         .rank-title { font-family: 'Orbitron', sans-serif; font-size: clamp(16px, 4vw, 20px); color: #00f2fe; letter-spacing: 2px; margin-bottom: 20px; text-transform: uppercase; text-align: center; border-bottom: 1px dashed rgba(0, 242, 254, 0.2); padding-bottom: 10px; }
         .players-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
@@ -214,7 +216,7 @@
         .lock-overlay-box h3 { font-family: 'Orbitron', sans-serif; font-size: 20px; letter-spacing: 2px; margin-bottom: 10px; text-transform: uppercase; }
         .lock-overlay-box p { color: #94a3b8; font-size: 14px; line-height: 1.4; }
 
-        /* КНОПКИ ЧАТОВ */
+        /* КНОПКИ */
         .social-container { max-width: 500px; width: 100%; display: flex; flex-direction: column; gap: 15px; align-items: center; }
         .social-btn { display: flex; align-items: center; justify-content: center; gap: 15px; width: 100%; padding: 18px; border-radius: 8px; text-decoration: none; font-family: 'Orbitron', sans-serif; font-size: clamp(18px, 5vw, 24px); font-weight: 900; text-transform: uppercase; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); backdrop-filter: blur(5px); color: #fff; }
         .social-btn:hover { transform: scale(1.08); color: #02050a; }
@@ -401,13 +403,12 @@
         <div class="social-container">
             <a href="https://discord.gg/U3zekgCn7" target="_blank" class="social-btn btn-discord"><i class="fa-brands fa-discord"></i><span>Discord</span></a>
             <a href="https://t.me/+0kNCkvxktdozZTYy" target="_blank" class="social-btn btn-telegram"><i class="fa-solid fa-paper-plane"></i><span>Telegram</span></a>
-            
             <div class="lock-overlay-box" id="telemostLockBox" style="margin: 0; padding: 20px; max-width: 100%;">
                 <i class="fa-solid fa-microphone-lines" style="font-size: 30px; margin-bottom: 10px;"></i>
                 <h3 style="font-size: 15px;">Связь Заблокирована</h3>
                 <p style="font-size: 12px;">Голосовой канал Яндекс Телемост доступен только авторизованным бойцам.</p>
             </div>
-            <a href="https://telemost.yandex.ru/j/02002400708623" id="telemostActualBtn" target="_blank" class="social-btn btn-telemost" style="display: none;"><i class="fa-solid fa-headset"></i><span>Яндекс Телемост</span></a>
+            <a href="https://telemost.yandex.ru/j/05068502104106" id="telemostActualBtn" target="_blank" class="social-btn btn-telemost" style="display: none;"><i class="fa-solid fa-headset"></i><span>Яндекс Телемост</span></a>
         </div>
     </section>
 
@@ -444,7 +445,7 @@
                 <div class="form-group"><label>Ваш Telegram Тэг (Логин)</label><input type="text" id="tgLink" placeholder="Например: @vova" required></div>
                 
                 <div class="form-group">
-                    <label>Ваш цифровой Telegram ID (<a href="https://t.me/userinfobot" target="_blank" style="color:#00f2fe; text-decoration:underline;">Узнать свой ID в боте</a>)</label>
+                    <label>Ваш цифровой Telegram ID (<a href="https://t.me/Status_UserBot" target="_blank" style="color:#00f2fe; text-decoration:underline;">Узнать свой ID в боте</a>)</label>
                     <input type="text" id="gameChatId" placeholder="Вставьте цифры, полученные от бота (например: 74928421)" required>
                 </div>
 
@@ -695,7 +696,6 @@
             }
         });
 
-        // 🔥 ПОЛНОЕ ИСПРАВЛЕНИЕ СИНХРОНИЗАЦИИ ОДОБРЕНИЯ И ОТПРАВКИ В ЛС ПО ЦИФРОВОМУ CHAT_ID
         window.executeTerminalApprove = async function() {
             if(!isLeaderMode || !currentParsedData) return;
             const acceptBtn = document.getElementById('terminalAcceptBtn');
@@ -710,21 +710,18 @@
             cloudDatabase.banned = cloudDatabase.banned.filter(tg => tg !== currentParsedData.tg.trim().toLowerCase());
             cloudDatabase.kickedNicks = cloudDatabase.kickedNicks.filter(n => n.toLowerCase() !== currentParsedData.nick.toLowerCase());
 
-            // Фиксация в облаке JSONbin.io
             await saveToCloud();
 
             const groupMessage = `🟢 <b>Игрок ${currentParsedData.nick} ПРИНЯТ в клан STAGE!</b>\n\n👤 <b>Логин (ТГ Тэг):</b> <code>${currentParsedData.tg}</code>\n🔑 <b>Пароль:</b> <code>${generatedPassword}</code>\n🆔 <b>ID Клана:</b> <code>${CLAN_ID}</code>\n\nДанные доступа высланы в личные сообщения бойца.`;
 
             const personalMessage = `🎉 <b>Приветствуем на борту, боец ${currentParsedData.nick}!</b>\n\nВаш рапорт в клан <b>STAGE</b> успешно утвержден Руководством флота!\n\n🔐 <b>Ваши персональные ключи доступа к Штабу:</b>\n👤 <b>Логин (Ваш ТГ):</b> <code>${currentParsedData.tg}</code>\n🔑 <b>Пароль:</b> <code>${generatedPassword}</code>\n🆔 <b>ID Клана:</b> <code>${CLAN_ID}</code>\n\n⚓️ <b>Секретные шлюзы коммуникации:</b>\n✈️ Telegram чат: https://t.me/+0kNCkvxktdozZTYy\n🎮 Discord server: https://discord.gg/U3zekgCn7\n\nВозвращайтесь на сайт, авторизуйтесь через терминал "Вход" — Карты и Доска открыты. Полный вперёд! 🚢🔥`;
 
-            // 1. Отправка отчета в штабной чат клана
             await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ chat_id: TG_CHAT_ID, message_thread_id: TG_THREAD_ID, text: groupMessage, parse_mode: 'html' })
             });
 
-            // 2. ⚡️ ЖЕЛЕЗОБЕТОННАЯ ЖЕСТКАЯ ОТПРАВКА СТРОГО В ЛС ИГРОКУ ПО ЕГО ЦИФРОВОМУ TG ID
             await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -819,11 +816,11 @@
         function unlockTeamFeatures() {
             document.getElementById('mapsLockBox').style.display = 'none';
             document.getElementById('boardLockBox').style.display = 'none';
-            document.getElementById('telemostLockBox').style.display = 'none'; // 🔥 Разблокировка Телемоста
+            document.getElementById('telemostLockBox').style.display = 'none';
             
             document.getElementById('mapsActualGrid').style.display = 'grid';
             document.getElementById('boardActualContainer').style.display = 'flex';
-            document.getElementById('telemostActualBtn').style.display = 'flex'; // 🔥 Показ кнопки Телемоста
+            document.getElementById('telemostActualBtn').style.display = 'flex';
             
             navLoginBtn.innerHTML = `<i class="fa-solid fa-user-check" style="color:#00f2fe;"></i> В команде`;
             navLoginBtn.style.background = "rgba(0, 242, 254, 0.15)"; navLoginBtn.style.borderColor = "#00f2fe";
@@ -880,22 +877,6 @@
                 }
             });
         }
-
-        checkVerifyBtn.addEventListener('click', () => {
-            let inputNick = verifyTgInput.value.trim().toLowerCase();
-            if(!inputNick.startsWith('@')) { inputNick = '@' + inputNick; }
-            
-            if(cloudDatabase.banned.includes(inputNick)) { alert("Доступ заблокирован штабом клана."); return; }
-
-            const localApproved = JSON.parse(localStorage.getItem('stage_approved_list')) || [];
-            if (APPROVED_TELEGRAMS.map(v => v.toLowerCase()).includes(inputNick) || localApproved.includes(inputNick) || cloudDatabase.pairs[verifyTgInput.value.trim()]) {
-                localStorage.setItem('stage_authorized', 'true');
-                localStorage.setItem('stage_user_registered_tg', verifyTgInput.value.trim()); 
-                secretTgBox.style.display = 'block'; recruitBoxBtn.style.display = 'none';
-                document.getElementById('modalOverlay').classList.remove('active');
-                alert("Верификация пройдена успешно! Доступ к ссылке чата открыт.");
-            } else { alert("Ошибка! Ваш Telegram-никнейм не найден в списке одобренных. Пройдите авторизацию через 'Вход' вверху."); }
-        });
 
         function renderLocalRecruits() {
             document.querySelectorAll('.player-card.new-recruit-dynamic').forEach(c => c.remove());
